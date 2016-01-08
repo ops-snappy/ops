@@ -302,6 +302,7 @@ def dcTestCustomValidatorInvalidPut(wrkston01):
     return retStruct
 
 
+@pytest.mark.skipif(True, reason="Disabled until feature inclusion.")
 class Test_ft_framework_rest:
     def setup_class(cls):
         # Create Topology object and connect to devices

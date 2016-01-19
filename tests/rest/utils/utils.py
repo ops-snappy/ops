@@ -17,7 +17,6 @@
 
 import json
 import httplib
-import urllib
 import random
 
 from copy import deepcopy
@@ -34,31 +33,17 @@ PORT_DATA = {
         "vlan_mode": "trunk",
         "ip6_address": "2001:0db8:85a3:0000:0000:8a2e:0370:7334",
         "external_ids": {"extid1key": "extid1value"},
-        "bond_options": {"key1": "value1"},
+        "bond_options": {},
         "mac": "01:23:45:67:89:ab",
         "other_config": {"cfg-1key": "cfg1val"},
         "bond_active_slave": "null",
         "ip6_address_secondary": ["01:23:45:67:89:ab"],
-        "vlan_options": {"opt1key": "opt2val"},
+        "vlan_options": {},
         "ip4_address": "192.168.0.1",
         "admin": "up"
     },
     "referenced_by": [{"uri": "/rest/v1/system/bridges/bridge_normal"}]
 }
-
-
-INTERFACE_DATA = {
-    "configuration": {
-        "other_config": {},
-        "name": "50-1",
-        "split_parent": ["/rest/v1/system/interfaces/50"],
-        "options": {},
-        "split_children": [],
-        "external_ids": {},
-        "type": "system",
-        "user_config": {}
-    },
-    "referenced_by": [{"uri": "/rest/v1/system/interfaces?depth=1;name=50-1"}]}
 
 
 def get_switch_ip(switch):
@@ -199,10 +184,16 @@ def execute_port_operations(data, port_name, http_method, operation_uri,
     return results
 
 
-def execute_request(path, http_method, data, ip, full_response=False):
+def execute_request(path, http_method, data, ip, full_response=False,
+                    xtra_header=None):
+
+    url = path.replace(';', '&')
+
     headers = {"Content-type": "application/json", "Accept": "text/plain"}
+    if xtra_header:
+        headers.update(xtra_header)
     conn = httplib.HTTPConnection(ip, 8091)
-    conn.request(http_method, path, data, headers)
+    conn.request(http_method, url, data, headers)
     response = conn.getresponse()
     status_code, response_data = response.status, response.read()
     conn.close()

@@ -400,12 +400,12 @@ Period after exist
 "vlan_mode": "trunk",
 "ip6_address": "2001:0db8:85a3:0000:0000:8a2e:0370:7334",
 "external_ids": {"extid1key": "extid1value"},
-"bond_options": {"key1": "value1"},
+"bond_options": {},
 "mac": "01:23:45:67:89:ab",
 "other_config": {"cfg-1key": "cfg1val"},
 "bond_active_slave": "null",
 "ip6_address_secondary": ["01:23:45:67:89:ab"],
-"vlan_options": {"opt1key": "opt2val"},
+"vlan_options": {},
 "ip4_address": "192.168.0.1",
 "admin": "up"
 }
@@ -513,12 +513,12 @@ Bridge "bridge_normal" must exist.
 "vlan_mode": "trunk",
 "ip6_address": "2001:0db8:85a3:0000:0000:8a2e:0370:7334",
 "external_ids": {"extid1key": "extid1value"},
-"bond_options": {"key1": "value1"},
+"bond_options": {},
 "mac": "01:23:45:67:89:ab",
 "other_config": {"cfg-1key": "cfg1val"},
 "bond_active_slave": "null",
 "ip6_address_secondary": ["01:23:45:67:89:ab"],
-"vlan_options": {"opt1key": "opt2val"},
+"vlan_options": {},
 "ip4_address": "192.168.0.1",
 "admin": "up"
 },
@@ -825,12 +825,12 @@ Period after exist.
 "vlan_mode": "trunk",
 "ip6_address": "2001:0db8:85a3:0000:0000:8a2e:0370:7334",
 "external_ids": {"extid1key": "extid1value"},
-"bond_options": {"key1": "value1"},
+"bond_options": {},
 "mac": "01:23:45:67:89:ab",
 "other_config": {"cfg-1key": "cfg1val"},
 "bond_active_slave": "null",
 "ip6_address_secondary": ["01:23:45:67:89:ab"],
-"vlan_options": {"opt1key": "opt2val"},
+"vlan_options": {},
 "ip4_address": "192.168.0.1",
 "admin": "up"
 }
@@ -856,12 +856,12 @@ Period after exist.
 "vlan_mode": "access",
 "ip6_address": "2001:0db8:85a3:0000:0000:8a2e:0370:8225",
 "external_ids": {"extid2key": "extid2value"},
-"bond_options": {"key2": "value2"},
+"bond_options": {},
 "mac": "01:23:45:63:90:ab",
 "other_config": {"cfg-2key": "cfg2val"},
 "bond_active_slave": "slave1",
 "ip6_address_secondary": ["2001:0db8:85a3:0000:0000:8a2e:0370:7224"],
-"vlan_options": {"opt1key": "opt3val"},
+"vlan_options": {},
 "ip4_address": "192.168.0.2",
 "admin": "up"
 },
@@ -871,6 +871,43 @@ Period after exist.
 
 2. Execute a GET request with /rest/v1/system/ports/Port1 and verify that the response is 200 OK.
 3. confirm that the configuration response data from Step 2 is the same as the configuration data from Step 1.
+
+#### Update port using If-Match
+1. Execute a GET request with /rest/v1/system/ports/Port1 and verify that the response is 200 OK.
+2. Read the entity tag provided by the server
+3. Set the "tag" value to:
+```
+"tag": 601
+```
+4. Execute a PUT request with /rest/v1/system/ports/Port1 including and If-Match Header using entity tag read at step 2
+5. Verify that the response is 200 OK
+6. Confirm that tag value was updated
+
+#### Update port using If-Match (star as etag)
+1. Set the "tag" value to:
+```
+"tag": 602
+```
+2. Execute a PUT request with /rest/v1/system/ports/Port1 including an If-Match Header using '"*"' as entity tag
+3. Verify that the response is 200 OK
+4. Confirm that tag value was updated
+
+#### Update port using If-Match change applied
+1. Execute a GET request with /rest/v1/system/ports/Port1 and verify that the response is 200 OK.
+2. Read the entity tag provided by the server
+2. Execute a PUT request with /rest/v1/system/ports/Port1 including and If-Match Header using entity tag different than the one read at step 2
+3. Verify that the response is 204 NO CONTENT
+
+#### Update port using If-Match Precondition Failed
+1. Execute a GET request with /rest/v1/system/ports/Port1 and verify that the response is 200 OK.
+2. Read the entity tag provided by the server
+3. Set the "tag" value to:
+```
+"tag": 603
+```
+2. Execute a PUT request with /rest/v1/system/ports/Port1 including and If-Match Header using entity tag different than the one read at step 2
+3. Verify that the response is 412 PRECONDITION FAILED
+
 
 #### Update port name
 
@@ -998,7 +1035,7 @@ Period after exist.
 2. Execute a PUT request with /rest/v1/system/ports/Port1 and with the port data changed.
 3. Verify that the HTTP response is 400 BAD REQUEST.
 
-##### Valid range for arry type
+##### Valid range for array type
 
 1. Change the "interfaces" value to:
 ```
@@ -1061,6 +1098,20 @@ The test is passing for "updating a port" when the following results occur:
 - The HTTP response is 200 OK when executing a GET request with /rest/v1/system/ports/Port1.
 - The configuration data posted is the same as that of the retrieved port.
 
+The test is passing for "updating a port using If-Match" when the following results occur:
+- The HTTP response is 200 OK.
+- The HTTP response is 200 OK when executing a GET request with /rest/v1/system/ports/Port1.
+- The configuration data posted is the same as that of the retrieved port.
+
+The test is passing for "updating a port using If-Match and * as etag" when the following results occur:
+- The HTTP response is 200 OK.
+- The HTTP response is 200 OK when executing a GET request with /rest/v1/system/ports/Port1.
+- The configuration data posted is the same as that of the retrieved port.
+
+The test is passing for "updating a port using If-Match and a change already applied" when the The HTTP response is 200 OK.
+
+The test is passing for "updating a port using If-Match and a not matching etag" when the The HTTP response is 412 PRECONDITION FAILED
+
 The test is passing for "updating a port with the same name as another port" when the HTTP response is 400 BAD REQUEST.
 
 The test is passing for "updating a port with a valid string type" when the HTTP response is 200 OK.
@@ -1096,6 +1147,20 @@ The test is failing for "updating a port" when the following occurs:
 - The HTTP response is not equal to 200 OK.
 - The HTTP response is not equal to 200 OK when executing a GET request with /rest/v1/system/ports/Port1.
 - The configuration data posted is not the same as the data on the retrieved port.
+
+The test is failing for "updating a port using If-Match" when the following results occur:
+- The HTTP response is not equal to 200 OK.
+- The HTTP response is not equal to 200 OK when executing a GET request with /rest/v1/system/ports/Port1.
+- The configuration data posted is not the same as that of the retrieved port.
+
+The test is failing for "updating a port using If-Match and * as etag" when the following results occur:
+- The HTTP response is 200 OK.
+- The HTTP response is 200 OK when executing a GET request with /rest/v1/system/ports/Port1.
+- The configuration data posted is the same as that of the retrieved port.
+
+The test is failing for "updating a port using If-Match and a change already applied" when the The HTTP response is not equal to 204 NOT CONTENT.
+
+The test is failing for "updating a port using If-Match and a not matching etag" when the The HTTP response is not equal to 412 PRECONDITION FAILED
 
 The test is failing for "updating a port with the same name as another port" when the HTTP response is not equal to 400 BAD REQUEST.
 
@@ -1165,12 +1230,12 @@ Period after exist.
 "vlan_mode": "trunk",
 "ip6_address": "2001:0db8:85a3:0000:0000:8a2e:0370:7334",
 "external_ids": {"extid1key": "extid1value"},
-"bond_options": {"key1": "value1"},
+"bond_options": {},
 "mac": "01:23:45:67:89:ab",
 "other_config": {"cfg-1key": "cfg1val"},
 "bond_active_slave": "null",
 "ip6_address_secondary": ["01:23:45:67:89:ab"],
-"vlan_options": {"opt1key": "opt2val"},
+"vlan_options": {},
 "ip4_address": "192.168.0.1",
 "admin": "up"
 }
@@ -1183,6 +1248,7 @@ Period after exist.
 2. Execute a GET request on /rest/v1/system/ports and verify that the port is being deleted from the port list.
 3. Execute a GET request on /rest/v1/ports/system/Port1 and verify that the HTTP response is 404 NOT FOUND.
 4. Execute a DELETE request on /rest/v1/system/ports/Port2 and ensure that the  HTTP response is 404 NOT FOUND.
+5. Execute a DELETE request on  /rest/v1/system/ports/Port1 using Conditional request If-Match and verify HTTP response is 412 PRECONDITION_FAILED and 204 NOT_CONTENT
 
 ### Test result criteria
 
@@ -1193,7 +1259,10 @@ The test is passing for "deleting an existing port" when the following occurs:
 - The HTTP response is 204 NOT CONTENT.
 - There is no URI "/rest/v1/system/ports/Port1" in the port list that is returned from the /rest/v1/system/ports URI.
 - When doing a GET request on "/rest/v1/system/ports/Port1", the HTTP response is 404 NOT FOUND.
-
+- The HTTP response is 412 PRECONDITION FAILED if Conditional request If-Match provided entity tag does not match the Port entity-tag
+- The HTTP response is 204 NOT CONTENT if Conditional request If-Match provided entity tag matches the Port entity-tag
+- There is no URI "/rest/v1/system/ports/Port1" in the port list that is returned from the /rest/v1/system/ports URI.
+- When doing a GET request on "/rest/v1/system/ports/Port1", the HTTP response is 404 NOT FOUND.
 The test case is passing for "deleting a non-existent" port when the HTTP response is 404 NOT FOUND 1284.
 
 #### Test fail criteria
@@ -1292,7 +1361,7 @@ The test case validates the recursivity through the standard REST API GET method
  - b. Verify if the HTTP response is 200 OK.
  - c. Validate the first level depth returned interface object has Configuration, Statistics and Status keys present.
  - d. Validate the second level depth returned interface object has Configuration, Statistics and Status keys present.
- - e. Ensure that second level of depth inner data has the URIs /rest/v1/system/interfaces/50-{1..4} in the response data.
+ - e. Ensure that second level of depth inner data has the URIs /rest/v1/system/interfaces/50-{1-4} in the response data.
 
 5. Verify if response has a BAD_REQUEST status code by using a negative depth value.
 
@@ -1317,7 +1386,7 @@ The test case validates the recursivity through the standard REST API GET method
  - b. Verify if the HTTP response is 200 OK.
  - c. Validate the first level depth returned interface object has Configuration, Statistics and Status keys present.
  - d. Validate the second level depth returned interface object has Configuration, Statistics and Status keys present.
- - e. Ensure that second level of depth inner data has the URIs /rest/v1/system/interfaces/50-{1..4} in the response data.
+ - e. Ensure that second level of depth inner data has the URIs /rest/v1/system/interfaces/50-{1-4} in the response data.
 
 9. Verify if returns a BAD_REQUEST status code by using a negative depth value with an specific URI.
 
@@ -1434,12 +1503,12 @@ Port list is sorted by name
         "vlan_mode": "trunk",
         "ip6_address": "2001:0db8:85a3:0000:0000:8a2e:0370:7334",
         "external_ids": {"extid1key": "extid1value"},
-        "bond_options": {"key1": "value1"},
+        "bond_options": {},
         "mac": "01:23:45:67:89:ab",
         "other_config": {"cfg-1key": "cfg1val"},
         "bond_active_slave": "null",
         "ip6_address_secondary": ["01:23:45:67:89:ab"],
-        "vlan_options": {"opt1key": "opt2val"},
+        "vlan_options": {},
         "ip4_address": "192.168.0.1",
         "admin": "up"
     },
@@ -1589,13 +1658,13 @@ Where index is a number between 1 and 10.
         "vlan_mode": "trunk",
         "ip6_address": ["2001:0db8:85a3:0000:0000:8a2e:0370:{index with format 0000}"],
         "external_ids": {"extid1key": "extid1value"},
-        "bond_options": {"key1": "value1"},
+        "bond_options": {},
         "mac": ["01:23:45:67:89:(index_hex)"],
         "other_config": {"cfg-1key": "cfg1val"},
         "bond_active_slave": "null",
         "ip6_address_secondary": \
             ["2001:0db8:85a3:0000:0000:8a2e:0371:{index with format 0000}"],
-        "vlan_options": {"opt1key": "opt2val"},
+        "vlan_options": {},
         "ip4_address": "192.168.0.{index}",
         "admin": "up"
     },
@@ -1694,13 +1763,13 @@ Where index is a number between 1 and 10.
         "vlan_mode": "trunk",
         "ip6_address": ["2001:0db8:85a3:0000:0000:8a2e:0370:{index with format 0000}"],
         "external_ids": {"extid1key": "extid1value"},
-        "bond_options": {"key1": "value1"},
+        "bond_options": {},
         "mac": ["01:23:45:67:89:(index_hex)"],
         "other_config": {"cfg-1key": "cfg1val"},
         "bond_active_slave": "null",
         "ip6_address_secondary": \
             ["2001:0db8:85a3:0000:0000:8a2e:0371:{index with format 0000}"],
-        "vlan_options": {"opt1key": "opt2val"},
+        "vlan_options": {},
         "ip4_address": "192.168.0.{index}",
         "admin": "up"
     },

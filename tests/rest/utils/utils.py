@@ -17,10 +17,11 @@
 
 import json
 import httplib
-import urllib
 import random
+import urllib
 
 from copy import deepcopy
+from string import rstrip
 
 PORT_DATA = {
     "configuration": {
@@ -41,15 +42,18 @@ PORT_DATA = {
         "ip6_address_secondary": ["01:23:45:67:89:ab"],
         "vlan_options": {},
         "ip4_address": "192.168.0.1",
-        "admin": "up"
+        "admin": "up",
+        "qos_config": {}
     },
     "referenced_by": [{"uri": "/rest/v1/system/bridges/bridge_normal"}]
 }
 
 
 def get_switch_ip(switch):
-    return switch.cmd("python -c \"import socket;\
-                      print socket.gethostbyname(socket.gethostname())\"")
+    switch_ip = switch.cmd("python -c \"import socket;\
+                            print socket.gethostbyname(socket.gethostname())\"")
+    switch_ip = switch_ip.rstrip("\r\n")
+    return switch_ip
 
 
 def create_test_port(ip):
@@ -184,12 +188,17 @@ def execute_port_operations(data, port_name, http_method, operation_uri,
 
     return results
 
-def execute_request(path, http_method, data, ip, full_response=False, xtra_header=None):
+
+def execute_request(path, http_method, data, ip, full_response=False,
+                    xtra_header=None):
+
+    url = path.replace(';', '&')
+
     headers = {"Content-type": "application/json", "Accept": "text/plain"}
     if xtra_header:
-       headers.update(xtra_header)
+        headers.update(xtra_header)
     conn = httplib.HTTPConnection(ip, 8091)
-    conn.request(http_method, path, data, headers)
+    conn.request(http_method, url, data, headers)
     response = conn.getresponse()
     status_code, response_data = response.status, response.read()
     conn.close()
@@ -253,3 +262,40 @@ def random_ip6_address():
     ipv6 = ':'.join('{:x}'.format(random.randint(0, 2 ** 16 - 1))
                     for i in range(8))
     return ipv6
+
+
+def login(dut, user_name, user_password):
+    conn = httplib.HTTPConnection(dut.SWITCH_IP, 8091)
+    url = '/login'
+
+    body = {'username': user_name, 'password': user_password}
+    headers = {"Content-type": "application/x-www-form-urlencoded",
+               "Accept": "text/plain"}
+    conn.request('POST', url, urllib.urlencode(body), headers)
+    response = conn.getresponse()
+    dut.HEADERS = {'Cookie': response.getheader('set-cookie')}
+
+    if not dut.HEADERS['Cookie'] is None:
+        return True
+    else:
+        return False
+
+
+def get_json(response_data):
+    json_data = {}
+    try:
+        json_data = json.loads(response_data)
+    except:
+        assert False, "Malformed JSON"
+
+    return json_data
+
+
+def validate_keys_complete_object(json_data):
+    assert json_data["configuration"] is not None, \
+        "configuration key is not present"
+    assert json_data["statistics"] is not None, \
+        "statistics key is not present"
+    assert json_data["status"] is not None, "status key is not present"
+
+    return True

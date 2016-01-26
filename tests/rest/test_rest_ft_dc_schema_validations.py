@@ -13,12 +13,24 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 #
-import pytest
 import json
 from opstestfw.switch.CLI import *
 from opstestfw import *
+
+# The test case verifies that the schema validations are able to
+# detect invalid data in the PUT request for declarative configuration.
+#
+# The following topology is used:
+#
+# +----------------+         +----------------+
+# |                |         |                |
+# |                |         |                |
+# |      Host      +---------+     Switch     |
+# |                |         |                |
+# |                |         |                |
+# +----------------+         +----------------+
+
 topoDict = {"topoExecution": 3000,
-            "topoTarget": "dut01",
             "topoDevices": "dut01 wrkston01",
             "topoLinks": "lnk01:dut01:wrkston01",
             "topoFilters": "dut01:system-category:switch,\
@@ -30,6 +42,46 @@ restClientAddr = "10.10.10.3"
 broadcast = "10.10.10.255"
 netmask = "255.255.255.0"
 subnetMaskBits = 24
+put_url = "/rest/v1/system/full-configuration?type=running"
+
+put_data = {
+    "Interface": {
+        "49": {
+            "name": "49",
+            "type": "system"
+        }
+    },
+    "Port": {
+        "p1": {
+            "admin": "up",
+            "name": "p1",
+            "vlan_mode": "trunk",
+            "trunks": [1]
+        }
+    },
+    "System": {
+        "aaa": {
+            "fallback": "false",
+            "radius": "false"
+        },
+        "asset_tag_number": "",
+        "bridges": {
+            "bridge_normal": {
+                "datapath_type": "",
+                "name": "bridge_normal",
+                "ports": [
+                    "p1"
+                ]
+            }
+        },
+        "hostname": "ops",
+        "vrfs": {
+            "vrf_default": {
+                "name": "vrf_default"
+            }
+        }
+    }
+}
 
 
 def switch_reboot(dut01):
@@ -41,19 +93,15 @@ def switch_reboot(dut01):
 
 
 def config_rest_environment(dut01, wrkston01):
-    #Configuring REST environment
-    global switchMgmtAddr
-    global restClientAddr
-
     retStruct = InterfaceIpConfig(deviceObj=dut01,
                                   interface="mgmt",
                                   addr=switchMgmtAddr,
                                   mask=subnetMaskBits,
                                   config=True)
+
     assert retStruct.returnCode() == 0, 'Failed to configure IP on switchport'
     info('### Successfully configured ip on switch port ###\n')
-    cmdOut = dut01.cmdVtysh(command="show run")
-    info('### Running config of the switch:\n' + cmdOut + ' ###\n')
+
     info('### Configuring workstations ###\n')
     retStruct = wrkston01.NetworkConfig(
                                 ipAddr=restClientAddr,
@@ -61,14 +109,17 @@ def config_rest_environment(dut01, wrkston01):
                                 broadcast=broadcast,
                                 interface=wrkston01.linkPortMapping['lnk01'],
                                 config=True)
-    assert retStruct.returnCode() == 0, 'Failed to config IP on workstation'
-    info('### Successfully configured IP on workstation ###\n')
+
+    assert retStruct.returnCode() == 0, 'Failed to configure IP on workstation'
+    info('### Successfully configured IP on the workstation ###\n')
+
     cmdOut = wrkston01.cmd("ifconfig " + wrkston01.linkPortMapping['lnk01'])
-    info('### Ifconfig info for workstation 1:\n' + cmdOut + '###\n')
+    info('### Ifconfig info for the workstation: ###\n' + cmdOut)
+
     retStruct = GetLinuxInterfaceIp(deviceObj=wrkston01)
-    assert retStruct.returnCode() == 0, 'Failed to get linux interface\
-    ip on switch'
-    info('### Successful in getting linux interface ip on workstation ###\n')
+    assert retStruct.returnCode() == 0, 'Failed to get interface ip on switch'
+    info("### Successful in getting linux interface "
+         "ip on the workstation ###\n")
 
     retStruct = returnStruct(returnCode=0)
     return retStruct
@@ -81,50 +132,92 @@ def deviceCleanup(dut01, wrkston01):
                                 broadcast=broadcast,
                                 interface=wrkston01.linkPortMapping['lnk01'],
                                 config=False)
-    assert retStruct.returnCode() == 0, 'Failed to unconfigure\
-    IP address on workstation 1'
-    info('### Successfully unconfigured ip on Workstation 1 ###\n')
+
+    assert retStruct.returnCode() == 0, 'Failed to clean on the workstation'
+    info('### Successfully unconfigured ip on the workstation ###\n')
+
     cmdOut = wrkston01.cmd("ifconfig " + wrkston01.linkPortMapping['lnk01'])
-    info('### Ifconfig info for workstation 1:\n' + cmdOut + ' ###')
+    info('### Ifconfig info for the workstation: ###\n' + cmdOut)
+
     retStruct = InterfaceIpConfig(deviceObj=dut01,
                                   interface="mgmt",
                                   addr=switchMgmtAddr,
                                   mask=subnetMaskBits,
                                   config=False)
-    assert retStruct.returnCode() == 0, 'Failed to unconfigure\
-    IP address on dut01 port'
-    info('### Unconfigured IP address on dut01 port " ###\n')
-    cmdOut = dut01.cmdVtysh(command="show run")
-    info('Running config of the switch:\n' + cmdOut)
+
+    assert retStruct.returnCode() == 0, 'Failed to clean on dut01 port'
+    info('### Unconfigured IP address on dut01 port ###\n')
+
     retStruct = returnStruct(returnCode=0)
     return retStruct
 
 
-def restTestVrfs(wrkston01):
+def restTestDcValidData(wrkston01):
+    info("### Testing DC schema validations using VALID data ###\n")
     retStruct = wrkston01.RestCmd(switch_ip=switchMgmtAddr,
-                                  url="/rest/v1/system/vrfs",
-                                  method="GET")
-    assert retStruct.returnCode(
-    ) == 0, 'Failed to Execute rest command \
-    "GET for url=/rest/v1/system/vrfs"'
-    info('### Success in executing the rest command \
-    "GET for url=/rest/v1/system/vrfs" ###\n')
-    info('http return code' + retStruct.data['http_retcode'])
-    assert retStruct.data['http_retcode'].find(
-        '200') != -1, 'Rest GET vrfs Failed\n' +\
-        retStruct.data['response_body']
-    info('### Success in Rest GET vrfs ###\n')
-    info('###' + retStruct.data['response_body'] + '###\n')
-    assert retStruct.data["response_body"].find(
-        '/rest/v1/system/vrfs/vrf_default') != -1, 'Failed in checking\
-        the GET METHOD JSON response validation for vrfs'
-    info('### Success in Rest GET for vrfs ###\n')
+                                  url=put_url,
+                                  method="PUT",
+                                  data=put_data)
+
+    assert retStruct.returnCode() == 0, "Failed to PUT for url=%s" % post_url
+    info("### Successfully executed PUT for url=%s ###\n" % put_url)
+
+    assert retStruct.data['http_retcode'].find('200') != -1, \
+           'PUT request failed.\n' + retStruct.data['response_body']
+    info("### Received successful HTTP status code ###\n")
+
+    retStruct = returnStruct(returnCode=0)
+    return retStruct
+
+
+def restTestDcInvalidData(wrkston01):
+    info("### Testing DC schema validations using INVALID data ###\n")
+    erroneous_fields = []
+
+    info("### Removing mandatory field hostname from System ###\n")
+    field = "hostname"
+    del put_data["System"][field]
+    erroneous_fields.append(field)
+
+    info("### Setting an invalid port reference for bridge_normal ###\n")
+    field = "ports"
+    put_data["System"]["bridges"]["bridge_normal"][field] = ["p2"]
+    erroneous_fields.append(field)
+
+    info("### Changing the type of Interface name to an incorrect type ###\n")
+    field = "name"
+    put_data["Interface"]["49"][field] = 1
+    erroneous_fields.append(field)
+
+    info("### Setting an out of range value for Port trunks ###\n")
+    field = "trunks"
+    put_data["Port"]["p1"][field] = [0]
+    erroneous_fields.append(field)
+
+    retStruct = wrkston01.RestCmd(switch_ip=switchMgmtAddr,
+                                  url=put_url,
+                                  method="PUT",
+                                  data=put_data)
+
+    assert retStruct.returnCode() == 0, "Failed to PUT for url=%s" % put_url
+    info("### Successfully executed PUT for url=%s ###\n" % put_url)
+
+    assert retStruct.data['http_retcode'].find('400') != -1, \
+           'Expecting an error response.\n' + retStruct.data['response_body']
+    info("### Received expected non-successful HTTP status code ###\n")
+
+    info("### Verifying there was an error for each tampered field ###\n")
+    response_body = json.loads(retStruct.data["response_body"].strip())
+
+    assert len(response_body["error"]) >= len(erroneous_fields), \
+           'The number of errors in the response does not match\n'
+    info("### Received the expected number of errors ###\n")
+
     retStruct = returnStruct(returnCode=0)
     return retStruct
 
 
 class Test_ft_framework_rest:
-
     def setup_class(cls):
         # Create Topology object and connect to devices
         Test_ft_framework_rest.testObj = testEnviron(topoDict=topoDict)
@@ -154,17 +247,22 @@ class Test_ft_framework_rest:
         dut01Obj = self.topoObj.deviceObjGet(device="dut01")
         wrkston01Obj = self.topoObj.deviceObjGet(device="wrkston01")
         retStruct = config_rest_environment(dut01Obj, wrkston01Obj)
-        assert retStruct.returnCode() == 0, 'Fail in config REST environment'
+        assert retStruct.returnCode() == 0, 'Failed to config REST environment'
         info('### Successful in config REST environment test ###\n')
 
-    def test_restTestVrfs(self):
-        info('#######################################################\n')
-        info('######   Testing REST Vrfs basic functionality   ####\n')
-        info('#######################################################\n')
+    def test_restTestDcSchemaValidations(self):
+        info('##################################################\n')
+        info('######   Testing REST DC Schema Validations   ####\n')
+        info('##################################################\n')
         wrkston01Obj = self.topoObj.deviceObjGet(device="wrkston01")
-        retStruct = restTestVrfs(wrkston01Obj)
-        assert retStruct.returnCode() == 0, 'Failed to test rest Vrfs'
-        info('### Successful in test rest Vrfs ###\n')
+
+        retStruct = restTestDcValidData(wrkston01Obj)
+        assert retStruct.returnCode() == 0, 'Failed to test DC valid data'
+
+        retStruct = restTestDcInvalidData(wrkston01Obj)
+        assert retStruct.returnCode() == 0, 'Failed to test DC invalid data'
+
+        info('### Successful in testing DC Schema Validations ###\n')
 
     def test_clean_up_devices(self):
         info('#######################################################\n')

@@ -102,6 +102,10 @@
       <column name="asset_tag_number">
       </column>
 
+      <column name="sflow">
+        sFlow(R) configuration.
+      </column>
+
       <column name="other_config" key="stats-update-interval"
               type='{"type": "integer", "minInteger": 5000}'>
         <p>
@@ -146,6 +150,18 @@
         </p>
       </column>
 
+      <column name="other_config" key="cli_session_timeout"
+              type='{"type": "integer", "minInteger": 0, "maxInteger": 43200}'>
+        <p>
+            This key specifies cli idle session timeout in minutes.
+            Set this value to 0 to disable session timeout.
+        </p>
+        <p>
+            Default value is 30.
+        </p>
+      </column>
+
+
       <group title="TFTP Server Configurations">
         <column name="other_config" key="tftp_server_enable"
                 type='{"type": "boolean"}'>
@@ -161,6 +177,15 @@
           would be enabled. This config is valid only if TFTP server is enabled.
         </column>
       </group>
+
+    <group title="SFTP Server Configurations">
+        <column name="other_config" key="sftp_server_enable"
+                type='{"type": "boolean"}'>
+        Set this value to <code>true</code> to enable SFTP server
+        and to set to <code>false</code> to disable it. If not set, SFTP server
+        would be disabled by default.
+       </column>
+    </group>
 
     <group title="Source Interface Selection Configurations">
         <column name="other_config" key="tftp_source"
@@ -271,6 +296,17 @@
         </p>
         <p>
           Default value is 4.
+        </p>
+      </column>
+
+      <column name="other_config" key="lldp_reinit"
+              type='{"type": "integer", "minInteger": 1, "maxInteger": 10}'>
+        <p>
+          The amount of time in seconds to wait before performing LLDP
+          initialization on any interface.
+        </p>
+        <p>
+          Default value is 2.
         </p>
       </column>
    </group>
@@ -544,6 +580,21 @@
         </p>
       </column>
 
+      <column name="software_info" key="os_name">
+        <p>
+          This column is used for the software info. The value of the key
+          'os_name' will identify the operating system, without a version
+          component, and suitable for presentation to the user. If not set,
+          defaults to <code>os_name=OpenSwitch</code>. Example:
+          <code>os_name=Fedora</code> or
+          <code>os_name="Debian GNU/Linux"</code>.  This is equivalent of
+          <code>NAME</code> variable of the <code>/etc/os-release</code>
+          file.  Please refer to
+          <code>http://www.freedesktop.org/software/systemd/man/os-release.html</code>
+          for more detailed information.
+        </p>
+      </column>
+
       <column name="software_info" key="bios_release_date">
       </column>
 
@@ -591,6 +642,12 @@
         This column used for AAA feature. The valid values for the key 'fallback'
         are true or false based on the user request for authentication. If
         fallback=true, fall to local authentication if radius server is not reachable.
+      </column>
+      <column name="aaa" key="ssh_passkeyauthentication_enable" type='{"type": "boolean"}'>
+        Controls whether ssh password based authentication is enabled. Default is true.
+      </column>
+      <column name="aaa" key="ssh_publickeyauthentication_enable" type='{"type": "boolean"}'>
+        Controls whether ssh public key authentication is enabled. Default is true.
       </column>
       <column name="manager_options">
         Database clients to which the OpenSwitch database server should
@@ -776,6 +833,34 @@
         <column name="ecmp_config" key="resilient_hash_enabled" type='{"type": "boolean"}'>
             Determines whether ECMP hashing preserves traffic flows when ECMP group membership changes.
             Default is true.
+        </column>
+    </group>
+
+    <group title="QoS configuration">
+      <p>
+        Specifies QoS (Quality of Service) configuration options that are
+        global or are the configured default to use if no per-port override
+        has been specified.
+      </p>
+
+        <column name="qos_config" key="qos_trust"
+                type='{"type": "string",
+                       "enum": ["set", ["none", "cos", "dscp"]]}'>
+          Specifies the global default QoS Trust Mode. A value of 'none' will
+          not trust any packet code point fields, and remark all of them to 0.
+          A value of 'cos' will trust the 802.1Q priority code point and
+          preserve DSCP or IP-ToS. A value of 'dscp' will trust DSCP, and
+          optionally remark the 802.1Q priority code point to match. If the
+          key is not specified, then the system will use the factory default
+          value: 'none'.
+        </column>
+        <column name="qos_dscp_map_entries">
+          Contains references to each entry in the global DSCP map used by
+          port trust mode DSCP.
+        </column>
+        <column name="qos_cos_map_entries">
+          Contains references to each entry in the global COS map used by
+          port trust mode COS.
         </column>
     </group>
 
@@ -1089,7 +1174,19 @@
       </column>
    </group>
   </table>
-
+  <table name="Filter_List" title="Filter List">
+    <group title="IP AS Path filter List Configuration">
+      <column name="name">
+        Name of the filter list.
+      </column>
+      <column name="action">
+        Action to either "permit" or "deny".
+      </column>
+      <column name="match">
+      Specify POSIX regex expression to match.
+      </column>
+    </group>
+  </table>
   <table name="Prefix_List" title="Prefix List">
     <group title="Global IP Address Prefix List Configuration">
       <column name="name">
@@ -1133,7 +1230,22 @@
       </column>
    </group>
   </table>
-
+  <table name="Community_Filter" title="Community Filter">
+   <group title="Global Community and Extended Community Configuration">
+     <column name="name">
+       Name of the list.
+     </column>
+     <column name="match">
+       Regular expression.
+     </column>
+     <column name="action">
+       There are two types, either "permit" or "deny".
+     </column>
+     <column name="type">
+       There are two types, either "extcommunity-list" or "community-list".
+     </column>
+   </group>
+  </table>
   <table name="Route" title="Routes Information Base">
     <p>
       Global routes information base within an <ref table="System"/>.
@@ -1436,9 +1548,8 @@
       Default is 180 seconds.
       </column>
       <column name="redistribute">
-      Allows redistribution of routes from various protocols.
-      For example: static, connected. Enabling of redistribution protocols is not mutually
-      exclusive.
+      Specifies which protocol routes should be redistributed into BGP.
+      The routes can be filtered by specifying the route-map.
       </column>
       <column name="always_compare_med">
       Compares MED (Multi-Exit Discriminitor) from different neighbors.
@@ -1456,6 +1567,14 @@
       <column name="bgp_neighbors" keyname="ip_or_group_name">
         BGP neighbors or neighbor groups, keyed by IP for the former or any
 	string name for the latter.
+      </column>
+      <column name="fast_external_failover">
+        Enables fast external failover for BGP directly connected peering sessions.
+        Default is false.
+      </column>
+      <column name="log_neighbor_changes">
+        Enables logging of BGP neighbor status changes.
+        Default is false.
       </column>
     </group>
    <group title="Status">
@@ -1537,17 +1656,22 @@
       Minimum interval between sending BGP routing updates. Range: 0-600 seconds.
       </column>
 
+      <column name="ebgp_multihop">
+      If set to "true", allows BGP connections with peers that are not directly connected.
+      Default is "false".
+      </column>
+
+      <column name="ttl_security_hops">
+      Specifies the maximum number of hops to the BGP peer.
+      </column>
+
+      <column name="update_source">
+      Specifies the source-address to establish BGP connections to neighbors.
+      </column>
+
       <column name="maximum_prefix_limit">
       Maximum number of prefixes that can be accepted on a BGP peer
       session. When the limit is exceeded, a system log message is logged.
-      </column>
-
-      <column name="capability">
-      Advertise dynamic/ORF capabilities to the peer.
-      </column>
-
-      <column name="override_capability">
-      Override capability negotiation result.
       </column>
 
       <column name="inbound_soft_reconfiguration">
@@ -1568,12 +1692,32 @@
       The password for this entry.
       </column>
 
-      <column name="strict_capability_match">
-      Strict capability negotiation match.
-      </column>
-
       <column name="timers">
       BGP per neighbor timers - Connect timer/Keep-alive Interval.
+      </column>
+
+      <column name="filter_lists">
+      Name and direction of the filter lists.
+      </column>
+
+      <column name="filter_lists" key="in">
+      Filter list associated with incoming routes.
+      </column>
+
+      <column name="filter_lists" key="out">
+      Filter list associated with outbound routes.
+      </column>
+
+      <column name="prefix_lists">
+      Name and direction of the prefix lists.
+      </column>
+
+      <column name="prefix_lists" key="in">
+      Prefix list associated with incoming routes.
+      </column>
+
+      <column name="prefix_lists" key="out">
+      Prefix list associated with outbound routes.
       </column>
 
       <column name="route_maps">
@@ -1776,6 +1920,68 @@
    </group>
   </table>
 
+  <table name="QoS_DSCP_Map_Entry"
+         title="Quality of Service Differentiated Services Code Point Map">
+    <p>
+        Contains DSCP map entries used by QoS Trust Mode. It associates
+        each code point to local_priority (required), and (optionally),
+        priority code point, color and description.
+    </p>
+
+    <group title="Configuration">
+      <column name="code_point">
+        The identifier for an entry in the DSCP map that represents the
+        Differentiated Services Code Point (DSCP) value for this entry.
+      </column>
+      <column name="local_priority">
+        This is a switch internal meta-data value that will be associated with
+        the packet. This value will be used later to select the egress queue
+        for the packet.
+      </column>
+      <column name="color">
+        It may be used later in the pipeline in packet-drop decision points.
+        The default is 'green'.
+      </column>
+      <column name="priority_code_point">
+        The 802.1Q priority that will be assigned to the packet. If the packet
+        is transmitted with a VLAN tag, this value will be in the Priority
+        Code Point field. If this value is not specified, the default behavior
+        is that the priority of the packet will not be changed.
+      </column>
+      <column name="description">
+        Used for customer documentation.
+      </column>
+    </group>
+  </table>
+
+  <table name="QoS_COS_Map_Entry"
+         title="Quality of Service Class of Service Map">
+    <p>
+        Contains COS map entries used by QoS Trust Mode. It associates each
+        priority to local_priority (required), and (optionally), color and
+        description.
+    </p>
+
+    <group title="Configuration">
+      <column name="code_point">
+        The identifier for an entry in the COS map that is the 802.1Q priority
+        code point for this entry.
+      </column>
+      <column name="local_priority">
+        This is a switch internal meta-data value that will be associated with
+        the packet. This value will be used later to select the egress queue
+        for the packet.
+      </column>
+      <column name="color">
+        It may be used later in the pipeline in packet-drop decision points.
+        The default is 'green'.
+      </column>
+      <column name="description">
+        Used for customer documentation.
+      </column>
+    </group>
+  </table>
+
  <table name="Port" table="Port or bond configuration.">
     <p>A port within a <ref table="Bridge"/>.</p>
     <p>Most commonly, a port has exactly one ``interface,'' pointed to by its
@@ -1832,6 +2038,24 @@
       <column name="hw_config" key="internal-vlan">
         The VLAN associated with l3 interfaces.
       </column>
+    </group>
+
+    <group title="QoS configuration">
+      <p>
+        Specifies QoS (Quality of Service) port configuration options.
+      </p>
+
+        <column name="qos_config" key="qos_trust"
+                type='{"type": "string",
+                       "enum": ["set", ["none", "cos", "dscp"]]}'>
+          Specifies the port QoS Trust Mode. A value of 'none' will
+          not trust any packet code point fields, and remark all of them to 0.
+          A value of 'cos' will trust the 802.1Q priority code point and
+          preserve DSCP or IP-ToS. A value of 'dscp' will trust DSCP, and
+          optionally remark the 802.1Q priority code point to match. If the
+          key is not specified, then the configured global default value will
+          be used.
+        </column>
     </group>
 
     <group title="VLAN Configuration">
@@ -1941,8 +2165,16 @@
       <p>These columns apply only to bonded ports.  Their values are otherwise
           ignored.</p>
 
-      <column name="bond_mode"> <p>The type of bonding used for a bonded port.
-              Defaults to <code>l3-src-dst-hash</code> if not assigned.  </p>
+      <column name="bond_mode">
+        <p>
+          The type of bonding used for a bonded port. Bond mode controls
+          the selection of a interface from a group of aggregate interfaces
+          with which to transmit a frame. This selection is performed with
+          a hash function using either source and destination mac addresses
+          (l2), mac addresses plus VLAN ID (l2vid), ip addresses (l3) or
+          tcp/udp ports (l4) as parameters.
+          Defaults to <code>l3-src-dst-hash</code> if not assigned.
+        </p>
       </column>
 
       <group title="LACP Configuration">
@@ -1990,6 +2222,17 @@
             rate of once every 30 seconds.
           </p>
         </column>
+
+        <column name="other_config" key="lacp-fallback"
+          type='{"type": "boolean"}'>
+          <p>
+            The LACP fallback which should be used on this <ref table="Port"/>.
+            Set this value to <code>true</code> to enable always one interface active
+            and set to <code>false</code> to block all interfaces when LACP = off.
+            If not specified, lacp-fallback is assumed to be false.
+          </p>
+        </column>
+
       </group>
     </group>
    <group title="L3 Configuration">
@@ -2018,7 +2261,10 @@
         port's actual MAC address, nor will setting it change the port's actual
         MAC address.
       </column>
-
+      <column name="other_config" key="sflow-enabled" type='{"type": "boolean"}'>
+        Determines whether sflow sampling is enabled on this port.
+        Default is true.
+      </column>
    </group>
 
     <group title="Port Status">
@@ -2627,6 +2873,13 @@
         The LACP port priority of this <ref table="Interface"/>.  In LACP
         negotiations <ref table="Interface"/>s with numerically lower
         priorities are preferred for aggregation.
+      </column>
+
+      <column name="other_config" key="lacp-aggregation-key"
+              type='{"type": "integer", "minInteger": 1, "maxInteger": 65535}'>
+        The LACP aggregation key of this <ref table="Interface"/>. <ref
+        table="Interface"/>s with different aggregation keys may not be active
+        within a given <ref table="Port"/> at the same time.
       </column>
     </group>
 
@@ -3273,6 +3526,87 @@
 
       <column name="external_ids"/>
     </group>
+  </table>
+
+  <table name="sFlow">
+    <p>A set of sFlow(R) configurations.  sFlow is a protocol for remote
+    monitoring of switches.</p>
+
+    <column name="name">
+      sFlow identifier for the configuration. Should be alphanumeric.
+    </column>
+
+    <column name="targets">
+      sFlow collectors in the form
+      <code><var>ip</var>:<var>port</var></code>.
+      Port defaults to 6343 if not specified.
+      Can have multiple collectors. Atleast one target has to be
+      configured for sflow to be enabled. Collectors can only be reached over
+      vrf_default.
+    </column>
+
+    <column name="sampling">
+      Specifies the rate at which packets should be sampled and sent
+      to the collector. If not specified, rate defaults to 4096, which means
+      one out of 4096 packets, on average, will be sent to the collector.
+    </column>
+
+    <column name="sampling_per_speed">
+      The sampling rate can be configured per interface-speed (in Mbps) which
+      means the rate will be applied only for interfaces that match the speed.
+      For example, `sflow sampling 1024 1G` means a sampling rate of 1024 is
+      applied to all the 1Gig interfaces on the system. If interface-speed is
+      not specified, the global rate is applied on the interface.
+    </column>
+    <column name="sampling_per_speed" key="1G">
+      Sampling rate for the 1 Gigabit interfaces.
+    </column>
+    <column name="sampling_per_speed" key="10G">
+      Sampling rate for the 10 Gigabit interfaces.
+    </column>
+    <column name="sampling_per_speed" key="40G">
+      Sampling rate for the 40 Gigabit interfaces.
+    </column>
+    <column name="sampling_per_speed" key="100G">
+      Sampling rate for the 100 Gigabit interfaces.
+    </column>
+
+    <column name="polling">
+      Specifies the interval at which counter statistics are send to the
+      collector. If not specified, interval defaults to 30 seconds
+    </column>
+
+    <column name="header">
+      Number of bytes of a sampled packet to send to the collector.
+      If not specified, the default is 128 bytes.
+    </column>
+
+    <column name="max_datagram">
+      Maximum number of bytes that will be send in the sflow datagram.
+      If not specified, the default is 1400 bytes.
+    </column>
+
+    <column name="agent">
+      Name of the network device whose IP address should be reported as the
+      ``agent address'' to collectors.  If not specified, the agent IP is
+      derived from the first interface in alphabetical order.
+    </column>
+
+    <column name="agent_addr_family">
+      Address type of agent address reported. If agent interface has both
+      IPv4 and IPv6 address configured, then this column selects which address
+      will be used. Defaults to IPv4.
+    </column>
+
+    <column name="external_ids"/>
+
+    <column name="statistics">
+      Key value pairs that has sampling statistics.
+    </column>
+    <column name="statistics" key="num_sampled_pkts">
+      Total number of sampled packets sent to the collector.
+    </column>
+
   </table>
 
   <table name="CLI_Alias">

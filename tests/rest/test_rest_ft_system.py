@@ -18,6 +18,7 @@ import json
 from opstestfw.switch.CLI import *
 from opstestfw import *
 topoDict = {"topoExecution": 3000,
+            "topoTarget": "dut01",
             "topoDevices": "dut01 wrkston01",
             "topoLinks": "lnk01:dut01:wrkston01",
             "topoFilters": "dut01:system-category:switch,\
@@ -111,7 +112,6 @@ def restTestSystem(wrkston01):
             "logrotate_config": {},
             "hostname": "openswitch",
             "manager_options": [],
-            "subsystems": ["/rest/v1/system/subsystems/base"],
             "asset_tag_number": "",
             "ssl": [],
             "mgmt_intf": {

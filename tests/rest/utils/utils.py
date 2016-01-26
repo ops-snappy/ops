@@ -18,8 +18,10 @@
 import json
 import httplib
 import random
+import urllib
 
 from copy import deepcopy
+from string import rstrip
 
 PORT_DATA = {
     "configuration": {
@@ -40,15 +42,18 @@ PORT_DATA = {
         "ip6_address_secondary": ["01:23:45:67:89:ab"],
         "vlan_options": {},
         "ip4_address": "192.168.0.1",
-        "admin": "up"
+        "admin": "up",
+        "qos_config": {}
     },
     "referenced_by": [{"uri": "/rest/v1/system/bridges/bridge_normal"}]
 }
 
 
 def get_switch_ip(switch):
-    return switch.cmd("python -c \"import socket;\
-                      print socket.gethostbyname(socket.gethostname())\"")
+    switch_ip = switch.cmd("python -c \"import socket;\
+                            print socket.gethostbyname(socket.gethostname())\"")
+    switch_ip = switch_ip.rstrip("\r\n")
+    return switch_ip
 
 
 def create_test_port(ip):
@@ -57,7 +62,7 @@ def create_test_port(ip):
                                                  "POST",
                                                  json.dumps(PORT_DATA),
                                                  ip)
-    return status_code
+    return status_code, response_data
 
 
 def update_test_field(switch_ip, path, field, new_value):
@@ -257,3 +262,40 @@ def random_ip6_address():
     ipv6 = ':'.join('{:x}'.format(random.randint(0, 2 ** 16 - 1))
                     for i in range(8))
     return ipv6
+
+
+def login(dut, user_name, user_password):
+    conn = httplib.HTTPConnection(dut.SWITCH_IP, 8091)
+    url = '/login'
+
+    body = {'username': user_name, 'password': user_password}
+    headers = {"Content-type": "application/x-www-form-urlencoded",
+               "Accept": "text/plain"}
+    conn.request('POST', url, urllib.urlencode(body), headers)
+    response = conn.getresponse()
+    dut.HEADERS = {'Cookie': response.getheader('set-cookie')}
+
+    if not dut.HEADERS['Cookie'] is None:
+        return True
+    else:
+        return False
+
+
+def get_json(response_data):
+    json_data = {}
+    try:
+        json_data = json.loads(response_data)
+    except:
+        assert False, "Malformed JSON"
+
+    return json_data
+
+
+def validate_keys_complete_object(json_data):
+    assert json_data["configuration"] is not None, \
+        "configuration key is not present"
+    assert json_data["statistics"] is not None, \
+        "statistics key is not present"
+    assert json_data["status"] is not None, "status key is not present"
+
+    return True

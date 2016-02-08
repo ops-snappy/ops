@@ -283,6 +283,18 @@
             "max": 1
           }
         },
+        "acls": {
+            "category": "configuration",
+            "relationship": "1:m",
+            "type": {
+                "key": {
+                "type": "uuid",
+                "refTable": "ACL"
+                },
+                "min": 0,
+                "max": "unlimited"
+            }
+        },
         "other_config": {
           "category": "configuration",
           "type": {
@@ -3315,6 +3327,77 @@
             "max": "unlimited"
           }
         },
+        "acl_applied": {
+            "category": "configuration",
+            "relationship": "reference",
+            "type": {
+                "key": {
+                    "type": "uuid",
+                    "refTable": "Interface",
+                    "refType" : "weak"
+                 },
+                 "value": "string",
+                 "min": 0,
+                 "max": 8
+            }
+        },
+        "aclv4_in_cur": {
+            "category": "configuration",
+            "relationship": "reference",
+            "type": {
+                "key": {
+                    "type": "uuid",
+                    "refTable": "ACL",
+                    "refType" : "weak"
+                },
+                "min": 0,
+                "max": 1
+            }
+        },
+        "aclv4_in_want": {
+            "category": "configuration",
+            "relationship": "reference",
+            "type": {
+                "key": {
+                    "type": "uuid",
+                    "refTable": "ACL",
+                    "refType" : "weak"
+                },
+                "min": 0,
+                "max": 1
+            }
+        },
+        "aclv4_in_want_version": {
+            "category": "configuration",
+            "type": {
+                "key": {
+                    "type": "integer",
+                    "minInteger": 0,
+                    "maxInteger": 4294967295
+                }
+            }
+        },
+        "aclv4_in_want_status": {
+            "category": "status",
+            "type": {
+                "key": "string",
+                "value": "string",
+                "min": 0,
+                "max": "unlimited"
+            }
+        },
+        "aclv4_in_statistics": {
+            "category": "status",
+            "type": {
+                "key": {
+                    "type": "integer",
+                    "minInteger": 0
+                },
+                "min": 0,
+                "max": 512
+            },
+            "ephemeral": true
+        },
         "other_config": {
           "category": "configuration",
           "type": {
@@ -3757,6 +3840,77 @@
             "max": "unlimited"
           },
           "ephemeral": true
+        },
+        "acl_applied": {
+            "category": "configuration",
+            "relationship": "reference",
+            "type": {
+                "key": {
+                    "type": "uuid",
+                    "refTable": "Interface",
+                    "refType" : "weak"
+                 },
+                 "value": "string",
+                 "min": 0,
+                 "max": 8
+            }
+        },
+        "aclv4_in_cur": {
+            "category": "configuration",
+            "relationship": "reference",
+            "type": {
+                "key": {
+                    "type": "uuid",
+                    "refTable": "ACL",
+                    "refType" : "weak"
+                },
+                "min": 0,
+                "max": 1
+            }
+        },
+        "aclv4_in_want": {
+            "category": "configuration",
+            "relationship": "reference",
+            "type": {
+                "key": {
+                    "type": "uuid",
+                    "refTable": "ACL",
+                    "refType" : "weak"
+                },
+                "min": 0,
+                "max": 1
+            }
+        },
+        "aclv4_in_want_version": {
+            "category": "configuration",
+            "type": {
+                "key": {
+                    "type": "integer",
+                    "minInteger": 0,
+                    "maxInteger": 4294967295
+                }
+            }
+        },
+        "aclv4_in_want_status": {
+            "category": "status",
+            "type": {
+                "key": "string",
+                "value": "string",
+                "min": 0,
+                "max": "unlimited"
+            }
+        },
+        "aclv4_in_statistics": {
+            "category": "status",
+            "type": {
+                "key": {
+                    "type": "integer",
+                    "minInteger": 0
+                },
+                "min": 0,
+                "max": 512
+            },
+            "ephemeral": true
         },
         "other_config": {
           "category": "configuration",
@@ -7320,6 +7474,94 @@
         ]
       ],
       "isRoot": true
+    },
+    "ACL": {
+        "columns": {
+            "list_name": {
+                "category": "configuration",
+                "type": {
+                    "key": {
+                        "type": "string",
+                        "maxLength": 64
+                    }
+                }
+            },
+            "list_type": {
+                "category": "configuration",
+                "type": {
+                    "key": {
+                        "type": "string",
+                        "enum": [
+                            "set",
+                            [
+                                "ipv4"
+                            ]
+                        ]
+                    }
+                }
+            },
+            "cur": {
+                "category": "status",
+                "type": {
+                    "key": "string",
+                    "value": "string",
+                    "min": 0,
+                    "max": 512
+                }
+            },
+            "want": {
+                "category": "configuration",
+                "type": {
+                    "key": "string",
+                    "value": "string",
+                    "min": 0,
+                    "max": 512
+                }
+            },
+            "want_version": {
+                "category": "configuration",
+                "type": {
+                    "key": {
+                        "type": "integer",
+                        "minInteger": 0,
+                        "maxInteger": 4294967295
+                    }
+                }
+            },
+            "want_status": {
+                "category": "status",
+                "type": {
+                    "key": "string",
+                    "value": "string",
+                    "min": 0,
+                    "max": "unlimited"
+                }
+            },
+            "other_config": {
+                "category": "configuration",
+                "type": {
+                    "key": "string",
+                    "value": "string",
+                    "min": 0,
+                    "max": "unlimited"
+                }
+            },
+            "external_ids": {
+                "category": "configuration",
+                "type": {
+                    "key": "string",
+                    "value": "string",
+                    "min": 0,
+                    "max": "unlimited"
+                }
+            }
+        },
+        "indexes": [
+            [
+                "list_name",
+                "list_type"
+            ]
+        ]
     }
   }
 }

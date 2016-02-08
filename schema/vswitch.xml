@@ -796,6 +796,9 @@
         Specifies the URL that was used to fetch auto-provisioning script. Would not be
         present if auto-provisioning was not performed.
       </column>
+      <column name="acls">
+        Access control lists.
+      </column>
     </group>
 
     <group title="Logrotate configuration">
@@ -2884,6 +2887,62 @@
       Contains the name of the schedule profile that is operating in hardware.
       This may different than the name in <ref column="qos"/> when
       that profile cannot be supported in hardware.
+      </column>
+    </group>
+
+    <group title="ACL Configuration">
+      <p>
+        ACL applied to ports.  Status of applied ACLs and ACL statistics
+        per port.
+      </p>
+      <column name="acl_applied" key="uuid" type='{"type":"string"}'>
+        <!-- THIS COLUMN IS A WORK IN PROGRESS -->
+        Value indicating whether or not an ACL of any type is applied to the
+        uuid of the specified interfaces that comprise this port.
+        This column is written by switchd.
+      </column>
+      <column name="aclv4_in_cur" key="uuid">
+        Current, successfully applied ACL to this port, uuid of list in the
+        <ref table="ACL"/>
+        This column is written by switchd.
+      </column>
+      <column name="aclv4_in_want" key="uuid">
+        ACL, potentially in flight, desired to be applied to this port, uuid
+        of the list in the <ref table="ACL"/>.
+        This column is written by the management interface - CLI/REST/Web UI, etc.
+      </column>
+      <column name="aclv4_in_want_version" key="string" type='{"type":"integer"}'>
+        The version of the 'aclv4_in_want' column (an integer).
+        This column is incremented by the management interface - CLI/REST/Web UI, etc.
+        every time it changes the 'aclv4_in_want' value.
+      </column>
+      <column name="aclv4_in_want_status"  key="string" type='{"type":"string"}'>
+        The status of the last version of 'aclv4_in_want' column, that has been
+        processed by switchd.  Accepted values are: 'in_progress', 'applied', 'rejected',
+        and 'canceled'.
+        This column is written by switchd.
+      </column>
+      <column name="aclv4_in_want_status" key="version" type='{"type":"integer"}'>
+        The version of aclv4_in_want that corresponds to this status.
+        This column is written by switchd.
+      </column>
+      <column name="aclv4_in_want_status" key="state" type='{"type":"string"}'>
+        Valid values are 'applied', 'in_progress', 'canceled', 'rejected'
+        This column is written by switchd.
+      </column>
+      <column name="aclv4_in_want_status" key="code" type='{"type":"integer"}'>
+        Numeric error code.  Expected to be 0 when state is 'applied'
+        This column is written by switchd.
+      </column>
+      <column name="aclv4_in_want_status" key="message" type='{"type":"string"}'>
+        Detailed reason for error state.  Expected empty when state is 'applied'
+        This column is written by switchd.
+      </column>
+      <column name="aclv4_in_statistics" key="string" type='{"type":"integer"}'>
+        Statistics for the ACL applied to this port for ACEs that have the
+        'count' keyword specified.  Statistics are key/value pairs of
+        ACL sequence number and integer representing the statistics for that entry.
+        This column is written by switchd.
       </column>
     </group>
 
@@ -5891,6 +5950,364 @@
         <column name="lsa_data">
           The OSPFv2 LSA specific data.
         </column>
+    </group>
+  </table>
+
+  <table name="ACL" title="Access Control List">
+    <group title="Access Control List  Configuration">
+      <column name="list_name">
+        Name of an Access Control List (ACL).
+        This column is written by the management configuration
+        interface: CLI, WebUI, REST, etc.
+      </column>
+      <column name="list_type">
+        Type of an Access Control List  Accepted values: 'ipv4'
+        This column is written by the management configuration
+        interface: CLI, WebUI, REST, etc.
+      </column>
+      <column name="cur" key="action" type='{"type": "string", "enum": ["set", ["permit", "deny"]]}'>
+        <p>
+            Match Action:
+            Required parameter for IPv4 ACL entries.
+            "action": "permit"
+            "action": "deny"
+
+            This column is written by switchd.
+        </p>
+      </column>
+      <column name="cur" key="src_ip" type='{"type": "string"}'>
+          <p>
+            Source IPv4 Address:
+            Required parameter for IPv4 ACL entries
+            "src_ip": "X.X.X.X/X"
+            "src_ip": "X.X.X.X"
+            "src_ip": "any"
+
+            This column is written by switchd.
+          </p>
+      </column>
+      <column name="cur" key="dst_ip" type='{"type": "string"}'>
+          <p>
+            Destination IPv4 Address:
+            Required parameter for IPv4 ACL entries
+            "dst_ip": "X.X.X.X/X"
+            "dst_ip": "X.X.X.X"
+            "dst_ip": "any"
+
+            This column is written by switchd.
+          </p>
+      </column>
+      <column name="cur" key="protocol" type='{"type": "string"}'>
+        <p>
+           IPv4 Protocol:
+           Required parameter for IPv4 ACL entries
+           "protocol": "ip"
+           "protocol": "tcp"
+           "protocol": "udp"
+           "protocol": "integer value between 1-255 inclusive"
+
+           This column is written by switchd.
+        </p>
+      </column>
+      <column name="cur" key="src_l4_op" type='{"type": "string", "enum": ["set", ["eq", "lt", "gt", "range"]]}'>
+        <p>
+            Source L4 Operator:
+            Optional parameter for IPv4 ACL entries.
+            Applicable to TCP and UDP protocols.
+            "src_l4_op": "eq"
+            "src_l4_op": "lt
+            "src_l4_op": "gt"
+            "src_l4_op": "range"
+
+            This column is written by switchd.
+        </p>
+      </column>
+      <column name="cur" key="src_l4_port" type='{"type": "string"}'>
+        <p>
+            Source L4 Port: specififes the IPv4 L4 source port to be used
+            as the only value when src_l4_op is eq, lt, or gt, as the initial
+            value when src_l4_op is range.
+            Applicable to TCP and UDP protocols.
+            Required parameter for IPv4 ACL entries when src_l4_op has been
+            specified.
+            "src_l4_port": "integer value between 1 and 65535 inclusive"
+            "src_l4_port": "ftp"
+            "src_l4_port": "http"
+            "src_l4_port": "ssl"
+            "src_l4_port": "telnet"
+
+            This column is written by switchd.
+        </p>
+      </column>
+      <column name="cur" key="src_l4_port_max" type='{"type": "integer", "minInteger": 1, "maxInteger":65535}'>
+        <p>
+            Source L4 Port Max: specifies the maximum value when the
+            src_l4_port is range.
+            Applicable to TCP and UDP protocols.
+            Required parameter for IPv4 ACL entries when src_l4_op 'range'
+            has been specified.
+            src_l4_port_max: "integer value between 1 and 65535 inclusive"
+
+            This column is written by switchd.
+        </p>
+      </column>
+      <column name="cur" key="dst_l4_op" type='{"type": "string", "enum": ["set", ["eq", "lt", "gt", "range"]]}'>
+        <p>
+            Destination L4 Operator:
+            Optional parameter for IPv4 ACL entries.
+            Applicable to TCP and UDP protocols.
+            "dst_l4_op": "eq"
+            "dst_l4_op": "lt
+            "dst_l4_op": "gt"
+            "dst_l4_op": "range"
+
+            This column is written by switchd.
+        </p>
+      </column>
+      <column name="cur" key="dst_l4_port" type='{"type": "string"}'>
+        <p>
+            Destination L4 Port: specififes the IPv4 L4 destination port to be used
+            as the only value when dst_l4_op is eq, lt, or gt, as the initial
+            value when dst_l4_op is range.
+            Applicable to TCP and UDP protocols.
+            Required parameter for IPv4 ACL entries when dst_l4_op has been
+            specified.
+            "dst_l4_port": "integer value between 1 and 65535 inclusive"
+            "dst_l4_port": "ftp"
+            "dst_l4_port": "http"
+            "dst_l4_port": "ssl"
+            "dst_l4_port": "telnet"
+
+            This column is written by switchd.
+        </p>
+      </column>
+      <column name="cur" key="dst_l4_port_max" type='{"type": "integer", "minInteger": 1, "maxInteger":65535}'>
+        <p>
+            Destination L4 Port Max: specifies the maximum value when the
+            dst_l4_port is range.
+            Applicable to TCP and UDP protocols.
+            Required parameter for IPv4 ACL entries when dst_l4_op 'range'
+            has been specified.
+            dst_l4_port_max: "integer value between 1 and 65535 inclusive"
+
+            This column is written by switchd.
+        </p>
+      </column>
+      <column name="cur" key="log" type='{"type": "boolean"}'>
+        <p>
+            Log Action: enable ACL logging for packets that match this
+            ACL entry
+            Optional parameter for IPv4 ACL entries
+            "log": "true"
+
+            This column is written by switchd
+        </p>
+      </column>
+      <column name="cur" key="count" type='{"type": "boolean"}'>
+        <p>
+            Count Action: enable hit counts in hardware for packets that
+            match this ACL entry
+            Optional parameter for IPv4 ACL entries
+            "count": "true"
+
+            This column is written by switchd.
+        </p>
+      </column>
+      <column name="want" key="action" type='{"type": "string", "enum": ["set", ["permit", "deny"]]}'>
+        <p>
+            Match Action:
+            Required parameter for IPv4 ACL entries.
+            "action": "permit"
+            "action": "deny"
+
+            This column is written by the management configuration
+            interface: CLI, WebUI, REST, etc.
+        </p>
+      </column>
+      <column name="want" key="src_ip" type='{"type": "string"}'>
+          <p>
+            Source IPv4 Address:
+            Required parameter for IPv4 ACL entries
+            "src_ip": "X.X.X.X/X"
+            "src_ip": "X.X.X.X"
+            "src_ip": "any"
+
+            This column is written by the management configuration
+             interface: CLI, WebUI, REST, etc.
+          </p>
+      </column>
+      <column name="want" key="dst_ip" type='{"type": "string"}'>
+          <p>
+            Destination IPv4 Address:
+            Required parameter for IPv4 ACL entries
+            "dst_ip": "X.X.X.X/X"
+            "dst_ip": "X.X.X.X"
+            "dst_ip": "any"
+
+            This column is written by the management configuration
+            interface: CLI, WebUI, REST, etc.
+          </p>
+      </column>
+      <column name="want" key="protocol" type='{"type": "string"}'>
+        <p>
+           IPv4 Protocol:
+           Required parameter for IPv4 ACL entries
+           "protocol": "ip"
+           "protocol": "tcp"
+           "protocol": "udp"
+           "protocol": "integer value between 1-255 inclusive"
+
+           This column is written by the management configuration
+            interface: CLI, WebUI, REST, etc.
+        </p>
+      </column>
+      <column name="want" key="src_l4_op" type='{"type": "string", "enum": ["set", ["eq", "lt", "gt", "range"]]}'>
+        <p>
+            Source L4 Operator:
+            Optional parameter for IPv4 ACL entries.
+            Applicable to TCP and UDP protocols.
+            "src_l4_op": "eq"
+            "src_l4_op": "lt
+            "src_l4_op": "gt"
+            "src_l4_op": "range"
+
+            This column is written by the management configuration
+            interface: CLI, WebUI, REST, etc.
+        </p>
+      </column>
+      <column name="want" key="src_l4_port" type='{"type": "string"}'>
+        <p>
+            Source L4 Port: specififes the IPv4 L4 source port to be used
+            as the only value when src_l4_op is eq, lt, or gt, as the initial
+            value when src_l4_op is range.
+            Applicable to TCP and UDP protocols.
+            Required parameter for IPv4 ACL entries when src_l4_op has been
+            specified.
+            "src_l4_port": "integer value between 1 and 65535 inclusive"
+            "src_l4_port": "ftp"
+            "src_l4_port": "http"
+            "src_l4_port": "ssl"
+            "src_l4_port": "telnet"
+
+            This column is written by the management configuration
+            interface: CLI, WebUI, REST, etc.
+        </p>
+      </column>
+      <column name="want" key="src_l4_port_max" type='{"type": "integer", "minInteger": 1, "maxInteger":65535}'>
+        <p>
+            Source L4 Port Max: specifies the maximum value when the
+            src_l4_port is range.
+            Applicable to TCP and UDP protocols.
+            Required parameter for IPv4 ACL entries when src_l4_op 'range'
+            has been specified.
+            src_l4_port_max: "integer value between 1 and 65535 inclusive"
+
+            This column is written by the management configuration
+            interface: CLI, WebUI, REST, etc.
+        </p>
+      </column>
+      <column name="want" key="dst_l4_op" type='{"type": "string", "enum": ["set", ["eq", "lt", "gt", "range"]]}'>
+        <p>
+            Destination L4 Operator:
+            Optional parameter for IPv4 ACL entries.
+            Applicable to TCP and UDP protocols.
+            "dst_l4_op": "eq"
+            "dst_l4_op": "lt
+            "dst_l4_op": "gt"
+            "dst_l4_op": "range"
+
+            This column is written by the management configuration
+            interface: CLI, WebUI, REST, etc.
+        </p>
+      </column>
+      <column name="want" key="dst_l4_port" type='{"type": "string"}'>
+        <p>
+            Destination L4 Port: specififes the IPv4 L4 destination port to be used
+            as the only value when dst_l4_op is eq, lt, or gt, as the initial
+            value when dst_l4_op is range.
+            Applicable to TCP and UDP protocols.
+            Required parameter for IPv4 ACL entries when dst_l4_op has been
+            specified.
+            "dst_l4_port": "integer value between 1 and 65535 inclusive"
+            "dst_l4_port": "ftp"
+            "dst_l4_port": "http"
+            "dst_l4_port": "ssl"
+            "dst_l4_port": "telnet"
+
+            This column is written by the management configuration
+            interface: CLI, WebUI, REST, etc.
+        </p>
+      </column>
+      <column name="want" key="dst_l4_port_max" type='{"type": "integer", "minInteger": 1, "maxInteger":65535}'>
+        <p>
+            Destination L4 Port Max: specifies the maximum value when the
+            dst_l4_port is range.
+            Applicable to TCP and UDP protocols.
+            Required parameter for IPv4 ACL entries when dst_l4_op 'range'
+            has been specified.
+            dst_l4_port_max: "integer value between 1 and 65535 inclusive"
+
+            This column is written by the management configuration
+            interface: CLI, WebUI, REST, etc.
+        </p>
+      </column>
+      <column name="want" key="log" type='{"type": "boolean"}'>
+        <p>
+            Log Action: enable ACL logging for packets that match this
+            ACL entry
+            Optional parameter for IPv4 ACL entries
+            "log": "true"
+
+            This column is written by the management configuration
+            interface: CLI, WebUI, REST, etc.
+        </p>
+      </column>
+      <column name="want" key="count" type='{"type": "boolean"}'>
+        <p>
+            Count Action: enable hit counts in hardware for packets that
+            match this ACL entry
+            Optional parameter for IPv4 ACL entries
+            "count": "true"
+
+            This column is written by the management configuration
+            interface: CLI, WebUI, REST, etc.
+        </p>
+      </column>
+      <column name="want_version" key="string" type='{"type":"integer"}'>
+        The version of the 'want' column (an integer).
+        This column is incremented by the management interface - CLI/REST/Web UI, etc.
+        every time it changes the 'want' value.
+      </column>
+      <column name="want_status"  key="string" type='{"type":"string"}'>
+        The status of the last version of 'want' column, that has been
+        processed by switchd.  Accepted values are: 'in_progress', 'applied', 'rejected',
+        and 'canceled'.
+        This column is written by switchd.
+      </column>
+      <column name="want_status" key="version" type='{"type":"integer"}'>
+        The version of want that corresponds to this status.
+        This column is written by switchd.
+      </column>
+      <column name="want_status" key="state" type='{"type":"string"}'>
+        Valid values are 'applied', 'in_progress', 'canceled', 'rejected'
+        This column is written by switchd.
+      </column>
+      <column name="want_status" key="code" type='{"type":"integer"}'>
+        Numeric error code.  Expected to be 0 when state is 'applied'
+        This column is written by switchd.
+      </column>
+      <column name="want_status" key="message" type='{"type":"string"}'>
+        Detailed reason for error state.  Expected empty when state is 'applied'
+        This column is written by switchd.
+      </column>
+    </group>
+    <group title="Common Columns">
+      The overall purpose of these columns is described under <code>Common
+      Columns</code> at the beginning of this document.
+      <column name="other_config">
+      </column>
+      <column name="external_ids">
+      </column>
     </group>
   </table>
 

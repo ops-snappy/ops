@@ -19,7 +19,12 @@ import json
 import httplib
 import random
 import urllib
+import ssl
+import os
+import time
+import pytest
 
+from opsvsi.opsvsitest import *
 from copy import deepcopy
 from string import rstrip
 
@@ -35,14 +40,20 @@ PORT_DATA = {
         "vlan_mode": "trunk",
         "ip6_address": "2001:0db8:85a3:0000:0000:8a2e:0370:7334",
         "external_ids": {"extid1key": "extid1value"},
-        "bond_options": {},
         "mac": "01:23:45:67:89:ab",
         "other_config": {"cfg-1key": "cfg1val"},
         "bond_active_slave": "null",
         "ip6_address_secondary": ["01:23:45:67:89:ab"],
-        "vlan_options": {},
         "ip4_address": "192.168.0.1",
-        "admin": "up"
+        "admin": "up",
+        "ospf_auth_text_key": "null",
+        "ospf_auth_type": "null",
+        "ospf_if_out_cost": 10,
+        "ospf_if_type": "ospf_iftype_broadcast",
+        "ospf_intervals": {"transmit_delay": 1},
+        "ospf_mtu_ignore": False,
+        "ospf_priority": 0,
+        "qos_config": {"qos_trust": "none"}
     },
     "referenced_by": [{"uri": "/rest/v1/system/bridges/bridge_normal"}]
 }
@@ -61,7 +72,7 @@ def create_test_port(ip):
                                                  "POST",
                                                  json.dumps(PORT_DATA),
                                                  ip)
-    return status_code
+    return status_code, response_data
 
 
 def update_test_field(switch_ip, path, field, new_value):
@@ -196,7 +207,14 @@ def execute_request(path, http_method, data, ip, full_response=False,
     headers = {"Content-type": "application/json", "Accept": "text/plain"}
     if xtra_header:
         headers.update(xtra_header)
-    conn = httplib.HTTPConnection(ip, 8091)
+
+    sslcontext = ssl.SSLContext(ssl.PROTOCOL_SSLv23)
+    sslcontext.verify_mode = ssl.CERT_REQUIRED
+    sslcontext.check_hostname = False
+    src_path = os.path.dirname(os.path.realpath(__file__))
+    src_file = os.path.join(src_path, 'server.crt')
+    sslcontext.load_verify_locations(src_file)
+    conn = httplib.HTTPSConnection(ip, 443, context=sslcontext)
     conn.request(http_method, url, data, headers)
     response = conn.getresponse()
     status_code, response_data = response.status, response.read()
@@ -264,16 +282,26 @@ def random_ip6_address():
 
 
 def login(dut, user_name, user_password):
-    conn = httplib.HTTPConnection(dut.SWITCH_IP, 8091)
+
+    sslcontext = ssl.SSLContext(ssl.PROTOCOL_SSLv23)
+    sslcontext.verify_mode = ssl.CERT_REQUIRED
+    sslcontext.check_hostname = False
+    src_path = os.path.dirname(os.path.realpath(__file__))
+    src_file = os.path.join(src_path, 'server.crt')
+    sslcontext.load_verify_locations(src_file)
+    conn = httplib.HTTPSConnection(dut.SWITCH_IP, 443, context=sslcontext)
     url = '/login'
 
     body = {'username': user_name, 'password': user_password}
     headers = {"Content-type": "application/x-www-form-urlencoded",
                "Accept": "text/plain"}
     conn.request('POST', url, urllib.urlencode(body), headers)
+
     response = conn.getresponse()
     dut.HEADERS = {'Cookie': response.getheader('set-cookie')}
 
+    status_code, response_data = response.status, response.read()
+    conn.close()
     if not dut.HEADERS['Cookie'] is None:
         return True
     else:
@@ -298,3 +326,27 @@ def validate_keys_complete_object(json_data):
     assert json_data["status"] is not None, "status key is not present"
 
     return True
+
+
+def rest_sanity_check(switch_ip):
+    info("\nSwitch Sanity Check: Verify if System table row and bridge_normal exist\n")
+    # Check if bridge_normal is ready, loop until ready or timeout finish
+    system_path = "/rest/v1/system"
+    bridge_path = "/rest/v1/system/bridges/bridge_normal"
+    count = 1
+    max_retries = 60 # 1 minute
+    while count <= max_retries:
+        info("\nSwitch Sanity Check: Try count %d \n" % count)
+        status_system, response_system = execute_request(system_path, "GET",
+                                                         None, switch_ip)
+        status_bridge, response_bridge = execute_request(bridge_path, "GET",
+                                                         None, switch_ip)
+        if status_system is httplib.OK and response_system is not None and \
+            status_bridge is httplib.OK and response_bridge is not None:
+            break;
+        count += 1
+        info("\nSwitch Sanity Check: Retrying\n")
+        time.sleep(1)
+
+    assert count <= max_retries, "Switch Sanity check failure: After waiting %d seconds, "\
+        "the switch is still not ready to run the tests" % max_retries

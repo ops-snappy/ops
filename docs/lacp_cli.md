@@ -34,7 +34,7 @@
 ```
 
 ##### Description
-This command creates a LAG interface represented by an ID.
+This command creates a Link Aggregation Group (LAG) interface represented by an ID.
 
 ##### Authority
 all users
@@ -80,7 +80,7 @@ switch(config)# no interface lag 100
 ```
 
 ##### Description
-This command sets an LACP system priority.
+This command sets a Link Aggregation Control Protocol (LACP) system priority.
 
 ##### Authority
 all users
@@ -258,11 +258,10 @@ switch(config-lag-if)# no lacp mode active
 
 #### Configuring hash type
 ##### Syntax
-    hash l2-src-dst
+    hash {l2-src-dst/l2vid-src-dst/l3-src-dst/l4-src-dst}
 
 ##### Description
-This command sets an LACP hash type to l2-src-dst. The default is l3-src-dst.
-The **no** form of the command sets an LACP hash type to l3-src-dst.
+This command sets an LACP hash type to l2-src-dst, l2vid-src-dst, l3-src-dst or l4-src-dst. The default is l3-src-dst.
 
 ##### Authority
 all users
@@ -275,7 +274,6 @@ no parameters.
 ```
 switch(config)# interface lag 1
 switch(config-lag-if)# hash l2-src-dst
-switch(config-lag-if)# no hash l2-src-dst
 ```
 
 #### Configuring LACP fallback mode
@@ -359,7 +357,7 @@ System-priority : 65534
 ```
 
 #### Description
-This command displays all LACP aggregate information if no parameter is passed. If a LAG name is passed as an argument, it shows information of the specified LAG
+This command displays all LACP aggregate information if no parameter is passed. If a LAG name is passed as an argument, it shows information of the specified LAG.
 
 #### Authority
 all users
@@ -371,27 +369,31 @@ This command takes a LAG name as an optional parameter.
 
 ```
 switch# show lacp aggregates lag100
-Aggregate-name          : lag100
-Aggregated-interfaces
-Heartbeat rate              : slow
-Fallback                        : false
-Hash                             : l3-src-dst
-Aggregate mode           : off
+
+Aggregate-name        : lag100
+Aggregated-interfaces : 1
+Heartbeat rate        : slow
+Fallback              : false
+Hash                  : l3-src-dst
+Aggregate mode        : active
 
 switch# show lacp aggregates
-Aggregate-name          : lag100
-Aggregated-interfaces
-Heartbeat rate             : slow
-Fallback                       : false
-Hash                            : l3-src-dst
-Aggregate mode         : off
+
+Aggregate-name        : lag100
+Aggregated-interfaces : 1
+Heartbeat rate        : slow
+Fallback              : false
+Hash                  : l3-src-dst
+Aggregate mode        : active
 
 Aggregate-name        : lag200
-Aggregated-interfaces
-Heartbeat rate             : slow
-Fallback                       : false
-Hash                             : l3-src-dst
-Aggregate mode           : off
+Aggregated-interfaces : 3 2
+Heartbeat rate        : slow
+Fallback              : false
+Hash                  : l3-src-dst
+Aggregate mode        : active
+
+switch#
 ```
 
 ### Display LACP interface configuration
@@ -419,27 +421,44 @@ A - Active        P - Passive      F - Aggregable I - Individual
 S - Short-timeout L - Long-timeout N - InSync     O - OutofSync
 C - Collecting    D - Distributing
 X - State m/c expired              E - Default neighbor state
-.
+
 Actor details of all interfaces
-\-------------------------------------------
-Intf-name    Key    Priority   State
-\-------------------------------------------
-Aggregate-name : lag100
-1                            500
-Aggregate-name : lag200
-3
-4
-2
+\------------------------------------------------------------------------------
+Intf Aggregate Port    Port     Key  State   System-id         System   Aggr
+     name      id      Priority                                Priority Key
+\------------------------------------------------------------------------------
+1    lag100    16      1        1    ALFNCDE 70:72:cf:59:97:06 65534    100
+3    lag200    70      1        2    ALFOCX  70:72:cf:59:97:06 65534    200
+2    lag200    13      1        2    ALFNCDE 70:72:cf:59:97:06 65534    200
 .
 Partner details of all interfaces
+\------------------------------------------------------------------------------
+Intf Aggregate Partner Port     Key  State   System-id         System   Aggr
+     name      Port-id Priority                                Priority Key
+\------------------------------------------------------------------------------
+1    lag100    0       0        0    PLFNCD  00:00:00:00:00:00 0        100
+3    lag200    0       0        0    PSFO    00:00:00:00:00:00 0        200
+2    lag200    0       0        0    PLFNCD  00:00:00:00:00:00 0        200
+
+
+switch# show lacp interfaces lag100
+
+State abbreviations
+A - Active        P - Passive      F - Aggregable I - Individual
+S - Short-timeout L - Long-timeout N - InSync     O - OutofSync
+C - Collecting    D - Distributing
+X - State m/c expired              E - Default neighbor state
+
+Aggregate-name :
 \-------------------------------------------------
-Intf-name    Partner  Key    Priority   State
-                     port-id
+                       Actor             Partner
 \-------------------------------------------------
-Aggregate-name : lag100
-1                      500
-Aggregate-name : lag200
-3
-4
-2
+Port-id            |                    |
+Port-priority      |                    |
+Key                |                    |
+State              |                    |
+System-id          |                    |
+System-priority    |                    |
+
+switch#
 ```

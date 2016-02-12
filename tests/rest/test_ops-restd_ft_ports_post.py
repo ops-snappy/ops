@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright (C) 2015 Hewlett Packard Enterprise Development LP
+# Copyright (C) 2015-2016 Hewlett Packard Enterprise Development LP
 # All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -235,6 +235,7 @@ class CreatePortTest (OpsVsiTest):
 
         info("\n########## End test to verify malformed JSON ##########\n")
 
+
 class Test_CreatePort:
     def setup (self):
         pass
@@ -244,6 +245,7 @@ class Test_CreatePort:
 
     def setup_class (cls):
         Test_CreatePort.test_var = CreatePortTest()
+        rest_sanity_check(cls.test_var.SWITCH_IP)
 
     def teardown_class (cls):
         Test_CreatePort.test_var.net.stop()

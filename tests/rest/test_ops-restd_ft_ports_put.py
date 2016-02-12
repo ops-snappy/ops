@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright (C) 2015 Hewlett Packard Enterprise Development LP
+# Copyright (C) 2015-2016 Hewlett Packard Enterprise Development LP
 # All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -78,12 +78,10 @@ class ModifyPortTest (OpsVsiTest):
         put_data["vlan_mode"] = "access"
         put_data["ip6_address"] = "2001:0db8:85a3:0000:0000:8a2e:0370:8225"
         put_data["external_ids"] = {"extid2key": "extid2value"}
-        put_data["bond_options"] = {}
         put_data["mac"] = "01:23:45:63:90:ab"
         put_data["other_config"] = {"cfg-2key": "cfg2val"}
         put_data["bond_active_slave"] = "slave1"
         put_data["ip6_address_secondary"] = ["2001:0db8:85a3:0000:0000:8a2e:0370:7224"]
-        put_data["vlan_options"] = {}
         put_data["ip4_address"] = "192.168.1.2"
 
         status_code, response_data = execute_request(self.PORT_PATH, "PUT", json.dumps({'configuration': put_data}), self.SWITCH_IP)
@@ -105,174 +103,6 @@ class ModifyPortTest (OpsVsiTest):
         info("### Configuration data validated %s ###\n" % response_data)
 
         info("\n########## End Test to Validate Modify Port ##########\n")
-
-
-    def modify_port_if_match (self):
-        info("\n##########  Test to Validate Modify Port using if-match ##########\n")
-        # 1 - Query port
-        selector_sufix = "?selector=configuration"
-        cond_path = self.PORT_PATH + selector_sufix
-
-        response, response_data = execute_request(cond_path, "GET", None, self.SWITCH_IP, True)
-        status_code = response.status
-        etag = response.getheader("Etag")
-        assert status_code == httplib.OK, "Port %s doesn't exists" % cond_path
-
-        pre_put_get_data = {}
-        try:
-            pre_put_get_data = json.loads(response_data)
-        except:
-            assert False, "Malformed JSON"
-        info("### Query Port %s  ###\n" % response_data)
-
-        # 2 - Modify data
-        put_data = pre_put_get_data["configuration"]
-        put_data["tag"] = 601
-
-        #add If-Match: etag to the request
-        status_code, response_data = execute_request(cond_path, "PUT", json.dumps({'configuration': put_data}) , self.SWITCH_IP, False, {"If-Match":etag})
-        assert status_code == httplib.OK, "Error modifying a Port using if-match option. Status code: %s Response data: %s " % (status_code, response_data)
-        info("### Port Modified. Status code 200 OK  ###\n")
-
-        # 3 - Verify Modified data
-        status_code, response_data = execute_request(cond_path, "GET", None, self.SWITCH_IP)
-        assert status_code == httplib.OK, "Port %s doesn't exists" % cond_path
-        post_put_data = {}
-        try:
-            post_put_get_data = json.loads(response_data)
-        except:
-            assert False, "Malformed JSON"
-
-        post_put_data = post_put_get_data["configuration"]
-
-        assert compare_dict(post_put_data, put_data), "Configuration data is not equal that posted data"
-        info("### Configuration data validated %s ###\n" % response_data)
-
-        info("\n########## End Test to Validate Modify Port with If-Match ##########\n")
-
-
-    def modify_port_if_match_star (self):
-        info("\n########## Test to Validate Modify Port with * as etag   ##########\n")
-        # 1 - Query port
-        selector_sufix = "?selector=configuration"
-        cond_path = self.PORT_PATH + selector_sufix
-
-        status_code, response_data = execute_request(cond_path, "GET", None, self.SWITCH_IP)
-        assert status_code == httplib.OK, "Port %s doesn't exists" % cond_path
-
-        pre_put_get_data = {}
-        try:
-            pre_put_get_data = json.loads(response_data)
-        except:
-            assert False, "Malformed JSON"
-        info("### Query Port %s  ###\n" % response_data)
-
-        # 2 - Modify data
-        put_data = pre_put_get_data["configuration"]
-        put_data["tag"] = 602
-
-        #add If-Match: '"*"' to the request
-        status_code, response_data = execute_request(cond_path, "PUT", json.dumps({'configuration': put_data}) , self.SWITCH_IP, False, {'"If-Match"':'"*"'})
-        assert status_code == httplib.OK, "Error modifying a Port using if-match option. Status code: %s Response data: %s " % (status_code, response_data)
-        info("### Port Modified. Status code 200 OK  ###\n")
-
-        # 3 - Verify Modified data
-        status_code, response_data = execute_request(cond_path, "GET", None, self.SWITCH_IP)
-        assert status_code == httplib.OK, "Port %s doesn't exists" % cond_path
-        post_put_data = {}
-        try:
-            post_put_get_data = json.loads(response_data)
-        except:
-            assert False, "Malformed JSON"
-
-        post_put_data = post_put_get_data["configuration"]
-
-        assert compare_dict(post_put_data, put_data), "Configuration data is not equal that posted data"
-        info("### Configuration data validated %s ###\n" % response_data)
-
-        info("\n########## End Test to Validate Modify Port with If-Match using * as etag ##########\n")
-
-
-    def modify_port_if_match_change_applied (self):
-        info("\n########## Test to Validate Modify Port with If-Match - change applied   ##########\n")
-        # 1 - Query port
-        selector_sufix = "?selector=configuration"
-        cond_path = self.PORT_PATH + selector_sufix
-
-        response, response_data = execute_request(cond_path, "GET", None, self.SWITCH_IP, True)
-        status_code = response.status
-        etag = response.getheader("Etag")
-        assert status_code == httplib.OK, "Port %s doesn't exists" % cond_path
-
-        pre_put_get_data = {}
-        try:
-            pre_put_get_data = json.loads(response_data)
-        except:
-            assert False, "Malformed JSON"
-        info("### Query Port %s  ###\n" % response_data)
-
-        # 2 - Modify data
-        put_data = pre_put_get_data["configuration"]
-        if etag:
-            etag = etag[::-1]
-        else:
-            etag = '"abcdef"'
-        info(etag)
-
-        status_code, response_data = execute_request(cond_path, "PUT", json.dumps({'configuration': put_data}) , self.SWITCH_IP, False, {'If-Match' : etag})
-        assert status_code == httplib.OK, "Error modifying a Port using if-match option. Status code: %s Response data: %s " % (status_code, response_data)
-        info("### Port Modified. Status code 200 OK  ###\n")
-
-        # 3 - Verify Modified data
-        status_code, response_data = execute_request(cond_path, "GET", None, self.SWITCH_IP)
-        assert status_code == httplib.OK, "Port %s doesn't exists" % cond_path
-        post_put_data = {}
-        try:
-            post_put_get_data = json.loads(response_data)
-        except:
-            assert False, "Malformed JSON"
-
-        post_put_data = post_put_get_data["configuration"]
-
-        assert compare_dict(post_put_data, put_data), "Configuration data is not equal that posted data"
-        info("### Configuration data validated %s ###\n" % response_data)
-
-        info("\n########## End Test to Validate Modify Port with If-Match- change applied ##########\n")
-
-
-    def modify_port_if_match_precondition_failed(self):
-        info("\n########## Test to Validate Modify Port - Precondition failed   ##########\n")
-        # 1 - Query port
-        selector_sufix = "?selector=configuration"
-        cond_path = self.PORT_PATH + selector_sufix
-
-        response, response_data = execute_request(cond_path, "GET", None, self.SWITCH_IP, True)
-        status_code = response.status
-        etag = response.getheader("Etag")
-        assert status_code == httplib.OK, "Port %s doesn't exists" % cond_path
-        info("rec etag = %s", etag)
-        pre_put_get_data = {}
-        try:
-            pre_put_get_data = json.loads(response_data)
-        except:
-            assert False, "Malformed JSON"
-        info("### Query Port %s  ###\n" % response_data)
-
-        # 2 - Modify data
-        put_data = pre_put_get_data["configuration"]
-        put_data["tag"] = 603
-        if etag:
-            etag = etag[::-1]
-        else:
-            etag = '"abcdef"'
-
-        status_code, response_data = execute_request(cond_path, "PUT", json.dumps({'configuration': put_data}) , self.SWITCH_IP, False, {"If-Match":etag})
-        assert status_code == httplib.PRECONDITION_FAILED, "Error modifying a Port using if-match(precondition failed) option. Status code: %s Response data: %s " % (status_code, response_data)
-        info("### Port no Modified. Status code 412 OK  ###\n")
-
-        info("\n########## End Test to Validate Modify Port with If-Match - Precondition failed ##########\n")
-
-
 
     def verify_port_name_modification_not_applied (self):
         info("\n########## Test to Validate: Port name modification not applied ##########\n")
@@ -438,6 +268,7 @@ class ModifyPortTest (OpsVsiTest):
 
         info("\n########## End test to verify malformed JSON ##########\n")
 
+
 class Test_ModifyPort:
     def setup (self):
         pass
@@ -447,8 +278,14 @@ class Test_ModifyPort:
 
     def setup_class (cls):
         Test_ModifyPort.test_var = ModifyPortTest()
+        rest_sanity_check(cls.test_var.SWITCH_IP)
         # Add a test port
-        create_test_port(Test_ModifyPort.test_var.SWITCH_IP)
+        info("\n########## Creating Test Port  ##########\n")
+        switch_ip = Test_ModifyPort.test_var.SWITCH_IP
+        status_code, response = create_test_port(switch_ip)
+        assert status_code == httplib.CREATED, "Port not created."\
+            "Response %s" % response
+        info("### Test Port Created  ###\n")
 
     def teardown_class (cls):
         Test_ModifyPort.test_var.net.stop()
@@ -464,11 +301,6 @@ class Test_ModifyPort:
 
     def test_run (self):
         self.test_var.modify_port()
-        # If Match Tests
-        self.test_var.modify_port_if_match()
-        self.test_var.modify_port_if_match_star()
-        self.test_var.modify_port_if_match_change_applied()
-        self.test_var.modify_port_if_match_precondition_failed()
         self.test_var.verify_port_name_modification_not_applied()
         # Verification Tests
         self.test_var.verify_attribute_type()

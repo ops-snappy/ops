@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright (C) 2015 Hewlett Packard Enterprise Development LP
+# Copyright (C) 2015-2016 Hewlett Packard Enterprise Development LP
 # All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -99,6 +99,7 @@ class TestDeleteNonExistentVlan:
 
     def setup_class(cls):
         TestDeleteNonExistentVlan.test_var = DeleteNonExistentVlan()
+        rest_sanity_check(cls.test_var.switch_ip)
 
     def teardown_class(cls):
         TestDeleteNonExistentVlan.test_var.net.stop()
@@ -169,18 +170,14 @@ class DeleteExistentVlan(OpsVsiTest):
         info("\n########## Executing GET for %s ##########\n" % self.vlan_path)
         info("Testing Path: %s\n" % self.vlan_path)
 
-        response_status, response_data = execute_request(self.vlan_path,
+        response_status, response_data = execute_request(delete_path,
                                                          "GET",
                                                          None,
                                                          self.switch_ip)
 
-        assert response_status == httplib.OK, \
+        assert response_status == httplib.NOT_FOUND, \
             "Response status received: %s\n" % response_status
         info("Response status received: \"%s\"\n" % response_status)
-
-        assert json.loads(response_data) == [], \
-            "Response data received: %s\n" % response_data
-        info("Response data received: %s\n" % response_data)
 
         info("########## Executing GET for %s DONE "
              "##########\n" % self.vlan_path)
@@ -195,7 +192,7 @@ class TestDeleteExistentVlan:
 
     def setup_class(cls):
         TestDeleteExistentVlan.test_var = DeleteExistentVlan()
-
+        rest_sanity_check(cls.test_var.switch_ip)
         create_fake_vlan(TestDeleteExistentVlan.test_var.vlan_path,
                          TestDeleteExistentVlan.test_var.switch_ip,
                          TestDeleteExistentVlan.test_var.vlan_name,

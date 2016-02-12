@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright (C) 2015 Hewlett Packard Enterprise Development LP
+# Copyright (C) 2015-2016 Hewlett Packard Enterprise Development LP
 # All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -77,8 +77,6 @@ class QueryInterfaceDepthTest(OpsVsiTest):
     def validate_keys_inner_object(self, json_data, json_expected_data):
         assert json_data["split_parent"] is not None, \
             "split_parent key is not present"
-        assert json_data["split_children"] is not None, \
-            "split_children key is not present"
         info("### split_parent, split_children keys present ###\n")
         assert json_data == json_expected_data, \
             "Configuration data is not equal that posted data"
@@ -422,6 +420,7 @@ class Test_QueryInterfaceDepth:
 
     def setup_class(cls):
         Test_QueryInterfaceDepth.test_var = QueryInterfaceDepthTest()
+        rest_sanity_check(cls.test_var.SWITCH_IP)
 
     def teardown_class(cls):
         Test_QueryInterfaceDepth.test_var.net.stop()

@@ -4278,7 +4278,7 @@
             "key": {
               "type": "integer",
               "minInteger": 0,
-              "maxInteger": 7
+              "maxInteger": 4294967295
             }
           }
         },
@@ -4361,7 +4361,7 @@
             "key": {
               "type": "integer",
               "minInteger": 0,
-              "maxInteger": 7
+              "maxInteger": 4294967295
             }
           }
         },
@@ -4476,10 +4476,10 @@
             "key": {
               "type": "integer",
               "minInteger": 0,
-              "maxInteger": 7
+              "maxInteger": 4294967295
             },
             "min": 0,
-            "max": 8
+            "max": "unlimited"
           }
         },
         "description": {
@@ -4524,17 +4524,6 @@
             }
           },
           "mutable": false
-        },
-        "type": {
-          "category": "configuration",
-          "type": {
-            "key": {
-              "type": "string",
-              "maxLength": 64
-            },
-            "min": 0,
-            "max": 1
-          }
         },
         "queues": {
           "category": "configuration",
@@ -4581,25 +4570,15 @@
     },
     "Queue": {
       "columns": {
-        "dscp": {
-          "category": "configuration",
-          "type": {
-            "key": {
-              "type": "integer",
-              "minInteger": 0,
-              "maxInteger": 63
-            },
-            "min": 0,
-            "max": 1
-          }
-        },
         "algorithm": {
           "category": "configuration",
           "type": {
             "key": {
               "type": "string",
               "enum": ["set", ["strict", "wrr"] ]
-            }
+            },
+            "min": 0,
+            "max": 1
           }
         },
         "weight": {

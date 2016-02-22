@@ -23,6 +23,8 @@ LAG Test Cases
 * [Modify number of static LAG members upper limits](#modify-number-of-static-lag-members-upper-limits)
 * [Modify dynamic LAG without changing any setting](#modify-dynamic-lag-without-changing-any-setting)
 * [Modify static LAG without changing any setting](#modify-static-lag-without-changing-any-setting)
+* [Verify communication between 2 switches connected by L3 dynamic LAGs](#Verify-communication-between-2-switches-connected-by-L3-dynamic-lag)
+* [Verify communication between 2 switches connected by L3 static LAGs](#Verify-communication-between-2-switches-connected-by-L3-static-lag)
 
 ## Create dynamic LAGs with different names
 ### Objective
@@ -1188,3 +1190,102 @@ The traffic flow between hosts is not stopped after applying static LAG configur
 
 The traffic between hosts stops crossing the static LAG link, or the configuration changes, or the interfaces reset, or for any other unexpected behavior.
 
+
+## Verify communication between 2 switches connected by L3 dynamic LAGs
+### Objective
+Verify a ping between 2 switches configured with L3 dynamic LAGs works properly.
+### Requirements
+The requirements for this test case are:
+
+ - 2 Switches running OpenSwitch
+ - **FT file**: `ops/tests/lag/test_ft_lacp_l3_ping.py`
+
+### Setup
+
+#### Topology diagram
+```ditaa
+
+   +-----+------+
+   |            |
+   |  Switch 1  |
+   |            |
+   +-+---+---+--+
+     |   |   |
+     |   |   |      LAG 1
+     |   |   |
+   +-+---+---+--+
+   |            |
+   |  Switch 2  |
+   |            |
+   +-----+------+
+
+```
+#### Test setup
+### Description
+
+This test verifies that after configuring a L3 dynamic lag between two switches
+a ping works properly from one switch to the other.
+
+  1. Create a dynamic LAG in both switches.
+  2. Add 3 interfaces to each LAG.
+  3. Assign IP address on the same range to each LAG.
+  4. Ping from switch1 to switch2 and viceversa.
+
+### Test result criteria
+#### Test pass criteria
+The number of packets transmitted in the ping is equal to the number of packets
+received.
+
+#### Test fail criteria
+The number of packets transmitted in the ping is not equal to the number of
+packets received.
+
+
+## Verify communication between 2 switches connected by L3 static LAGs
+### Objective
+Verify a ping between 2 switches configured with L3 static LAGs works properly.
+### Requirements
+The requirements for this test case are:
+
+ - 2 Switches running OpenSwitch
+ - **FT file**: `ops/tests/lag/test_ft_static_lag_l3_ping.py`
+
+### Setup
+
+#### Topology diagram
+```ditaa
+
+   +-----+------+
+   |            |
+   |  Switch 1  |
+   |            |
+   +-+---+---+--+
+     |   |   |
+     |   |   |      LAG 1
+     |   |   |
+   +-+---+---+--+
+   |            |
+   |  Switch 2  |
+   |            |
+   +-----+------+
+
+```
+#### Test setup
+### Description
+
+This test verifies that after configuring a L3 static lag between two switches
+a ping works properly from one switch to the other.
+
+  1. Create a static LAG in both switches.
+  2. Add 3 interfaces to each LAG.
+  3. Assign IP address on the same range to each LAG.
+  4. Ping from switch1 to switch2 and viceversa.
+
+### Test result criteria
+#### Test pass criteria
+The number of packets transmitted in the ping is equal to the number of packets
+received.
+
+#### Test fail criteria
+The number of packets transmitted in the ping is not equal to the number of
+packets received.

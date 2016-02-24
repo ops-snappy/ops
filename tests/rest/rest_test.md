@@ -23,6 +23,7 @@ REST API Test Cases
 - [REST API get method with pagination for ports](#rest-api-get-method-with-pagination-for-ports)
 - [REST API get method and sort by field for ports](#rest-api-get-method-and-sort-by-field-for-ports)
 - [REST API get method and sort by field combination for ports](#rest-api-get-method-and-sort-by-field-combination-for-ports)
+- [REST API patch method for system](#rest-api-patch-method-for-system)
 - [REST API VLANs Resource test cases](#rest-api-vlans-resource-test-cases)
   - [Query Bridge Normal](#query-bridge-normal)
   - [Query existent VLANs](#query-existent-vlans)
@@ -33,8 +34,8 @@ REST API Test Cases
   - [Create VLAN using an invalid ID](#create-vlan-using-an-invalid-id)
   - [Create VLAN using an invalid Description](#create-vlan-using-an-invalid-description)
   - [Create VLAN using an invalid Admin](#create-vlan-using-an-invalid-admin)
-  - [Create VLAN using an invalid other_config](#create-vlan-using-an-invalid-otherconfig)
-  - [Create VLAN using an invalid external_ids](#create-vlan-using-an-invalid-externalids)
+  - [Create VLAN using an invalid other_config](#create-vlan-using-an-invalid-other_config)
+  - [Create VLAN using an invalid external_ids](#create-vlan-using-an-invalid-external_ids)
   - [Create VLAN with missing fields](#create-vlan-with-missing-fields)
   - [Create a duplicated VLAN](#create-a-duplicated-vlan)
   - [Update VLAN name](#update-vlan-name)
@@ -42,8 +43,8 @@ REST API Test Cases
   - [Update VLAN using an invalid ID](#update-vlan-using-an-invalid-id)
   - [Update VLAN using an invalid Description](#update-vlan-using-an-invalid-description)
   - [Update VLAN using an invalid Admin](#update-vlan-using-an-invalid-admin)
-  - [Update VLAN using an invalid other_config](#update-vlan-using-an-invalid-otherconfig)
-  - [Update VLAN using an invalid external_ids](#update-vlan-using-an-invalid-externalids)
+  - [Update VLAN using an invalid other_config](#update-vlan-using-an-invalid-other_config)
+  - [Update VLAN using an invalid external_ids](#update-vlan-using-an-invalid-external_ids)
   - [Update VLAN with missing fields](#update-vlan-with-missing-fields)
   - [Delete non-existent VLAN](#delete-non-existent-vlan)
   - [Query VLANs filtered by name](#query-vlans-filtered-by-name)
@@ -63,6 +64,7 @@ REST API Test Cases
   - [Delete VLAN using If Match header with a not matching Etag](#delete-vlan-using-if-match-header-with-a-not-matching-etag)
 - [Declarative configuration schema validations](#declarative-configuration-schema-validations)
 - [Custom validators](#custom-validators)
+- [HTTPS support](#https-support)
 
 ## REST API put method for system
 ### Objective
@@ -87,26 +89,26 @@ The requirements for this test case are:
 ### Description
 Configure the system through the Standard REST API PUT method.
 
-**URL "/rest/v1/system"**
+**URL `/rest/v1/system`**
 
 #### Steps
 
 1. Connect OpenSwitch to the Ubuntu workstation as shown in the topology diagram.
 2. Configure an IPV4 address on the switch management interfaces.
 3. Configure the IPV4 address on the Ubuntu workstation.
-4. Configure the system through the Standard REST API PUT method for the URI "/rest/v1/system".
-5. Validate the system configuration with the HTTP return code for the URI "/rest/v1/system".
-6. Execute the Standard REST API GET method for URI "/rest/v1/system".
-7. Validate the GET method HTTP return code for "/rest/v1/system" and its respective values.
+4. Configure the system through the Standard REST API PUT method for the URI `/rest/v1/system`.
+5. Validate the system configuration with the HTTP return code for the URI `/rest/v1/system`.
+6. Execute the Standard REST API GET method for URI `/rest/v1/system`.
+7. Validate the GET method HTTP return code for `/rest/v1/system` and its respective values.
 
 ### Test result criteria
 #### Test pass criteria
-- The first test passes (steps 4 and 5), if the standard REST API PUT method returns HTTP code `200 OK` for the URI "/ rest/v1/system".
-- The second test passes (steps 6 and 7), if the standard REST API GET method returns HTTP code `200 OK` for the URI "/rest/v1/system" and the returned data is identical to the date used for the PUT.
+- The first test passes (steps 4 and 5), if the standard REST API PUT method returns HTTP code `200 OK` for the URI `/rest/v1/system`.
+- The second test passes (steps 6 and 7), if the standard REST API GET method returns HTTP code `200 OK` for the URI `/rest/v1/system` and the returned data is identical to the date used for the PUT.
 
 #### Test fail criteria
-- The first test fails if the standard REST API PUT method does not return HTTP code `200 OK` for the URI "/rest/v1/system".
-- The second test fails if the standard REST API GET method does not return HTTP code `200 OK` for the URI "/rest/v1/system" or the returned data is not identical to the data used for PUT.
+- The first test fails if the standard REST API PUT method does not return HTTP code `200 OK` for the URI `/rest/v1/system`.
+- The second test fails if the standard REST API GET method does not return HTTP code `200 OK` for the URI `/rest/v1/system` or the returned data is not identical to the data used for PUT.
 
 ## REST API get method for subsystems
 ### Objective
@@ -131,26 +133,26 @@ The requirements for this test case are:
 ### Description
 This test case validates the subsystem through the standard REST API GET method.
 
-**URL "/rest/v1/system/subsystems"**
+**URL `/rest/v1/system/subsystems`**
 
 #### Steps
 
 1. Connect OpenSwitch to the Ubuntu workstation as shown in the topology diagram.
 2. Configure the IPV4 address on the switch management interfaces.
 3. Configure the IPV4 address on the Ubuntu workstation.
-4. Execute the Standard REST API GET method for URI "/rest/v1/system/subsystems".
-5. Validate the GET method HTTP return code for "/rest/v1/system/subsystems" and its respective values.
+4. Execute the Standard REST API GET method for URI `/rest/v1/system/subsystems`.
+5. Validate the GET method HTTP return code for `/rest/v1/system/subsystems` and its respective values.
 
 ### Test result criteria
 #### Test pass criteria
-The test passes if the standard REST API GET method returns HTTP code `200 OK` for the URI "/rest/v1/system/subsystems" and the returned data is identical.
+The test passes if the standard REST API GET method returns HTTP code `200 OK` for the URI `/rest/v1/system/subsystems` and the returned data is identical.
 
 #### Test fail criteria
-The test case is fails if the standard REST API GET method does not return the HTTP code `200 OK` for the URI "/rest/v1/system/subsystems".
+The test case is fails if the standard REST API GET method does not return the HTTP code `200 OK` for the URI `/rest/v1/system/subsystems`.
 
 ## REST API get method for an interface
 ### Objective
-The objective of the test case is to validate the "/rest/v1/system/interfaces/{id}" through the standard REST API GET method.
+The objective of the test case is to validate the `/rest/v1/system/interfaces/<id>` through the standard REST API GET method.
 
 ### Requirements
 The requirements for this test case are:
@@ -169,7 +171,7 @@ The requirements for this test case are:
 ```
 
 ### Description
-The objective of the test case is to validate the "/rest/v1/system/interfaces/{id}" through the standard REST API GET method.
+The objective of the test case is to validate the `/rest/v1/system/interfaces/<id>` through the standard REST API GET method.
 
 #### Steps
 
@@ -178,37 +180,37 @@ The objective of the test case is to validate the "/rest/v1/system/interfaces/{i
 3. Configure the IPV4 address on the Ubuntu workstation.
 
 ##### Test 1
-1. Configure the "/rest/v1/system/interfaces/{id}" through Standard REST API PUT method.
-2. Validate the "/rest/v1/system/interfaces/{id}" configuration with the HTTP return code.
+1. Configure the `/rest/v1/system/interfaces/<id>` through Standard REST API PUT method.
+2. Validate the `/rest/v1/system/interfaces/<id>` configuration with the HTTP return code.
 
 ##### Test 2
-1. Execute the Standard REST API GET method for URI "/rest/v1/system/interfaces/{id}".
-2. Validate the GET Method HTTP return code for "/rest/v1/system/interfaces/{id}" and its respective values.
+1. Execute the Standard REST API GET method for URI `/rest/v1/system/interfaces/<id>`.
+2. Validate the GET Method HTTP return code for `/rest/v1/system/interfaces/<id>` and its respective values.
 
 ##### Test 3
-1. Execute Standard REST API DELETE method for URI "/rest/v1/system/interfaces/{id}".
-2. Validate the DELETE method HTTP return code for "/rest/v1/system/interfaces/{id}".
+1. Execute Standard REST API DELETE method for URI `/rest/v1/system/interfaces/<id>`.
+2. Validate the DELETE method HTTP return code for `/rest/v1/system/interfaces/<id>`.
 
 ##### Test 4
-1. Execute Standard REST API GET Method for URI "/rest/v1/system/interfaces/{id}".
-2. Validate the GET method HTTP return code for "/rest/v1/system/interfaces/{id}".
+1. Execute Standard REST API GET Method for URI `/rest/v1/system/interfaces/<id>`.
+2. Validate the GET method HTTP return code for `/rest/v1/system/interfaces/<id>`.
 
 ### Test result criteria
 #### Test pass criteria
-- The first test passes if the standard REST API PUT method returns HTTP code `200 OK` for the URI "/rest/v1/system/interfaces/{id}".
-- The second test passes if the standard REST API GET method returns HTTP code `200 OK` for the URI "/rest/v1/system/interfaces/{id}" and the returned data is identical to the date used for the PUT.
-- The third test passes if the standard REST API DELETE method returns HTTP code `204 NO CONTENT` for the URI "/rest/v1/system/interfaces/{id}".
-- The fourth test passes, if the standard REST API GET method does not return HTTP code `200 OK` for the URI "/rest/v1/system/interfaces/{id}".
+- The first test passes if the standard REST API PUT method returns HTTP code `200 OK` for the URI `/rest/v1/system/interfaces/<id>`.
+- The second test passes if the standard REST API GET method returns HTTP code `200 OK` for the URI `/rest/v1/system/interfaces/<id>` and the returned data is identical to the date used for the PUT.
+- The third test passes if the standard REST API DELETE method returns HTTP code `204 NO CONTENT` for the URI `/rest/v1/system/interfaces/<id>`.
+- The fourth test passes, if the standard REST API GET method does not return HTTP code `200 OK` for the URI `/rest/v1/system/interfaces/<id>`.
 
 #### Test fail criteria
-- The first test fails if the standard REST API PUT method does not return HTTP code `200 OK` for the URI "/rest/v1/system/interfaces/{id}".
-- The second test fails if the standard REST API GET method does not return HTTP code `200 OK` for the URI "/rest/v1/system/interfaces/{id}" or the returned data is not identical to the data used for PUT.
-- The third test fails if the standard REST API DELETE method does not return HTTP code `204 NO CONTENT` for the URI "/rest/v1/system/interfaces/{id}".
-- The fourth test fails if the standard REST API GET method returns HTTP code `200 OK` for the URI "/rest/v1/system/interfaces/{id}".
+- The first test fails if the standard REST API PUT method does not return HTTP code `200 OK` for the URI `/rest/v1/system/interfaces/<id>`.
+- The second test fails if the standard REST API GET method does not return HTTP code `200 OK` for the URI `/rest/v1/system/interfaces/<id>` or the returned data is not identical to the data used for PUT.
+- The third test fails if the standard REST API DELETE method does not return HTTP code `204 NO CONTENT` for the URI `/rest/v1/system/interfaces/<id>`.
+- The fourth test fails if the standard REST API GET method returns HTTP code `200 OK` for the URI `/rest/v1/system/interfaces/<id>`.
 
 ## REST API get method for VRFS
 ### Objective
-The objective of this test case is to validate the "/rest/v1/system/vrfs" through the standard REST API GET method.
+The objective of this test case is to validate the `/rest/v1/system/vrfs` through the standard REST API GET method.
 
 ### Requirements
 The requirements for this test case are:
@@ -227,26 +229,26 @@ The requirements for this test case are:
 ```
 
 ### Description
-Validate the "/rest/v1/system/vrfs" through the standard REST API GET method.
+Validate the `/rest/v1/system/vrfs` through the standard REST API GET method.
 
 #### Steps
 
 1. Connect OpenSwitch to the Ubuntu workstation as shown in the topology diagram.
 2. Configure the IPV4 address on the switch management interfaces.
 3. Configure the IPV4 address on the Ubuntu workstation.
-4. Execute the Standard REST API GET Method for URI "/rest/v1/system/vrfs".
-5. Validate the GET Method HTTP return code for "/rest/v1/system/vrfs" and its respective values.
+4. Execute the Standard REST API GET Method for URI `/rest/v1/system/vrfs`.
+5. Validate the GET Method HTTP return code for `/rest/v1/system/vrfs` and its respective values.
 
 ### Test result criteria
 #### Test pass criteria
-The test case is passes if the standard REST API GET method returns HTTP code `200 OK` for the URI "/rest/v1/system/vrfs" and if the returned data is identical.
+The test case is passes if the standard REST API GET method returns HTTP code `200 OK` for the URI `/rest/v1/system/vrfs` and if the returned data is identical.
 
 #### Test fail criteria
-The test case fails if the standard REST API GET method does not return HTTP code `200 OK` for the URI "/rest/v1/system/vrfs".
+The test case fails if the standard REST API GET method does not return HTTP code `200 OK` for the URI `/rest/v1/system/vrfs`.
 
 ## REST API get method for route maps
 ### Objective
-The objective of this test case is to validate the "/rest/v1/system/route_maps/{id}" through the standard REST API GET method.
+The objective of this test case is to validate the `/rest/v1/system/route_maps/<id>` through the standard REST API GET method.
 
 ### Requirements
 The requirements for this test case are:
@@ -265,26 +267,26 @@ The requirements for this test case are:
 ```
 
 ### Description
-The test case validates the "/rest/v1/system/route_maps/{id}" through the standard REST API GET method.
+The test case validates the `/rest/v1/system/route_maps/<id>` through the standard REST API GET method.
 
 #### Steps
 
 1. Connect OpenSwitch to the Ubuntu workstation as shown in the topology diagram.
 2. Configure the IPV4 address on the switch management interfaces.
 3. Configure the IPV4 address on the Ubuntu workstation.
-4. Execute the Standard REST API GET Method for URI "/rest/v1/system/route_maps/{id}".
-5. Validate the GET method HTTP return code for "/rest/v1/system/route_maps/{id}" and its respective values.
+4. Execute the Standard REST API GET Method for URI `/rest/v1/system/route_maps/<id>`.
+5. Validate the GET method HTTP return code for `/rest/v1/system/route_maps/<id>` and its respective values.
 
 ### Test result criteria
 #### Test pass criteria
-This test case passes if the standard REST API GET method returns HTTP code `200 OK` for the URI "/rest/v1/system/route_maps/{id}" and the returned data is identical.
+This test case passes if the standard REST API GET method returns HTTP code `200 OK` for the URI `/rest/v1/system/route_maps/<id>` and the returned data is identical.
 
 #### Test fail criteria
-This test case fails if the standard REST API GET method does not return HTTP code `200 OK` for the URI "/rest/v1/system/route_maps/{id}".
+This test case fails if the standard REST API GET method does not return HTTP code `200 OK` for the URI `/rest/v1/system/route_maps/<id>`.
 
 ## REST API get method for interfaces
 ### Objective
-The objective of the test case is to validate the "/rest/v1/system/interfaces" through the standard REST API GET method.
+The objective of the test case is to validate the `/rest/v1/system/interfaces` through the standard REST API GET method.
 
 ### Requirements
 The requirements for this test case are:
@@ -303,22 +305,22 @@ The requirements for this test case are:
 ```
 
 ### Description
-The test case validates the "/rest/v1/system/interfaces" through the standard REST API GET method.
+The test case validates the `/rest/v1/system/interfaces` through the standard REST API GET method.
 
 #### Steps
 
 1. Connect OpenSwitch to the Ubuntu workstation as shown in the topology diagram.
 2. Configure the IPV4 address on the switch management interfaces.
 3. Configure the IPV4 address on the Ubuntu workstation.
-4. Execute the Standard REST API GET Method for URI "/rest/v1/system/interfaces".
-5. Validate the GET method HTTP return code for "/rest/v1/system/interfaces" and its respective values.
+4. Execute the Standard REST API GET Method for URI `/rest/v1/system/interfaces`.
+5. Validate the GET method HTTP return code for `/rest/v1/system/interfaces` and its respective values.
 
 ### Test result criteria
 #### Test pass criteria
-The test case passes if the standard REST API GET method returns HTTP code `200 OK` for the URI "/rest/v1/system/interfaces" and the returned data is identical.
+The test case passes if the standard REST API GET method returns HTTP code `200 OK` for the URI `/rest/v1/system/interfaces` and the returned data is identical.
 
 #### Test fail criteria
-The test case is fails if the standard REST API GET method does not return HTTP code `200 OK` for the URI "/rest/v1/system/interfaces".
+The test case is fails if the standard REST API GET method does not return HTTP code `200 OK` for the URI `/rest/v1/system/interfaces`.
 
 ## REST API put method with invalid data for URLs
 ### Objective
@@ -389,22 +391,22 @@ This test case checks login and authentication.
 
 ##### Test 1
 
-1. Execute the Standard REST API POST method for the URI "/login" with valid credentials.
-2. Validate the GET Method HTTP return code for the URI "/login".
+1. Execute the Standard REST API POST method for the URI `/login` with valid credentials.
+2. Validate the GET Method HTTP return code for the URI `/login`.
 
 ##### Test 2
 
-1. Execute the Standard REST API POST method for URI "/login" with invalid credentials.
-2. Validate that the GET method HTTP failed the return code for URI "/login".
+1. Execute the Standard REST API POST method for URI `/login` with invalid credentials.
+2. Validate that the GET method HTTP failed the return code for URI `/login`.
 
 ### Test result criteria
 #### Test pass criteria
-- The first test passes if the standard REST API GET method returns HTTP code `200 OK` for the URI "/login".
-- The second test passes if the standard REST API GET method returns HTTP code `401 UNAUTHORIZED` for the URI "/login".
+- The first test passes if the standard REST API GET method returns HTTP code `200 OK` for the URI `/login`.
+- The second test passes if the standard REST API GET method returns HTTP code `401 UNAUTHORIZED` for the URI `/login`.
 
 #### Test fail criteria
-- The first test fails if the standard REST API GET Method does not return HTTP code `200 OK` for the URI "/login".
-- The second test fails if the standard REST API GET Method does not return HTTP `401 UNAUTHORIZED` for the URI "/login".
+- The first test fails if the standard REST API GET Method does not return HTTP code `200 OK` for the URI `/login`.
+- The second test fails if the standard REST API GET Method does not return HTTP `401 UNAUTHORIZED` for the URI `/login`.
 
 ## REST API startup config verify
 ### Objective
@@ -434,22 +436,22 @@ Verify that the REST API startup configuration works.
 1. Connect OpenSwitch to the Ubuntu workstation as shown in the topology diagram.
 2. Configure the IPV4 address on the switch management interfaces.
 3. Configure the IPV4 address on the Ubuntu workstation.
-4. Execute Standard REST API PUT method for URI "/rest/v1/system" - 1st test case.
-5. Execute Standard REST API GET method for URI "/rest/v1/system" - 2nd test case.
+4. Execute Standard REST API PUT method for URI `/rest/v1/system` - 1st test case.
+5. Execute Standard REST API GET method for URI `/rest/v1/system` - 2nd test case.
 
 ### Test result criteria
 #### Test pass criteria
-- The first test passes if the standard REST API PUT method returns HTTP code `200 OK` for the URI "/rest/v1/system".
-- The second test passes if the standard REST API GET method returns HTTP code `200 OK` for the URI "/rest/v1/system" and the returned data is identical to the data used for the PUT.
+- The first test passes if the standard REST API PUT method returns HTTP code `200 OK` for the URI `/rest/v1/system`.
+- The second test passes if the standard REST API GET method returns HTTP code `200 OK` for the URI `/rest/v1/system` and the returned data is identical to the data used for the PUT.
 
 #### Test fail criteria
-- The first test fails if the standard REST API PUT method does not return HTTP code `200 OK` for the URI "/rest/v1/system".
-- The second test fails if the standard REST API GET method does not return HTTP code `200 OK` for the URI "/rest/v1/system" or the returned data is not identical to the data used for PUT.
+- The first test fails if the standard REST API PUT method does not return HTTP code `200 OK` for the URI `/rest/v1/system`.
+- The second test fails if the standard REST API GET method does not return HTTP code `200 OK` for the URI `/rest/v1/system` or the returned data is not identical to the data used for PUT.
 
 ## REST API get method for users
 
 ### Objective
-The objective of the test case is to validate the "/rest/v1/system/users" through the standard REST API GET method.
+The objective of the test case is to validate the `/rest/v1/system/users` through the standard REST API GET method.
 
 ### Requirements
 The requirements for this test case are:
@@ -472,40 +474,40 @@ The requirements for this test case are:
 
 ### Description
 
-The test case validates the "/rest/v1/system/users" through the standard REST API GET method.
+The test case validates the `/rest/v1/system/users` through the standard REST API GET method.
 
 1. Verify if the GET method returns a json object with a list of users by creating 100 new users that are part of ovsdb_users group.
-    a. Execute the GET request over /rest/v1/system/users?depth=1.
+    a. Execute the GET request over `/rest/v1/system/users?depth=1`.
     b. Verify if the HTTP response is `200 OK`.
     c. Confirm that the returned user list has the expected data.
 
 2. Verify if the GET method returns an users URI list by creating 100 new users that are part of ovsdb_users group.
-    a. Execute the GET request over /rest/v1/system/users.
+    a. Execute the GET request over `/rest/v1/system/users`.
     b. Verify if the HTTP response is `200 OK`.
     c. Confirm that the returned user list has the expected data.
 
 3. Verify if the GET method returns a json object with a list of users by creating 11 new users and only 10 are part of ovsdb_users group.
-    a. Execute the GET request over /rest/v1/system/users?depth=1.
+    a. Execute the GET request over `/rest/v1/system/users?depth=1`.
     b. Verify if the HTTP response is `200 OK`.
     c. Confirm that the returned user list has the expected data.
 
 4. Verify if the GET method returns a json object with a list of users by creating 10 new users that are part of ovsdb_users group and have extra arguments in the creation command.
-    a. Execute the GET request over /rest/v1/system/users?depth=1.
+    a. Execute the GET request over `/rest/v1/system/users?depth=1`.
     b. Verify if the HTTP response is `200 OK`.
     c. Confirm that the returned user list has the expected data.
 
 5. Verify if the GET method returns a json object with the default user.
-    a. Execute the GET request over /rest/v1/system/users?depth=1.
+    a. Execute the GET request over `/rest/v1/system/users?depth=1`.
     b. Verify if the HTTP response is `200 OK`.
     c. Confirm that the returned user list has the expected data.
 
 6. Verify if the GET method returns a json object when querying an specific user.
-    a. Execute the GET request over /rest/v1/system/users/{username}.
+    a. Execute the GET request over `/rest/v1/system/users/<username>`.
     b. Verify if the HTTP response is `200 OK`.
     c. Confirm that the returned user object has the expected data.
 
 7. Verify if the GET method not returns a json object when querying an non existent user.
-    a. Execute the GET request over /rest/v1/system/users/{username}.
+    a. Execute the GET request over `/rest/v1/system/users/<username>`.
     b. Verify if the HTTP response is `404 NOT FOUND`.
 
 
@@ -553,7 +555,7 @@ The test fails when:
 ## REST API post method for users
 
 ### Objective
-The objective of the test is to validate the "/rest/v1/system/users" through the standard REST API POST method.
+The objective of the test is to validate the `/rest/v1/system/users` through the standard REST API POST method.
 
 ### Requirements
 The requirements for this test case are:
@@ -575,10 +577,10 @@ The requirements for this test case are:
 ```
 
 ### Description
-The test case validates the "/rest/v1/system/users" through the standard REST API POST method.
+The test case validates the `/rest/v1/system/users` through the standard REST API POST method.
 
 1. Verify that the request passes when trying to create a new user with a valid username and password.
-    a. Execute the POST request over /rest/v1/system/users with the following data:
+    a. Execute the POST request over `/rest/v1/system/users` with the following data:
 
         ```
         {
@@ -591,11 +593,11 @@ The test case validates the "/rest/v1/system/users" through the standard REST AP
         ```
 
     b. Verify if the HTTP response is `201 CREATED`.
-    c. Execute a GET request over /rest/v1/system/users.
+    c. Execute a GET request over `/rest/v1/system/users`.
     d. Confirm that the user is in the returned user list.
 
 2. Verify that the request passes when trying to create a new user with a 32 characters username:
-    a. Execute the POST request over /rest/v1/system/users with the following data:
+    a. Execute the POST request over `/rest/v1/system/users` with the following data:
 
         ```
         {
@@ -608,11 +610,11 @@ The test case validates the "/rest/v1/system/users" through the standard REST AP
         ```
 
     b. Verify if the HTTP response is `201 CREATED`.
-    c. Execute a GET request over /rest/v1/system/users.
+    c. Execute a GET request over `/rest/v1/system/users`.
     d. Confirm that the user is in the returned user list.
 
 3. Verify that the request fails when trying to create a new user with an empty username:
-    a. Execute the POST request over /rest/v1/system/users with the following data:
+    a. Execute the POST request over `/rest/v1/system/users` with the following data:
 
         ```
         {
@@ -627,7 +629,7 @@ The test case validates the "/rest/v1/system/users" through the standard REST AP
     b. Verify if the HTTP response is `400 BAD REQUEST`.
 
 4. Verify that the request fails when trying to create a new user with a space as username:
-    a. Execute the POST request over /rest/v1/system/users with the following data:
+    a. Execute the POST request over `/rest/v1/system/users` with the following data:
 
         ```
         {
@@ -642,7 +644,7 @@ The test case validates the "/rest/v1/system/users" through the standard REST AP
     b. Verify if the HTTP response is `400 BAD REQUEST`.
 
 5. Verify that the request fails when trying to create a new user with a username longer than 32 characters:
-    a. Execute the POST request over /rest/v1/system/users with the following data:
+    a. Execute the POST request over `/rest/v1/system/users` with the following data:
 
         ```
         {
@@ -656,12 +658,12 @@ The test case validates the "/rest/v1/system/users" through the standard REST AP
 
     b. Verify if the HTTP response is `400 BAD REQUEST`.
 
-6. Verify that the request fails when trying to create a new user with a username that contains the following not allowed symbols: #(){}[]?\~/+-*=|^$%.;,:"´
-    a. Execute the POST request over /rest/v1/system/users with each of the not allowed symbols
+6. Verify that the request fails when trying to create a new user with a username that contains disallowed characters
+    a. Execute the POST request over `/rest/v1/system/users` with each of the not allowed symbols
     b. Verify if the HTTP response is `400 BAD REQUEST`.
 
 7. Verify that the request passes when trying to create a new user with a long password
-    a. Execute the POST request over /rest/v1/system/users with the following data:
+    a. Execute the POST request over `/rest/v1/system/users` with the following data:
 
         ```
         {
@@ -674,11 +676,11 @@ The test case validates the "/rest/v1/system/users" through the standard REST AP
         ```
 
     b. Verify if the HTTP response is `201 CREATED`.
-    c. Execute a GET request over /rest/v1/system/users.
+    c. Execute a GET request over `/rest/v1/system/users`.
     d. Confirm that the user is in the returned user list.
 
 8. Verify that the request fails when trying to create a new user with a empty username and password
-    a. Execute the POST request over /rest/v1/system/users with the following data:
+    a. Execute the POST request over `/rest/v1/system/users` with the following data:
 
         ```
         {
@@ -693,7 +695,7 @@ The test case validates the "/rest/v1/system/users" through the standard REST AP
     b. Verify if the HTTP response is `400 BAD REQUEST`.
 
 9. Verify that the request fails when trying to create a new user with a valid username and empty password
-    a. Execute the POST request over /rest/v1/system/users with the following data:
+    a. Execute the POST request over `/rest/v1/system/users` with the following data:
 
         ```
         {
@@ -708,7 +710,7 @@ The test case validates the "/rest/v1/system/users" through the standard REST AP
     b. Verify if the HTTP response is `400 BAD REQUEST`.
 
 10. Verify that the request fails when trying to create an existent user
-    a. Execute the POST request over /rest/v1/system/users with the following data:
+    a. Execute the POST request over `/rest/v1/system/users` with the following data:
 
         ```
         {
@@ -720,11 +722,11 @@ The test case validates the "/rest/v1/system/users" through the standard REST AP
         }
         ```
 
-    b. Execute the POST request over /rest/v1/system/users with the same data that (a):
+    b. Execute the POST request over `/rest/v1/system/users` with the same data that (a):
     c. Verify if the HTTP response is `400 BAD REQUEST`.
 
 11. Verify that the request passes when trying to create two user with the same password and check if hashed password is different in the shadow file.
-    a. Execute the POST request over /rest/v1/system/users with the following data:
+    a. Execute the POST request over `/rest/v1/system/users` with the following data:
 
         ```
         {
@@ -737,7 +739,7 @@ The test case validates the "/rest/v1/system/users" through the standard REST AP
         ```
 
     b. Verify if the HTTP response is `201 CREATED`.
-    c. Execute the POST request over /rest/v1/system/users with the following data:
+    c. Execute the POST request over `/rest/v1/system/users` with the following data:
 
         ```
         {
@@ -750,7 +752,7 @@ The test case validates the "/rest/v1/system/users" through the standard REST AP
         ```
 
     d. Verify if the HTTP response is `201 CREATED`.
-    e. Execute a GET request over /rest/v1/system/users.
+    e. Execute a GET request over `/rest/v1/system/users`.
     f. Confirm that the users is in the returned user list.
     g. Read the /etc/shadow file and the users hashed password.
     h. Verify if both hashed password are different.
@@ -819,7 +821,7 @@ This test fails when:
 ## REST API delete method for users
 
 ### Objective
-The objective of the test case is to validate the "/rest/v1/system/users/{id}" through the standard REST API DELETE method.
+The objective of the test case is to validate the `/rest/v1/system/users/<id>` through the standard REST API DELETE method.
 
 ### Requirements
 The requirements for this test case are:
@@ -841,29 +843,29 @@ The requirements for this test case are:
 ```
 
 ### Description
-The test case validates the "/rest/v1/system/users/{id}" through the standard REST API DELETE method.
+The test case validates the `/rest/v1/system/users/<id>` through the standard REST API DELETE method.
 
 1. Verify that the request passes when trying to delete a new user who is part of ovsdb_users group and is not logged in.
-    a. Execute the DELETE request over /rest/v1/system/users/{id}.
+    a. Execute the DELETE request over `/rest/v1/system/users/<id>`.
     b. Verify if the HTTP response is `204 NO CONTENT`.
     c. Confirm that the returned user list has the expected data.
 
 2. Verify that the request fails when trying to delete a new user who is part of ovsdb_users group and is logged in.
-    a. Execute the DELETE request over /rest/v1/system/users/{id}.
+    a. Execute the DELETE request over `/rest/v1/system/users/<id>`.
     b. Verify if the HTTP response is `400 BAD REQUEST`.
     c. Confirm that the returned user list has the expected data.
 
 3. Verify that the request fails when trying to delete the current user and is logged in.
-    a. Execute the DELETE request over /rest/v1/system/users/{id}.
+    a. Execute the DELETE request over `/rest/v1/system/users/<id>`.
     b. Verify if the HTTP response is `400 BAD REQUEST`.
     c. Confirm that the returned user list has the expected data.
 
 4. Verify that the request fails after trying to delete a nonexistent user.
-    a. Execute the DELETE request over /rest/v1/system/users/{id}.
+    a. Execute the DELETE request over `/rest/v1/system/users/<id>`.
     b. Verify if the HTTP response is `404 NOT FOUND`.
 
 5. Verify that the request fails after trying to delete a new user who is not part of the ovsdb_users group.
-    a. Execute the DELETE request over /rest/v1/system/users/{id}.
+    a. Execute the DELETE request over `/rest/v1/system/users/<id>`.
     b. Verify if the HTTP response is `404 NOT FOUND`.
     c. Confirm that the returned user list has the expected data.
 
@@ -909,7 +911,7 @@ This test fails when:
 ## REST API put method for users
 
 ### Objective
-The objective of the test case is to validate the "/rest/v1/system/users/{id}" through the standard REST API PUT method.
+The objective of the test case is to validate the `/rest/v1/system/users/<id>` through the standard REST API PUT method.
 
 ### Requirements
 The requirements for this test case are:
@@ -945,10 +947,10 @@ The requirements for this test case are:
 ```
 
 ### Description
-The test case validates the "/rest/v1/system/users/{id}" through the standard REST API PUT method.
+The test case validates the `/rest/v1/system/users/<id>` through the standard REST API PUT method.
 
 1. Verify that the request passes when trying to update the password of a user, who is also part of ovsdb_users group but is not logged in.
-    a. Execute the PUT request over /rest/v1/system/users/{id} with the following data:
+    a. Execute the PUT request over `/rest/v1/system/users/<id>` with the following data:
 
         ```
         {
@@ -963,7 +965,7 @@ The test case validates the "/rest/v1/system/users/{id}" through the standard RE
     c. Confirm that the user can log in with the new password.
 
 2. Verify that the request fails when trying to update a user with an empty password, and the user is part of the ovsdb_users group.
-    a. Execute the PUT request over /rest/v1/system/users/{id} with the following data:
+    a. Execute the PUT request over `/rest/v1/system/users/<id>` with the following data:
 
         ```
         {
@@ -978,7 +980,7 @@ The test case validates the "/rest/v1/system/users/{id}" through the standard RE
     c. Confirm that the user can still log in with the current password.
 
 3. Verify that the request fails when trying to update a nonexistent user.
-    a. Execute the PUT request over /rest/v1/system/users/{id} with the following data:
+    a. Execute the PUT request over `/rest/v1/system/users/<id>` with the following data:
 
         ```
         {
@@ -992,7 +994,7 @@ The test case validates the "/rest/v1/system/users/{id}" through the standard RE
     b. Verify if the HTTP response is `404 NOT FOUND`.
 
 4. Verify that the request fails after trying to update the password of a user who is not part of the ovsdb_users group.
-    a. Execute the PUT request over /rest/v1/system/users/{id} with the following data:
+    a. Execute the PUT request over `/rest/v1/system/users/<id>` with the following data:
 
         ```
         {
@@ -1006,7 +1008,7 @@ The test case validates the "/rest/v1/system/users/{id}" through the standard RE
     b. Verify if the HTTP response is `404 NOT FOUND`.
 
 5. Verify that the request fails after trying to update the password of a user who is part of the ovsdb_users group and then try to log in with the old password.
-    a. Execute the PUT request over /rest/v1/system/users/{id} with the following data:
+    a. Execute the PUT request over `/rest/v1/system/users/<id>` with the following data:
 
         ```
         {
@@ -1131,20 +1133,20 @@ Period after exist
 ### Description
 
 1. Verify if the port is in the port list.
-    a. Execute the GET request over /rest/v1/system/ports.
+    a. Execute the GET request over `/rest/v1/system/ports`.
     b. Verify if the HTTP response is `200 OK`.
     c. Confirm that the returned port list has at least one element.
-    d. Ensure that URI /rest/v1/system/ports/Port1 is in the response data.
+    d. Ensure that URI `/rest/v1/system/ports/Port1` is in the response data.
 
 2. Verify if a specific port exists.
-    a. Execute GET request over rest/v1/system/ports/Port1.
+    a. Execute GET request over `rest/v1/system/ports/Port1`.
     b. Verify if the HTTP response is `200 OK`.
     c. Confirm if the response data is not empty.
     d. Ensure that the response data has the keys: "configuration", "status" and "statistics".
     e. Verify if the configuration data is equal to the Port1 configuration data.
 
 3. Verify if a non-existent port exists.
-    a. Execute the GET request over rest/v1/system/ports/Port2.
+    a. Execute the GET request over `rest/v1/system/ports/Port2`.
     b. Verify if the HTTP response is `404 NOT FOUND`.
 
 ### Test result criteria
@@ -1155,10 +1157,10 @@ This test passes by meeting the following criteria:
 - Querying a port list for:
     - A `200 OK` HTTP response.
     - At least one port in the port list.
-    - A URI "rest/v1/system/ports/Port1" in the port list returned from the  rest/v1/system/ports URI.
+    - A URI `rest/v1/system/ports/Port1` in the port list returned from the  `rest/v1/system/ports` URI.
 
 - Querying Port1 for:
-    - An HTTP response of `200 OK` when doing a GET request over "rest/v1/system/ports/Port1".
+    - An HTTP response of `200 OK` when doing a GET request over `rest/v1/system/ports/Port1`.
     - A response data that is not empty.
     - A response data that contains keys: "configuration", "status", and "statistics".
     - Preset port configuration data that is equal to Port1.
@@ -1171,9 +1173,9 @@ This test fails when:
 
 - Querying a post list for:
     - An HTTP response is not equal to `200 OK`.
-    - A GET request to "rest/v1/system/ports" and "Port1" is in the Ports URI list.
+    - A GET request to `rest/v1/system/ports` and "Port1" is in the Ports URI list.
 
-- Performing a GET request over "rest/v1/system/ports/Port1" and the HTTP response is not equal to `404 NOT FOUND` for Port1.
+- Performing a GET request over `rest/v1/system/ports/Port1` and the HTTP response is not equal to `404 NOT FOUND` for Port1.
 
 - Querying for a non-existent port and the HTTP response is not equal to `404 NOT FOUND`.
 
@@ -1210,7 +1212,7 @@ Bridge "bridge_normal" must exist.
 
 #### Create port
 
-1. Execute a POST request with /rest/v1/system/ports and with the following data and verify if the HTTP response is `201 CREATED`.
+1. Execute a POST request with `/rest/v1/system/ports` and with the following data and verify if the HTTP response is `201 CREATED`.
 
     ```
     {
@@ -1239,13 +1241,13 @@ Bridge "bridge_normal" must exist.
     }
     ```
 
-2. Execute a GET request with /rest/v1/system/ports/Port1 and verify if the response is `200 OK`.
+2. Execute a GET request with `/rest/v1/system/ports/Port1` and verify if the response is `200 OK`.
 3. Verify that the configuration response data from Step 2 is the same as the configuration data from Step 1.
 
 #### Create an existing port
 Verify that the HTTP response returns `400 BAD REQUEST` HTTP response when creating a existing port with the name "Port1".
 
-1. Execute a POST request with /rest/v1/system/ports, and with the name "Port1": `"name": "Port1"`.
+1. Execute a POST request with `/rest/v1/system/ports,` and with the name "Port1": `"name": "Port1"`.
 2. Confirm that the HTTP response is `400 BAD REQUEST`.
 
 #### Data validation
@@ -1255,37 +1257,37 @@ Verify that the HTTP response returns `400 BAD REQUEST` HTTP response when creat
 ###### Invalid string type
 
 1. Set the "ip4_address" value to: `"ip4_address": 192`.
-2. Execute a POST request with /rest/v1/system/ports and with the port data changed.
+2. Execute a POST request with `/rest/v1/system/ports` and with the port data changed.
 3. Verify that the HTTP response is `400 BAD REQUEST`.
 
 ###### Valid string type
 
 1. Set the "ip4_address" value to: `"ip4_address": "192.168.0.1"`.
-2. Execute a POST request with /rest/v1/system/ports and with the port data changed.
+2. Execute a POST request with `/rest/v1/system/ports` and with the port data changed.
 3. Verify that the HTTP response is `201 CREATED`.
 
 ###### Invalid integer type
 
 1. Set the "tag" value to: `"tag": "675"`.
-2. Execute a POST request with /rest/v1/system/ports and with the port data changed.
+2. Execute a POST request with `/rest/v1/system/ports` and with the port data changed.
 3. Verify that the HTTP response is `400 BAD REQUEST`.
 
 ###### Valid integer type
 
 1. Set the "tag" value to: `"tag": 675`.
-2. Execute a POST request with /rest/v1/system/ports and with the port data changed.
+2. Execute a POST request with `/rest/v1/system/ports` and with the port data changed.
 3. Verify that the HTTP response is `201 CREATED`.
 
 ###### Invalid array type
 
 1. Set the "trunks" value to: `"trunks": "654,675"`.
-2. Execute a POST request with /rest/v1/system/ports and with the port data changed.
+2. Execute a POST request with `/rest/v1/system/ports` and with the port data changed.
 3. Verify that the HTTP response is `400 BAD REQUEST`.
 
 ###### Valid array type
 
 1. Set the "trunks" value to: `"trunks": [654,675]`.
-2. Execute a POST request with /rest/v1/system/ports and with the port data changed.
+2. Execute a POST request with `/rest/v1/system/ports` and with the port data changed.
 3. Verify that the HTTP response is `201 CREATED`.
 
 ##### Ranges validation
@@ -1293,25 +1295,25 @@ Verify that the HTTP response returns `400 BAD REQUEST` HTTP response when creat
 ###### Invalid range for string type
 
 1. Set the "ip4_address" value to: `"ip4_address": "175.167.134.123/248"`.
-2. Execute a POST request with /rest/v1/system/ports and with the port data changed.
+2. Execute a POST request with `/rest/v1/system/ports` and with the port data changed.
 3. Verify that the HTTP response is `400 BAD REQUEST`.
 
 ###### Valid range for string type
 
 1. Set the "ip4_address" value to: `"ip4_address": "175.167.134.123/24"`.
-2. Execute a POST request with /rest/v1/system/ports and with the port data changed.
+2. Execute a POST request with `/rest/v1/system/ports` and with the port data changed.
 3. Verify that the HTTP response is `201 CREATED`.
 
 ###### Invalid range for integer type
 
 1. Set the "tag" value to: `"tag": 4095`.
-2. Execute a POST request with /rest/v1/system/ports and with the port data changed.
+2. Execute a POST request with `/rest/v1/system/ports` and with the port data changed.
 3. Verify that the HTTP response is `400 BAD REQUEST`.
 
 ###### Valid range for integer type
 
 1. Set the "tag" value to: `"tag": 675`.
-2. Execute a POST request with /rest/v1/system/ports and with the port data changed.
+2. Execute a POST request with `/rest/v1/system/ports` and with the port data changed.
 3. Verify that the HTTP response is `201 CREATED`.
 
 ###### Invalid range for array type
@@ -1331,13 +1333,13 @@ Verify that the HTTP response returns `400 BAD REQUEST` HTTP response when creat
                    "/rest/v1/system/interfaces/10" ]
     ```
 
-2. Execute a POST request with /rest/v1/system/ports and with the port data changed.
+2. Execute a POST request with `/rest/v1/system/ports` and with the port data changed.
 3. Verify that the HTTP response is `400 BAD REQUEST`.
 
 ###### Valid range for array type
 
 1. Change the "interfaces" value to: `"interfaces": ["/rest/v1/system/interfaces/1"]`.
-2. Execute a POST request with /rest/v1/system/ports and with the port data changed.
+2. Execute a POST request with `/rest/v1/system/ports` and with the port data changed.
 3. Verify that the HTTP response is `201 CREATED`.
 
 ##### Allowed data values validation
@@ -1346,34 +1348,34 @@ Verify that the HTTP response returns `400 BAD REQUEST` HTTP response when creat
 ###### Invalid data value
 
 1. Change the "vlan_mode" value to: `"vlan_mode": "invalid_value"`.
-2. Execute a POST request with /rest/v1/system/ports and with the port data changed.
+2. Execute a POST request with `/rest/v1/system/ports` and with the port data changed.
 3. Verify that the HTTP response is `400 BAD REQUEST`.
 
 ###### Valid data value
 
 1. Change the "vlan_mode" value to: `"vlan_mode": "access"`.
-2. Execute a POST request with /rest/v1/system/ports and with the port data changed.
+2. Execute a POST request with `/rest/v1/system/ports` and with the port data changed.
 3. Verify that the HTTP response is `201 CREATED`.
 
 ##### Missing attribute validation
 
-1. Execute a POST request with /rest/v1/system/ports and without the "vlan_mode" attribute.
+1. Execute a POST request with `/rest/v1/system/ports` and without the "vlan_mode" attribute.
 2. Verify that the HTTP Response is `400 BAD REQUEST`.
-3. Execute a POST request with /rest/v1/system/ports and with all the attributes.
+3. Execute a POST request with `/rest/v1/system/ports` and with all the attributes.
 4. Verify that the HTTP Response is `201 CREATED`.
 
 ##### Unknown attribute validation
 
-1. Execute a POST request with /rest/v1/system/ports and with an unknown attribute as follows: `"unknown_attribute": "unknown_value"`.
+1. Execute a POST request with `/rest/v1/system/ports` and with an unknown attribute as follows: `"unknown_attribute": "unknown_value"`.
 2. Verify that the HTTP response is `400 BAD REQUEST`.
-3. Execute a POST request with /rest/v1/system/ports and with all allowed attributes.
+3. Execute a POST request with `/rest/v1/system/ports` and with all allowed attributes.
 4. Verify that the HTTP Response is `201 CREATED`.
 
 ##### Malformed json validation
 
-1. Execute a POST request with /rest/v1/system/ports and with a semi-colon at the end of the json data.
+1. Execute a POST request with `/rest/v1/system/ports` and with a semi-colon at the end of the json data.
 2. Verify that the HTTP response is `400 BAD REQUEST`.
-3. Execute a POST request with /rest/v1/system/ports and without the semi-colon at the end of the json data.
+3. Execute a POST request with `/rest/v1/system/ports` and without the semi-colon at the end of the json data.
 4. Verify that the HTTP response is `201 CREATED`.
 
 
@@ -1383,7 +1385,7 @@ Verify that the HTTP response returns `400 BAD REQUEST` HTTP response when creat
 The test is passing for "creating a new port" when the following results occur:
 
 - The HTTP response is `200 OK`.
-- The HTTP response is `200 OK` when executing a GET request with /rest/v1/system/ports/Port1.
+- The HTTP response is `200 OK` when executing a GET request with `/rest/v1/system/ports/Port1`.
 - When the configuration data posted is the same as the retrieved port.
 
 The test is passing for "creating a port with the same name as another port" when the HTTP response is `400 BAD REQUEST`.
@@ -1419,7 +1421,7 @@ The test is passing for "creating a new port with well-formed json data" when th
 The test is failing for "creating a new port" when:
 
 - The HTTP response is not equal to `200 OK`.
-- Executing a GET request with /rest/v1/system/ports/Port1 the HTTP response is not equal to `200 OK`.
+- Executing a GET request with `/rest/v1/system/ports/Port1` the HTTP response is not equal to `200 OK`.
 - The configuration data posted is not the same as the retrieved port.
 
 The test is failing for "creating a port with the same name as another port" when the HTTP response is not equal `400 BAD REQUEST`.
@@ -1512,7 +1514,7 @@ Period after exist.
 
 #### Update port
 
-1. Execute a PUT request with /rest/v1/system/ports/Port1 and with the following data. Verify that the HTTP response is `200 OK`.
+1. Execute a PUT request with `/rest/v1/system/ports/Port1` and with the following data. Verify that the HTTP response is `200 OK`.
 
     ```
     {
@@ -1541,43 +1543,43 @@ Period after exist.
     }
     ```
 
-2. Execute a GET request with /rest/v1/system/ports/Port1 and verify that the response is `200 OK`.
+2. Execute a GET request with `/rest/v1/system/ports/Port1` and verify that the response is `200 OK`.
 3. Confirm that the configuration response data from Step 2 is the same as the configuration data from Step 1.
 
 #### Update port using If-Match
-1. Execute a GET request with /rest/v1/system/ports/Port1 and verify that the response is `200 OK`.
+1. Execute a GET request with `/rest/v1/system/ports/Port1` and verify that the response is `200 OK`.
 2. Read the entity tag provided by the server
 3. Set the "tag" value to: `"tag": 601`.
-4. Execute a PUT request with /rest/v1/system/ports/Port1 including and If-Match Header using entity tag read at step 2.
+4. Execute a PUT request with `/rest/v1/system/ports/Port1` including and If-Match Header using entity tag read at step 2.
 5. Verify that the response is `200 OK`.
 6. Confirm that tag value was updated.
 
 #### Update port using If-Match (star as etag)
 1. Set the "tag" value to: `"tag": 602`.
-2. Execute a PUT request with /rest/v1/system/ports/Port1 including an If-Match Header using '"*"' as entity tag
+2. Execute a PUT request with `/rest/v1/system/ports/Port1` including an If-Match Header using '"*"' as entity tag
 3. Verify that the response is `200 OK`.
 4. Confirm that tag value was updated.
 
 #### Update port using If-Match change applied
-1. Execute a GET request with /rest/v1/system/ports/Port1 and verify that the response is `200 OK`.
+1. Execute a GET request with `/rest/v1/system/ports/Port1` and verify that the response is `200 OK`.
 2. Read the entity tag provided by the server
-3. Execute a PUT request with /rest/v1/system/ports/Port1 including and If-Match Header using entity tag different than the one read at step 2.
+3. Execute a PUT request with `/rest/v1/system/ports/Port1` including and If-Match Header using entity tag different than the one read at step 2.
 4. Verify that the response is `204 NO CONTENT`.
 
 #### Update port using If-Match Precondition Failed
-1. Execute a GET request with /rest/v1/system/ports/Port1 and verify that the response is `200 OK`.
+1. Execute a GET request with `/rest/v1/system/ports/Port1` and verify that the response is `200 OK`.
 2. Read the entity tag provided by the server.
 3. Set the "tag" value to: `"tag": 603`.
-4. Execute a PUT request with /rest/v1/system/ports/Port1 including and If-Match Header using entity tag different than the one read at step 2.
+4. Execute a PUT request with `/rest/v1/system/ports/Port1` including and If-Match Header using entity tag different than the one read at step 2.
 5. Verify that the response is 412 PRECONDITION FAILED.
 
 
 #### Update port name
 
 1. Set the name of the port to "Port2": `"name": "Port2"`.
-2. Execute a PUT request with /rest/v1/system/ports/Port1.
+2. Execute a PUT request with `/rest/v1/system/ports/Port1`.
 3. Verify that the HTTP response is `200 OK`.
-4. Execute a GET request with /rest/v1/system/ports/Port1 and verify that the response is `200 OK`.
+4. Execute a GET request with `/rest/v1/system/ports/Port1` and verify that the response is `200 OK`.
 5. Confirm that the port is still named "Port1".
 
 #### Data validation
@@ -1587,37 +1589,37 @@ Period after exist.
 ###### Invalid string type
 
 1. Set the "ip4_address" value to: `"ip4_address": 192`.
-2. Execute a PUT request with /rest/v1/system/ports/Port1 and with the port data changed.
+2. Execute a PUT request with `/rest/v1/system/ports/Port1` and with the port data changed.
 3. Verify that the HTTP response is `400 BAD REQUEST`.
 
 ###### Valid string type
 
 1. Set the "ip4_address" value to: `"ip4_address": "192.168.0.1"`.
-2. Execute a PUT request with /rest/v1/system/ports/Port1 and with the port data changed.
+2. Execute a PUT request with `/rest/v1/system/ports/Port1` and with the port data changed.
 3. Verify if the HTTP response is `200 OK`.
 
 ###### Invalid integer type
 
 1. Set the "tag" value to: `"tag": "675"`.
-2. Execute a PUT request with /rest/v1/system/ports/Port1 and with the port data changed.
+2. Execute a PUT request with `/rest/v1/system/ports/Port1` and with the port data changed.
 3. Verify that the HTTP response is `400 BAD REQUEST`.
 
 ###### Valid integer type
 
 1. Set the "tag" value to: `"tag": 675`.
-2. Execute a PUT request with /rest/v1/system/ports/Port1 and with the port data changed.
+2. Execute a PUT request with `/rest/v1/system/ports/Port1` and with the port data changed.
 3. Verify that the HTTP response is `200 OK`.
 
 ###### Invalid array type
 
 1. Set the "trunks" value to: `"trunks": "654,675"`.
-2. Execute a PUT request with /rest/v1/system/ports/Port1 and with the port data changed.
+2. Execute a PUT request with `/rest/v1/system/ports/Port1` and with the port data changed.
 3. Verify that the HTTP response is `400 BAD REQUEST`.
 
 ###### Valid array type
 
 1. Set the "trunks" value to: `"trunks": [654,675]`.
-2. Execute a PUT request with /rest/v1/system/ports/Port1 and with the port data changed.
+2. Execute a PUT request with `/rest/v1/system/ports/Port1` and with the port data changed.
 3. Verify that the HTTP response is `200 OK`.
 
 ##### Ranges Validation
@@ -1625,25 +1627,25 @@ Period after exist.
 ###### Invalid range for string type
 
 1. Set the "ip4_address" value to: `"ip4_address": "175.167.134.123/248"`.
-2. Execute a PUT request with /rest/v1/system/ports/Port1 and with the port data changed.
+2. Execute a PUT request with `/rest/v1/system/ports/Port1` and with the port data changed.
 3. Verify that the HTTP response is `400 BAD REQUEST`.
 
 ###### Valid range for string type
 
 1. Set the "ip4_address" value to: `"ip4_address": "175.167.134.123/24"`.
-2. Execute a PUT request with /rest/v1/system/ports/Port1 and with the port data changed.
+2. Execute a PUT request with `/rest/v1/system/ports/Port1` and with the port data changed.
 3. Verify that the HTTP response is `200 OK`.
 
 ###### Invalid range for integer type
 
 1. Set the "tag" value to: `"tag": 4095`.
-2. Execute a PUT request with /rest/v1/system/ports/Port1 and with the port data changed.
+2. Execute a PUT request with `/rest/v1/system/ports/Port1` and with the port data changed.
 3. Verify that the HTTP response is `400 BAD REQUEST`.
 
 ###### Valid range for integer type
 
 1. Set the "tag" value to: `"tag": 675`.
-2. Execute a PUT request with /rest/v1/system/ports/Port1 and with the port data changed.
+2. Execute a PUT request with `/rest/v1/system/ports/Port1` and with the port data changed.
 3. Verify that the HTTP response is `200 OK`.
 
 ###### Invalid range for array type
@@ -1663,13 +1665,13 @@ Period after exist.
                    "/rest/v1/system/interfaces/10" ]
     ```
 
-2. Execute a PUT request with /rest/v1/system/ports/Port1 and with the port data changed.
+2. Execute a PUT request with `/rest/v1/system/ports/Port1` and with the port data changed.
 3. Verify that the HTTP response is `400 BAD REQUEST`.
 
 ##### Valid range for array type
 
 1. Change the "interfaces" value to: `"interfaces": ["/rest/v1/system/interfaces/1"]`.
-2. Execute a PUT request with /rest/v1/system/ports/Port1 and with the port data changed.
+2. Execute a PUT request with `/rest/v1/system/ports/Port1` and with the port data changed.
 3. Verify that the HTTP response is `200 OK`.
 
 ##### Allowed data values validation
@@ -1678,34 +1680,34 @@ Period after exist.
 ###### Invalid data value
 
 1. Change the "vlan_mode" value to: `"vlan_mode": "invalid_value"`.
-2. Execute a PUT request with /rest/v1/system/ports/Port1 and with the port data changed.
+2. Execute a PUT request with `/rest/v1/system/ports/Port1` and with the port data changed.
 3. Verify that the HTTP response is `400 BAD REQUEST`.
 
 ###### Valid data value
 
 1. Change the "vlan_mode" value to: `"vlan_mode": "access"`.
-2. Execute a PUT request with /rest/v1/system/ports/Port1 and with the port data changed.
+2. Execute a PUT request with `/rest/v1/system/ports/Port1` and with the port data changed.
 3. Verify that the HTTP response is `200 OK`.
 
 ##### Missing attribute validation
 
-1. Execute a PUT request with /rest/v1/system/ports/Port1 and without the "vlan_mode" attribute.
+1. Execute a PUT request with `/rest/v1/system/ports/Port1` and without the "vlan_mode" attribute.
 2. Verify that the HTTP response is `400 BAD REQUEST`.
-3. Execute a PUT request over /rest/v1/system/ports/Port1 with all the attributes.
+3. Execute a PUT request over `/rest/v1/system/ports/Port1` with all the attributes.
 4. Confirm that the HTTP response is `200 OK`.
 
 ##### Unknown attribute validation
 
-1. Execute a PUT request with /rest/v1/system/ports/Port1 and with an unknown attribute: `"unknown_attribute": "unknown_value"`.
+1. Execute a PUT request with `/rest/v1/system/ports/Port1` and with an unknown attribute: `"unknown_attribute": "unknown_value"`.
 2. Verify that the HTTP response is `400 BAD REQUEST`.
-3. Execute a PUT request with /rest/v1/system/ports/Port1 and with all allowed attributes.
+3. Execute a PUT request with `/rest/v1/system/ports/Port1` and with all allowed attributes.
 4. Verify that the HTTP response is `200 OK`.
 
 ##### Malformed json validation
 
-1. Execute a PUT request with /rest/v1/system/ports/Port1 and with a semi-colon at the end of the json data.
+1. Execute a PUT request with `/rest/v1/system/ports/Port1` and with a semi-colon at the end of the json data.
 2. Verify that the HTTP response is `400 BAD REQUEST`.
-3. Execute a PUT request with /rest/v1/system/ports/Port1 and without the semi-colon at the end of the json data.
+3. Execute a PUT request with `/rest/v1/system/ports/Port1` and without the semi-colon at the end of the json data.
 4. Verify that the HTTP response is `200 OK`.
 
 ### Test result criteria
@@ -1714,7 +1716,7 @@ Period after exist.
 The test is passing for "updating a port" when the following results occur:
 
 - The HTTP response is `200 OK`.
-- The HTTP response is `200 OK` when executing a GET request with /rest/v1/system/ports/Port1.
+- The HTTP response is `200 OK` when executing a GET request with `/rest/v1/system/ports/Port1`.
 - The configuration data posted is the same as that of the retrieved port.
 
 The test is passing for "updating a port with the same name as another port" when the HTTP response is `400 BAD REQUEST`.
@@ -1750,7 +1752,7 @@ The test is passing for "updating a port with well-formed json data" when the HT
 The test is failing for "updating a port" when the following occurs:
 
 - The HTTP response is not equal to `200 OK`.
-- The HTTP response is not equal to `200 OK` when executing a GET request with /rest/v1/system/ports/Port1.
+- The HTTP response is not equal to `200 OK` when executing a GET request with `/rest/v1/system/ports/Port1`.
 - The configuration data posted is not the same as the data on the retrieved port.
 
 The test is failing for "updating a port with the same name as another port" when the HTTP response is not equal to `400 BAD REQUEST`.
@@ -1836,10 +1838,10 @@ Period after exist.
 
 ### Description
 
-1. Execute a DELETE request on  /rest/v1/system/ports/Port1 and verify that the HTTP response is `204 NOT CONTENT`.
-2. Execute a GET request on /rest/v1/system/ports and verify that the port is being deleted from the port list.
-3. Execute a GET request on /rest/v1/ports/system/Port1 and verify that the HTTP response is `404 NOT FOUND`.
-4. Execute a DELETE request on /rest/v1/system/ports/Port2 and ensure that the  HTTP response is `404 NOT FOUND`.
+1. Execute a DELETE request on  `/rest/v1/system/ports/Port1` and verify that the HTTP response is `204 NOT CONTENT`.
+2. Execute a GET request on `/rest/v1/system/ports` and verify that the port is being deleted from the port list.
+3. Execute a GET request on `/rest/v1/ports/system/Port1` and verify that the HTTP response is `404 NOT FOUND`.
+4. Execute a DELETE request on `/rest/v1/system/ports/Port2` and ensure that the  HTTP response is `404 NOT FOUND`.
 
 ### Test result criteria
 
@@ -1848,10 +1850,10 @@ Period after exist.
 The test is passing for "deleting an existing port" when the following occurs:
 
 - The HTTP response is `204 NOT CONTENT`.
-- There is no URI "/rest/v1/system/ports/Port1" in the port list that is returned from the /rest/v1/system/ports URI.
-- When doing a GET request on "/rest/v1/system/ports/Port1", the HTTP response is `404 NOT FOUND`.
-- There is no URI "/rest/v1/system/ports/Port1" in the port list that is returned from the /rest/v1/system/ports URI.
-- When doing a GET request on "/rest/v1/system/ports/Port1", the HTTP response is `404 NOT FOUND`.
+- There is no URI `/rest/v1/system/ports/Port1` in the port list that is returned from the `/rest/v1/system/ports` URI.
+- When doing a GET request on `/rest/v1/system/ports/Port1`, the HTTP response is `404 NOT FOUND`.
+- There is no URI `/rest/v1/system/ports/Port1` in the port list that is returned from the `/rest/v1/system/ports` URI.
+- When doing a GET request on `/rest/v1/system/ports/Port1`, the HTTP response is `404 NOT FOUND`.
 
 The test case is passing for "deleting a non-existent" port when the HTTP response is `404 NOT FOUND`.
 
@@ -1860,8 +1862,8 @@ The test case is passing for "deleting a non-existent" port when the HTTP respon
 The test is passing for "deleting an existing port" when the following occurs:
 
 - The HTTP response is not equal to `204 NOT CONTENT`.
-- When performing a GET request on "/rest/v1/system/ports", "Port1" is displayed in the ports URI list.
-- The HTTP response is not equal to `404 NOT FOUND` when doing a GET request on "/rest/v1/system/ports/Port1".
+- When performing a GET request on `/rest/v1/system/ports`, "Port1" is displayed in the ports URI list.
+- The HTTP response is not equal to `404 NOT FOUND` when doing a GET request on `/rest/v1/system/ports/Port1`.
 
 The test case is failing for "deleting a non-existent port" when the HTTP response is not equal to `404 NOT FOUND`.
 
@@ -1925,70 +1927,70 @@ The test case verifies queries for:
 The test case validates the recursivity through the standard REST API GET method.
 
 1. Verify if returns a list of interface URIs by using depth equals zero.
-    a. Execute the GET request over /rest/v1/system/interfaces?depth=0.
+    a. Execute the GET request over `/rest/v1/system/interfaces?depth=0`.
     b. Verify if the HTTP response is `200 OK`.
     c. Confirm that the returned interface list has at least one element.
-    d. Ensure that URI /rest/v1/system/interfaces/50 is in the response data.
+    d. Ensure that URI `/rest/v1/system/interfaces/50` is in the response data.
 
 2. Verify if returns a list of interface URIs by not using depth parameter.
-    a. Execute the GET request over /rest/v1/system/interfaces
+    a. Execute the GET request over `/rest/v1/system/interfaces`
     b. Verify if the HTTP response is `200 OK`.
     c. Confirm that the returned interface list has at least one element.
-    d. Ensure that URI /rest/v1/system/interfaces/50 is in the response data.
+    d. Ensure that URI `/rest/v1/system/interfaces/50` is in the response data.
 
 3. Verify if returns an interface and first level data.
-    a. Execute the GET request over /rest/v1/system/interfaces?depth=1;name=50-1
+    a. Execute the GET request over `/rest/v1/system/interfaces?depth=1;name=50-1`
     b. Verify if the HTTP response is `200 OK`.
     c. Validate the first level depth returned interface object has Configuration, Statistics and Status keys present.
-    d. Ensure that inner data has the URI /rest/v1/system/interfaces/50 in the response data.
+    d. Ensure that inner data has the URI `/rest/v1/system/interfaces/50` in the response data.
 
 4. Verify if returns an interface and second level data.
-    a. Execute the GET request over /rest/v1/system/interfaces?depth=2;name=50-1
+    a. Execute the GET request over `/rest/v1/system/interfaces?depth=2;name=50-1`
     b. Verify if the HTTP response is `200 OK`.
     c. Validate the first level depth returned interface object has Configuration, Statistics and Status keys present.
     d. Validate the second level depth returned interface object has Configuration, Statistics and Status keys present.
-    e. Ensure that second level of depth inner data has the URIs /rest/v1/system/interfaces/50-{1-4} in the response data.
+    e. Ensure that second level of depth inner data has the URIs `/rest/v1/system/interfaces/50-<1-4>` in the response data.
 
 5. Verify if response has a `400 BAD REQUEST` HTTP response status code by using a negative depth value.
-    a. Execute the GET request over /rest/v1/system/interfaces?depth=-1
+    a. Execute the GET request over `/rest/v1/system/interfaces?depth=-1`
     b. Verify if the HTTP response is `400 BAD REQUEST`.
 
 6. Verify if response has a `400 BAD REQUEST` HTTP response status code by using a string depth value.
-    a. Execute the GET request over /rest/v1/system/interfaces?depth=a
+    a. Execute the GET request over `/rest/v1/system/interfaces?depth=a`
     b. Verify if the HTTP response is `400 BAD REQUEST`.
 
 7. Verify if returns an interface with specific URI and data in first level of depth.
-    a. Execute the GET request over /rest/v1/system/interfaces/50-1?depth=1
+    a. Execute the GET request over `/rest/v1/system/interfaces/50-1?depth=1`
     b. Verify if the HTTP response is `200 OK`.
     c. Validate the first level depth returned interface object has Configuration, Statistics and Status keys present.
-    d. Ensure that inner data has the URI /rest/v1/system/interfaces/50 in the response data.
+    d. Ensure that inner data has the URI `/rest/v1/system/interfaces/50` in the response data.
 
 8. Verify if returns an interface with specific URI and data in second level of depth.
-    a. Execute the GET request over /rest/v1/system/interfaces/50-1?depth=2
+    a. Execute the GET request over `/rest/v1/system/interfaces/50-1?depth=2`
     b. Verify if the HTTP response is `200 OK`.
     c. Validate the first level depth returned interface object has Configuration, Statistics and Status keys present.
     d. Validate the second level depth returned interface object has Configuration, Statistics and Status keys present.
-    e. Ensure that second level of depth inner data has the URIs /rest/v1/system/interfaces/50-{1-4} in the response data.
+    e. Ensure that second level of depth inner data has the URIs `/rest/v1/system/interfaces/50-<1-4>` in the response data.
 
 9. Verify if returns a `400 BAD REQUEST` HTTP response status code by using a negative depth value with an specific URI.
-    a. Execute the GET request over /rest/v1/system/interfaces/50-1?depth=-1
+    a. Execute the GET request over `/rest/v1/system/interfaces/50-1?depth=-1`
     b. Verify if the HTTP response is `400 BAD REQUEST`.
 
 10. Verify if returns a `400 BAD REQUEST` HTTP response status code by using a string depth value with an specific URI.
-    a. Execute the GET request over /rest/v1/system/interfaces/50-1?depth=a
+    a. Execute the GET request over `/rest/v1/system/interfaces/50-1?depth=a`
     b. Verify if the HTTP response is `400 BAD REQUEST`.
 
 11. Verify if returns an interface with specific URI by using depth equals zero.
-    a. Execute the GET request over /rest/v1/system/interfaces/50-1?depth=0
+    a. Execute the GET request over `/rest/v1/system/interfaces/50-1?depth=0`
     b. Verify if the HTTP response is `200 OK`.
     c. Validate the first level depth returned interface object has Configuration, Statistics and Status keys present.
-    d. Ensure that inner data has the URI /rest/v1/system/interfaces/50 in the response data.
+    d. Ensure that inner data has the URI `/rest/v1/system/interfaces/50` in the response data.
 
 12. Verify if returns an interface with specific URI by not using depth parameter.
-    a. Execute the GET request over /rest/v1/system/interfaces/50-1
+    a. Execute the GET request over `/rest/v1/system/interfaces/50-1`
     b. Verify if the HTTP response is `200 OK`.
     c. Validate the first level depth returned interface object has Configuration, Statistics and Status keys present.
-    d. Ensure that inner data has the URI /rest/v1/system/interfaces/50 in the response data.
+    d. Ensure that inner data has the URI `/rest/v1/system/interfaces/50` in the response data.
 
 ### Test result criteria
 #### Test pass criteria
@@ -2097,60 +2099,60 @@ The test case verifies:
 ### Description
 
 1. Query all ports with no pagination offset set.
-    a. Execute a GET request over /rest/v1/system/ports with the following parameters: "?depth=1;sort=name;limit=5"
+    a. Execute a GET request over `/rest/v1/system/ports` with the following parameters: "?depth=1;sort=name;limit=5"
     b. Verify if the HTTP response is `200 OK`.
     c. Confirm that the returned port list has exactly 5 elements.
     d. Ensure the first port in the list is 'bridge_normal', which means offset defaulted to 0.
 
 2. Query all ports with no pagination limit set.
-    a. Execute a GET request over /rest/v1/system/ports with the following parameters: "?depth=1;sort=name;offset=91"
+    a. Execute a GET request over `/rest/v1/system/ports` with the following parameters: "?depth=1;sort=name;offset=91"
     b. Verify if the HTTP response is `200 OK`.
     c. Confirm that the returned port list has exactly 10 elements.
     d. Ensure the first port in the list is 'Port90' and the last one is 'Port99, which means limit defaulted to the remainder size.
 
 3. Query all ports with no pagination offset or limit set.
-    a. Execute a GET request over /rest/v1/system/ports with the following parameters: "?depth=1;sort=name"
+    a. Execute a GET request over `/rest/v1/system/ports` with the following parameters: "?depth=1;sort=name"
     b. Verify if the HTTP response is `200 OK`.
     c. Confirm that the returned port list has exactly 101 elements.
 
 4. Query all ports with negative pagination offset set.
-    a. Execute a GET request over /rest/v1/system/ports with the following parameters: "?depth=1;sort=name;offset=-1;limit=10"
+    a. Execute a GET request over `/rest/v1/system/ports` with the following parameters: "?depth=1;sort=name;offset=-1;limit=10"
     b. Verify if the HTTP response is `400 BAD REQUEST`.
 
 5. Query all ports with negative pagination limit set.
-    a. Execute a GET request over /rest/v1/system/ports with the following parameters: "?depth=1;sort=name;offset=5;limit=-1"
+    a. Execute a GET request over `/rest/v1/system/ports` with the following parameters: "?depth=1;sort=name;offset=5;limit=-1"
     b. Verify if the HTTP response is `400 BAD REQUEST`.
 
 6. Query all ports with pagination offset set greater than data set's size.
-    a. Execute a GET request over /rest/v1/system/ports with the following parameters: "?depth=1;sort=name;offset=200"
+    a. Execute a GET request over `/rest/v1/system/ports` with the following parameters: "?depth=1;sort=name;offset=200"
     b. Verify if the HTTP response is `400 BAD REQUEST`.
 
 7. Query all ports with pagination offset + limit greater than data set's size.
-    a. Execute a GET request over /rest/v1/system/ports with the following parameters: "?depth=1;sort=name;offset=91;limit=20"
+    a. Execute a GET request over `/rest/v1/system/ports` with the following parameters: "?depth=1;sort=name;offset=91;limit=20"
     b. Verify if the HTTP response is `200 OK`.
     c. Confirm that the returned port list has exactly 10 elements.
     d. Ensure the first port in the list is 'Port90' and the last one is 'Port99, which means limit defaulted to the remainder size.
 
 8. Query specific a port with only pagination offset set.
-    a. Execute a GET request over /rest/v1/system/ports/bridge_normal with the following parameters: "?depth=1;offset=5"
+    a. Execute a GET request over `/rest/v1/system/ports/bridge_normal` with the following parameters: "?depth=1;offset=5"
     b. Verify if the HTTP response is `400 BAD REQUEST`.
 
 9. Query specific a port with only pagination limit set.
-    a. Execute a GET request over /rest/v1/system/ports/bridge_normal with the following parameters: "?depth=1;limit=10"
+    a. Execute a GET request over `/rest/v1/system/ports/bridge_normal` with the following parameters: "?depth=1;limit=10"
     b. Verify if the HTTP response is `400 BAD REQUEST`.
 
 10. Query specific a port with both pagination offset and limit set.
-    a. Execute a GET request over /rest/v1/system/ports/bridge_normal with the following parameters: "?depth=1;offset=0;limit=10"
+    a. Execute a GET request over `/rest/v1/system/ports/bridge_normal` with the following parameters: "?depth=1;offset=0;limit=10"
     b. Verify if the HTTP response is `400 BAD REQUEST`.
 
 11. Query first 10 ports using pagination indexes.
-    a. Execute a GET request over /rest/v1/system/ports with the following parameters: "?depth=1;sort=name;offset=0;limit=10"
+    a. Execute a GET request over `/rest/v1/system/ports` with the following parameters: "?depth=1;sort=name;offset=0;limit=10"
     b. Verify if the HTTP response is `200 OK`.
     c. Confirm that the returned port list has exactly 10 elements.
     d. Ensure the first port in the list is 'bridge_normal' and the last one is 'Port16'.
 
 12. Query last 10 ports using pagination indexes.
-    a. Execute a GET request over /rest/v1/system/ports with the following parameters: "?depth=1;sort=name;offset=91;limit=10"
+    a. Execute a GET request over `/rest/v1/system/ports` with the following parameters: "?depth=1;sort=name;offset=91;limit=10"
     b. Verify if the HTTP response is `200 OK`.
     c. Confirm that the returned port list has exactly 10 elements.
     d. Ensure the first port in the list is 'Port90' and the last one is 'Port99'.
@@ -2262,14 +2264,14 @@ Sort by allowed sort field (ascending mode).
 
 For each allowed sort field exececute the following steps:
 
-1. Execute a GET request on /rest/v1/system/ports?depth=1;sort={field_name} and verify that response is `200 OK`.
+1. Execute a GET request on `/rest/v1/system/ports?depth=1;sort=<field_name>` and verify that response is `200 OK`.
 2. Verify if the result is being ordered by the provided field name.
 
 Sort by allowed sort field (descending mode).
 
 For each allowed sort field exececute the following steps:
 
-1. Execute a GET request on /rest/v1/system/ports?depth=1;sort=-{field_name} and verify that response is `200 OK`.
+1. Execute a GET request on `/rest/v1/system/ports?depth=1;sort=-<field_name>` and verify that response is `200 OK`.
 2. Verify if the result is being ordered by the provided field name.
 
 ### Test result criteria
@@ -2363,12 +2365,12 @@ Port10:  admin = "down"
 ### Description
 Sort by admin and name (Ascending mode)
 
-1. Execute a GET request on /rest/v1/system/ports?depth=1;sort=admin,name and verify that response is `200 OK`.
+1. Execute a GET request on `/rest/v1/system/ports?depth=1;sort=admin,name` and verify that response is `200 OK`.
 2. Verify if the result is being ordered by the provided fields. First by admin and the by name.
 
 Sort by admin and name (Descending mode)
 
-1. Execute a GET request on /rest/v1/system/ports?depth=1;sort=-admin,name and verify that response is `200 OK`.
+1. Execute a GET request on `/rest/v1/system/ports?depth=1;sort=-admin,name` and verify that response is `200 OK`.
 2. Verify if the result is being ordered by the provided fields. First by admin and the by name.
 
 ### Test result criteria
@@ -2419,6 +2421,227 @@ The test fails when:
 - The response doesn't have 10 ports.
 - The result is not sorted ascending/descending by the combination of fields.
 
+## REST API patch method for system
+
+### Objective
+The test case verifies queries for:
+
+- Add operation to set a field with a new value
+- Add operation to replace a existing field
+- Add operation to set a field with an array type value
+- Add operation to aggregate an object member
+- Add operation to set a field value with a malformed patch
+- Add operation to set a field with a boolean type value
+- Add operation to set multiple fields
+- Test operation to verify a nonexisting value
+- Test operation to verify an existent value
+- Copy operation to duplicate an existing value
+- Copy operation to duplicate a nonexistent value
+- Move operation to change of place an existing value
+- Move operation to change of place a nonexistent value
+- Replace operation to set a new value for an existing field
+- Replace operation to set a new value for a nonexistent value
+
+### Requirements
+
+- OpenSwitch
+- Ubuntu Workstation
+
+### Setup
+
+#### Topology diagram
+```ditaa
++----------------+         +----------------+
+|                |         |                |
+|                |         |                |
+|    Local Host  +---------+    Switch 1    |
+|                |         |                |
+|                |         |                |
++----------------+         +----------------+
+```
+
+### Description
+The test case validates add, copy, remove, replace, copy and move and test operations through the standard REST API PATCH method. If-Match header is optional for the standard REST API PATCH method and it's used in these tests to verify whether a change was made or not by checking the ETag or entity tag identifier.
+
+1. Verify if a patch is applied using the add operation for a new value.
+    a. Execute the PATCH request over `/rest/v1/system?selector=configuration`.
+    ```
+        [{"op": "add", "path": "/dns_servers", "value": ["1.1.1.1"]}]
+    ```
+    b. Verify if the HTTP response is `204 NO CONTENT`.
+    c. Confirm that system resource has the new value added.
+    d. Confirm that the ETag is changed.
+
+2. Verify if a patch is applied using the add operation to replace an existing field.
+    a. Execute the PATCH request over `/rest/v1/system?selector=configuration`.
+    ```
+        [{"op": "add", "path": "/dns_servers", "value": ["1.1.1.1"]},
+         {"op": "add", "path": "/dns_servers", "value": ["1.2.3.4"]}]
+    ```
+    b. Verify if the HTTP response is `204 NO CONTENT`.
+    c. Confirm that system resource has the replace value added.
+    d. Confirm that the ETag is changed.
+
+3. Verify if a patch is applied using the add operation for an array element.
+    a. Execute the PATCH request over `/rest/v1/system?selector=configuration`.
+    ```
+        [{"op": "add", "path": "/dns_servers", "value": ["1.1.1.1"]},
+         {"op": "add", "path": "/dns_servers/1", "value": "1.2.3.4"}]
+    ```
+    b. Verify if the HTTP response is `204 NO CONTENT`.
+    c. Confirm that system resource has the new values added.
+    d. Confirm that the ETag is changed.
+
+4. Verify if a patch is applied using the add operation for a new object member.
+    a. Execute the PATCH request over `/rest/v1/system?selector=configuration`.
+    ```
+        [{"op": "add", "path": "/other_config/foo", "value": "bar"}]
+    ```
+    b. Verify if the HTTP response is `204 NO CONTENT`.
+    c. Confirm that system resource has the new object and value added.
+    d. Confirm that the ETag is changed.
+
+5. Verify if a patch is applied using the add operation with a malformed patch.
+    a. Execute the PATCH request over `/rest/v1/system?selector=configuration`.
+    ```
+        [{"path": "/dns_servers", "value": ["1.1.1.1"]}]
+    ```
+    b. Verify if the HTTP response is `400 BAD REQUEST`.
+    c. Confirm that the ETag remains the same.
+
+6. Verify if a patch is applied using the add operation for a boolean element.
+    a. Execute the PATCH request over `/rest/v1/system?selector=configuration`.
+    ```
+        [{"op": "add", "path": "/other_config/enable-statistics", "value": "true"}]
+    ```
+    b. Verify if the HTTP response is `204 NO CONTENT`.
+    c. Confirm that system resource has the new values added.
+    d. Confirm that the ETag is changed.
+
+7. Verify if a patch is applied using the add operation for multiple fields.
+    a. Execute the PATCH request over `/rest/v1/system?selector=configuration`.
+    ```
+        [{"op": "add", "path": "/other_config/enable-statistics", "value": "true"},
+         {"op": "add", "path": "/dns_servers", "value": ["1.1.1.1"]},
+         {"op": "add", "path": "/other_config/foo", "value": "bar"}]
+    ```
+    b. Verify if the HTTP response is `204 NO CONTENT`.
+    c. Confirm that system resource has the new values added.
+    d. Confirm that the ETag is changed.
+
+8. Verify if a patch is applied using the Test operation for a nonexistent value.
+    a. Execute the PATCH request over `/rest/v1/system?selector=configuration`.
+    ```
+        [{"op": "test", "path": "/other_config/foo", "value": "bar"}]
+    ```
+    b. Verify if the HTTP response is `400 BAD REQUEST`.
+    c. Confirm that the ETag remains the same.
+
+9. Verify if a patch is applied using the Test operation for an existent value.
+    a. Execute the PATCH request over `/rest/v1/system?selector=configuration`.
+    ```
+        [{"op": "add", "path": "/dns_servers", "value": "1.1.1.1"},
+         {"op": "test", "path": "/dns_servers", "value": "1.1.1.1"}]
+    ```
+    b. Verify if the HTTP response is `204 NO CONTENT`.
+    c. Confirm that the ETag is changed.
+
+10. Verify if a patch is applied using the Copy operation with an existent value.
+    a. Execute the PATCH request over `/rest/v1/system?selector=configuration`.
+    ```
+        [{"op": "copy", "from": "/other_config/foo",
+          "path": "/other_config/copy_of_foo"}]
+    ```
+    b. Verify if the HTTP response is `204 NO CONTENT`.
+    c. Confirm that system resource has the copied value.
+    d. Confirm that the ETag is changed.
+
+11. Verify if a patch is applied using the Copy operation with a nonexistent value.
+    a. Execute the PATCH request over `/rest/v1/system?selector=configuration`.
+    ```
+        [{"op": "copy", "from": "/other_config/foo",
+          "path": "/other_config/copy_of_foo"}]
+    ```
+    b. Verify if the HTTP response is `400 BAD REQUEST`.
+    c. Confirm that the ETag remains the same.
+
+12. Verify if a patch is applied using the Move operation with an existent value.
+    a. Execute the PATCH request over `/rest/v1/system?selector=configuration`.
+    ```
+        [{"op": "move", "from": "/dns_servers/0",
+          "path": "/other_config/dns_servers"}]
+    ```
+    b. Verify if the HTTP response is `204 NO CONTENT`.
+    c. Confirm that system resource has the moved value.
+    d. Confirm that the ETag is changed.
+
+13. Verify if a patch is applied using the Move operation with a nonexistent value.
+    a. Execute the PATCH request over `/rest/v1/system?selector=configuration`.
+    ```
+        [{"op": "move", "from": "/other_config/servers",
+          "path": "/other_config/dns_servers"}]
+    ```
+    b. Verify if the HTTP response is `400 BAD REQUEST`.
+
+14. Verify if a patch is applied using the Move operation with an invalid path.
+    a. Execute the PATCH request over `/rest/v1/system?selector=configuration`.
+    ```
+        [{"op": "move", "from": "/other_config/abc",
+          "path": "/other_config/abc/def"}]
+    ```
+    b. Verify if the HTTP response is `400 BAD REQUEST`.
+    c. Confirm that the ETag remains the same.
+
+15. Verify if a patch is applied using the Replace operation with an existent value.
+    a. Execute the PATCH request over `/rest/v1/system?selector=configuration`.
+    ```
+        [{"op": "replace", "path": "/other_config/test", "value": "bar"}]
+    ```
+    b. Verify if the HTTP response is `204 NO CONTENT`.
+    c. Confirm that system resource has the replaced value.
+    d. Confirm that the ETag is changed.
+
+16. Verify if a patch is applied using the Replace operation with a nonexistent value.
+    a. Execute the PATCH request over `/rest/v1/system?selector=configuration`.
+    ```
+        [{"op": "replace", "path": "/other_config/non_existent_field",
+          "value": "bar"}]
+    ```
+    b. Verify if the HTTP response is `400 BAD REQUEST`.
+    c. Confirm that the ETag remains the same.
+
+17. Verify if a patch is applied using the Remove operation with an existent value.
+    a. Execute the PATCH request over `/rest/v1/system?selector=configuration`.
+    ```
+        [{"op": "remove", "path": "/other_config/test"}]
+    ```
+    b. Verify if the HTTP response is `204 NO CONTENT`.
+    c. Confirm that system resource does not have the removed value.
+    d. Confirm that the ETag is changed.
+
+### Test result criteria
+#### Test pass criteria
+
+This test passes by meeting the following criteria:
+
+- Applying a Patch with the specified correct parameters in each step:
+    - A `204 NO CONTENT` HTTP response.
+
+- Applying a Patch with invalid parameters or a malformed patch results in a `400 BAD REQUEST`.
+
+- Applying a Patch with invalid ETag results in `412 PRECONDITION FAILED`
+
+#### Test fail criteria
+
+This test fails when:
+
+- Applying a Patch with the specified correct parameters in each step:
+    - A `400 BAD REQUEST` HTTP response.
+
+- Applying a Patch with invalid parameters or a malformed patch results in a `204 NO CONTENT`.
+
+- Applying a Patch with invalid ETag results in `204 NO CONTENT`
+
 REST API VLANs Resource test cases
 ==================================
 
@@ -2453,10 +2676,10 @@ The test case verifies queries for:
 ### Description
 
 - Verify if bridge_normal was created successfully.
-    1. Execute the GET request over /rest/v1/system/bridges.
+    1. Execute the GET request over `/rest/v1/system/bridges`.
     2. Verify if the HTTP response is `200 OK`.
     3. Verify if the response data is not empty.
-    4. Verify if /rest/v1/system/bridges/bridge_normal is returned within the response data.
+    4. Verify if `/rest/v1/system/bridges/bridge_normal` is returned within the response data.
 
 ### Test result criteria
 #### Test pass criteria
@@ -2466,7 +2689,7 @@ This test passes by meeting the following criteria:
 - Querying bridges for:
     - A `200 OK` HTTP response.
     - At least one bridge in the bridge list.
-    - A URI "/rest/v1/system/bridges/bridge_normal" in the bridge list returned from the "/rest/v1/system/bridges" URI.
+    - A URI `/rest/v1/system/bridges/bridge_normal` in the bridge list returned from the `/rest/v1/system/bridges` URI.
 
 #### Test fail criteria
 
@@ -2474,7 +2697,7 @@ This test fails when:
 
 - Querying a bridge for:
     - An HTTP response is not equal to `200 OK`
-    - A GET request to "/rest/v1/system/bridges" and "/rest/v1/system/bridges/bridge_normal" is in the Bridges URI list.
+    - A GET request to `/rest/v1/system/bridges` and `/rest/v1/system/bridges/bridge_normal` is in the Bridges URI list.
 
 ## Query non-existent VLANs
 
@@ -2507,7 +2730,7 @@ The test case verifies queries for:
 ### Description
 
 - Verify if VLAN was queried successfully:
-    1. Execute the GET request over "/rest/v1/system/bridges/bridge_normal".
+    1. Execute the GET request over `/rest/v1/system/bridges/bridge_normal`.
     2. Verify if the HTTP response is `200 OK`.
     3. Verify if the HTTP response data is empty.
 
@@ -2526,7 +2749,7 @@ This test fails when:
 
 - Querying a VLAN for:
     - An HTTP response is not equal to `200 OK`
-    - A GET request to "rest/v1/system/bridges/bridge_normal" and the VLANs URI list is not empty.
+    - A GET request to `rest/v1/system/bridges/bridge_normal` and the VLANs URI list is not empty.
 
 ## Query existent VLANs
 
@@ -2573,10 +2796,10 @@ The test case verifies queries for:
 ### Description
 
 - Verify if VLAN was queried successfully:
-    1. Execute the GET request over "/rest/v1/system/bridges/bridge_normal".
+    1. Execute the GET request over `/rest/v1/system/bridges/bridge_normal`.
     2. Verify if the HTTP response is `200 OK`.
     3. Verify if the HTTP response is not empty.
-    4. Verify if "/rest/v1/system/bridges/bridge_normal/vlans/fake_vlan" is in the VLAN URI list.
+    4. Verify if `/rest/v1/system/bridges/bridge_normal/vlans/fake_vlan` is in the VLAN URI list.
 
 ### Test result criteria
 #### Test pass criteria
@@ -2593,7 +2816,7 @@ This test fails when:
 
 - Querying a VLAN for:
     - An HTTP response is not equal to `200 OK`
-    - A GET request to "rest/v1/system/bridges/bridge_normal" and "/rest/v1/system/bridges/bridge_normal/vlans/fake_vlan" is not within VLANs URI list.
+    - A GET request to `rest/v1/system/bridges/bridge_normal` and `/rest/v1/system/bridges/bridge_normal/vlans/fake_vlan` is not within VLANs URI list.
 
 ## Query existent VLAN by name
 
@@ -2640,7 +2863,7 @@ The test case verifies queries for:
 ### Description
 
 - Verify if VLAN was queried successfully:
-    1. Execute the GET request over "/rest/v1/system/bridges/bridge_normal/vlans/fake_vlan".
+    1. Execute the GET request over `/rest/v1/system/bridges/bridge_normal/vlans/fake_vlan`.
     2. Verify if the HTTP response is `200 OK`.
     3. Verify if the HTTP response is not empty.
     4. Verify if the HTTP response data equals test VLAN in the "Configuration" section.
@@ -2660,7 +2883,7 @@ This test fails when:
 
 - Querying a VLAN for:
     - An HTTP response is not equal to `200 OK`
-    - A GET request to "rest/v1/system/bridges/bridge_normal" and info about "/rest/v1/system/bridges/bridge_normal/vlans/fake_vlan" is not within the HTTP response.
+    - A GET request to `rest/v1/system/bridges/bridge_normal` and info about `/rest/v1/system/bridges/bridge_normal/vlans/fake_vlan` is not within the HTTP response.
 
 ## Query non-existent VLAN by name
 
@@ -2693,7 +2916,7 @@ The test case verifies queries for:
 ### Description
 
 - Verify if VLAN was queried unsuccessfully:
-    1. Execute the GET request over "/rest/v1/system/bridges/bridge_normal/vlans/not_found".
+    1. Execute the GET request over `/rest/v1/system/bridges/bridge_normal/vlans/not_found`.
     2. Verify if the HTTP response is `404 NOT FOUND`.
     3. Verify if the HTTP response is empty.
 
@@ -2712,7 +2935,7 @@ This test fails when:
 
 - Querying a VLAN for:
     - An HTTP response is not equal to `404 NOT FOUND`.
-    - A GET request to "rest/v1/system/bridges/bridge_normal/vlans/not_found" and there is at least one VLAN in the HTTP response.
+    - A GET request to `rest/v1/system/bridges/bridge_normal/vlans/not_found` and there is at least one VLAN in the HTTP response.
 
 ## Create VLAN
 
@@ -2745,7 +2968,7 @@ The test case verifies creation for:
 ### Description
 
 - Verify if VLAN was created successfully:
-    1. Execute the POST request over "/rest/v1/system/bridges/bridge_normal/vlans".
+    1. Execute the POST request over `/rest/v1/system/bridges/bridge_normal/vlans`.
     2. Verify if the HTTP response is `201 CREATED`.
     3. Verify if the HTTP response is empty.
 
@@ -2771,7 +2994,7 @@ This test passes by meeting the following criteria:
 
 - Creating VLAN for:
     - An HTTP `201 CREATED` response.
-    - A POST request to "/rest/v1/system/bridges/bridge_normal/vlans/" and there is an empty HTTP response.
+    - A POST request to `/rest/v1/system/bridges/bridge_normal/vlans/` and there is an empty HTTP response.
 
 #### Test fail criteria
 
@@ -2779,7 +3002,7 @@ This test fails when:
 
 - Creating a VLAN for:
     - An HTTP response is not equal to `201 CREATED`.
-    - A POST request to "rest/v1/system/bridges/bridge_normal/vlans/" and there is an error in the HTTP response.
+    - A POST request to `rest/v1/system/bridges/bridge_normal/vlans/` and there is an error in the HTTP response.
 
 ## Create VLAN using an invalid name
 
@@ -2812,7 +3035,7 @@ The test case verifies creation for:
 ### Description
 
 - Verify if VLAN was created unsuccessfully:
-    1. Execute the POST request over "/rest/v1/system/bridges/bridge_normal/vlans" using each configuration.
+    1. Execute the POST request over `/rest/v1/system/bridges/bridge_normal/vlans` using each configuration.
     2. Verify if the HTTP response is `400 BAD REQUEST`.
     3. Verify if the HTTP response is not empty.
 
@@ -2909,7 +3132,7 @@ This test passes by meeting the following criteria:
 
 - Creating VLAN for:
     - An HTTP `400 BAD REQUEST` response.
-    - A POST request to "/rest/v1/system/bridges/bridge_normal/vlans/" and there is a non-empty HTTP response.
+    - A POST request to `/rest/v1/system/bridges/bridge_normal/vlans/` and there is a non-empty HTTP response.
 
 #### Test fail criteria
 
@@ -2917,7 +3140,7 @@ This test fails when:
 
 - Creating a VLAN for:
     - An HTTP response is not equal to `400 BAD REQUEST`.
-    - A POST request to "rest/v1/system/bridges/bridge_normal/vlans/" and there is no error in the HTTP response.
+    - A POST request to `rest/v1/system/bridges/bridge_normal/vlans/` and there is no error in the HTTP response.
 
 ## Create VLAN using an invalid ID
 
@@ -2950,7 +3173,7 @@ The test case verifies creation for:
 ### Description
 
 - Verify if VLAN was created unsuccessfully:
-    1. Execute the POST request over "/rest/v1/system/bridges/bridge_normal/vlans" using each configuration.
+    1. Execute the POST request over `/rest/v1/system/bridges/bridge_normal/vlans` using each configuration.
     2. Verify if the HTTP response is `400 BAD REQUEST`.
     3. Verify if the HTTP response is not empty.
 
@@ -3061,7 +3284,7 @@ This test passes by meeting the following criteria:
 
 - Creating VLAN for:
     - A HTTP `400 BAD REQUEST` response.
-    - A POST request to "/rest/v1/system/bridges/bridge_normal/vlans/" and there is a non-empty HTTP response.
+    - A POST request to `/rest/v1/system/bridges/bridge_normal/vlans/` and there is a non-empty HTTP response.
 
 #### Test fail criteria
 
@@ -3069,7 +3292,7 @@ This test fails when:
 
 - Creating a VLAN for:
     - An HTTP response is not equal to `400 BAD REQUEST`.
-    - A POST request to "rest/v1/system/bridges/bridge_normal/vlans/" and there is no error in the HTTP response.
+    - A POST request to `rest/v1/system/bridges/bridge_normal/vlans/` and there is no error in the HTTP response.
 
 ## Create VLAN using an invalid Description
 
@@ -3102,7 +3325,7 @@ The test case verifies creation for:
 ### Description
 
 - Verify if VLAN was created unsuccessfully:
-    1. Execute the POST request over "/rest/v1/system/bridges/bridge_normal/vlans" using each configuration.
+    1. Execute the POST request over `/rest/v1/system/bridges/bridge_normal/vlans` using each configuration.
     2. Verify if the HTTP response is `400 BAD REQUEST`.
     3. Verify if the HTTP response is not empty.
 
@@ -3199,7 +3422,7 @@ This test passes by meeting the following criteria:
 
 - Creating VLANs for:
     - A HTTP `400 BAD REQUEST` response.
-    - A POST request to "/rest/v1/system/bridges/bridge_normal/vlans/" and there is a non-empty HTTP response.
+    - A POST request to `/rest/v1/system/bridges/bridge_normal/vlans/` and there is a non-empty HTTP response.
 
 #### Test fail criteria
 
@@ -3207,7 +3430,7 @@ This test fails when:
 
 - Creating a VLAN for:
     - An HTTP response is not equal to `400 BAD REQUEST`.
-    - A POST request to "rest/v1/system/bridges/bridge_normal/vlans/" and there is no error in the HTTP response.
+    - A POST request to `rest/v1/system/bridges/bridge_normal/vlans/` and there is no error in the HTTP response.
 
 ## Create VLAN using an invalid Admin
 
@@ -3240,7 +3463,7 @@ The test case verifies creation for:
 ### Description
 
 - Verify if VLAN was created unsuccessfully:
-    1. Execute the POST request over "/rest/v1/system/bridges/bridge_normal/vlans" using each configuration.
+    1. Execute the POST request over `/rest/v1/system/bridges/bridge_normal/vlans` using each configuration.
     2. Verify if the HTTP response is `400 BAD REQUEST`.
     3. Verify if the the HTTP response is not empty.
 
@@ -3351,7 +3574,7 @@ This test passes by meeting the following criteria:
 
 - Creating VLANs for:
     - An HTTP `400 BAD REQUEST` response.
-    - A POST request to "/rest/v1/system/bridges/bridge_normal/vlans/" and there is a non-empty HTTP response.
+    - A POST request to `/rest/v1/system/bridges/bridge_normal/vlans/` and there is a non-empty HTTP response.
 
 #### Test fail criteria
 
@@ -3359,7 +3582,7 @@ This test fails when:
 
 - Creating a VLAN for:
     - An HTTP response is not equal to `400 BAD REQUEST`.
-    - A POST request to "rest/v1/system/bridges/bridge_normal/vlans/" and there is no error in the HTTP response.
+    - A POST request to `rest/v1/system/bridges/bridge_normal/vlans/` and there is no error in the HTTP response.
 
 ## Create VLAN using an invalid other_config
 
@@ -3392,7 +3615,7 @@ The test case verifies creation for:
 ### Description
 
 - Verify if VLAN was created unsuccessfully:
-    1. Execute the POST request over "/rest/v1/system/bridges/bridge_normal/vlans" using each configuration.
+    1. Execute the POST request over `/rest/v1/system/bridges/bridge_normal/vlans` using each configuration.
     2. Verify if the HTTP response is `400 BAD REQUEST`.
     3. Verify if the HTTP response data is not empty.
 
@@ -3503,7 +3726,7 @@ This test passes by meeting the following criteria:
 
 - Creating VLANs for:
     - An HTTP `400 BAD REQUEST` response.
-    - A POST request to "/rest/v1/system/bridges/bridge_normal/vlans/" and there is a non-empty HTTP response.
+    - A POST request to `/rest/v1/system/bridges/bridge_normal/vlans/` and there is a non-empty HTTP response.
 
 #### Test fail criteria
 
@@ -3511,7 +3734,7 @@ This test fails when:
 
 - Creating a VLAN for:
     - An HTTP response is not equal to `400 BAD REQUEST`.
-    - A POST request to "rest/v1/system/bridges/bridge_normal/vlans/" and there is no error in the HTTP response.
+    - A POST request to `rest/v1/system/bridges/bridge_normal/vlans/` and there is no error in the HTTP response.
 
 ## Create VLAN using an invalid external_ids
 
@@ -3544,7 +3767,7 @@ The test case verifies creation for:
 ### Description
 
 - Verify if VLAN was created unsuccessfully:
-    1. Execute the POST request over "/rest/v1/system/bridges/bridge_normal/vlans" using each configuration.
+    1. Execute the POST request over `/rest/v1/system/bridges/bridge_normal/vlans` using each configuration.
     2. Verify if the HTTP response is `400 BAD REQUEST`.
     3. Verify if the HTTP response is not empty.
 
@@ -3655,7 +3878,7 @@ This test passes by meeting the following criteria:
 
 - Creating VLAN for:
     - An HTTP `400 BAD REQUEST` response.
-    - A POST request to "/rest/v1/system/bridges/bridge_normal/vlans/" and there is a non-empty HTTP response.
+    - A POST request to `/rest/v1/system/bridges/bridge_normal/vlans/` and there is a non-empty HTTP response.
 
 #### Test fail criteria
 
@@ -3663,7 +3886,7 @@ This test fails when:
 
 - Creating a VLAN for:
     - An HTTP response is not equal to `400 BAD REQUEST`.
-    - A POST request to "rest/v1/system/bridges/bridge_normal/vlans/" and there is no error in the HTTP response.
+    - A POST request to `rest/v1/system/bridges/bridge_normal/vlans/` and there is no error in the HTTP response.
 
 ## Create VLAN with missing fields
 
@@ -3696,7 +3919,7 @@ The test case verifies creation for:
 ### Description
 
 - Verify if VLAN was created unsuccessfully:
-    1. Execute the POST request over "/rest/v1/system/bridges/bridge_normal/vlans" using each configuration.
+    1. Execute the POST request over `/rest/v1/system/bridges/bridge_normal/vlans` using each configuration.
     2. Verify if the HTTP response is `400 BAD REQUEST`.
     3. Verify if the HTTP response is not empty.
 
@@ -3735,7 +3958,7 @@ This test passes by meeting the following criteria:
 
 - Creating VLANs for:
     - An HTTP `400 BAD REQUEST` response.
-    - A POST request to "/rest/v1/system/bridges/bridge_normal/vlans/" and there is a non-empty HTTP response.
+    - A POST request to `/rest/v1/system/bridges/bridge_normal/vlans/` and there is a non-empty HTTP response.
 
 #### Test fail criteria
 
@@ -3743,7 +3966,7 @@ This test fails when:
 
 - Creating a VLAN for:
     - An HTTP response is not equal to `400 BAD REQUEST`.
-    - A POST request to "rest/v1/system/bridges/bridge_normal/vlans/" and there is no error in the HTTP response.
+    - A POST request to `rest/v1/system/bridges/bridge_normal/vlans/` and there is no error in the HTTP response.
 
 ## Create a duplicated VLAN
 
@@ -3776,7 +3999,7 @@ The test case verifies creation for:
 ### Description
 
 - Verify if VLAN was created unsuccessfully.
-    1. Execute the POST request over "/rest/v1/system/bridges/bridge_normal/vlans" using the following configuration:
+    1. Execute the POST request over `/rest/v1/system/bridges/bridge_normal/vlans` using the following configuration:
 
         ```
         {
@@ -3804,11 +4027,11 @@ This test passes by meeting the following criteria:
 
 - Creating VLAN for:
     - An HTTP 200 CREATED response the first time.
-    - A POST request to "/rest/v1/system/bridges/bridge_normal/vlans/" and there is an empty HTTP response.
+    - A POST request to `/rest/v1/system/bridges/bridge_normal/vlans/` and there is an empty HTTP response.
 
 - Creating the same VLAN for:
     - An HTTP `400 BAD REQUEST` response.
-    - A POST request to "/rest/v1/system/bridges/bridge_normal/vlans/" and there is a non-empty HTTP response.
+    - A POST request to `/rest/v1/system/bridges/bridge_normal/vlans/` and there is a non-empty HTTP response.
 
 #### Test fail criteria
 
@@ -3816,11 +4039,11 @@ This test fails when:
 
 - Creating a VLAN for:
     - An HTTP response is not equal to 200 CREATED.
-    - A POST request to "rest/v1/system/bridges/bridge_normal/vlans/" and there is an error in the HTTP response.
+    - A POST request to `rest/v1/system/bridges/bridge_normal/vlans/` and there is an error in the HTTP response.
 
 - Creating a VLAN for:
     - An HTTP response is not equal to `400 BAD REQUEST`.
-    - A POST request to "rest/v1/system/bridges/bridge_normal/vlans/" and there is no error in the HTTP response.
+    - A POST request to `rest/v1/system/bridges/bridge_normal/vlans/` and there is no error in the HTTP response.
 
 ## Update VLAN name
 
@@ -3867,7 +4090,7 @@ The test case verifies updates for:
 ### Description
 
 - Verify if VLAN was updated successfully:
-    1. Execute the PUT request over "/rest/v1/system/bridges/bridge_normal/vlans/test" with the name field with "fake_vlan".
+    1. Execute the PUT request over `/rest/v1/system/bridges/bridge_normal/vlans/test` with the name field with "fake_vlan".
     2. Verify if the HTTP response is `200 OK`.
     3. Verify if the HTTP response is not empty.
 
@@ -3886,7 +4109,7 @@ This test fails when:
 
 - Updating a VLAN for:
     - An HTTP response is not equal to `200 OK`.
-    - A PUT request to "rest/v1/system/bridges/bridge_normal/vlans/test" and the HTTP response is not empty.
+    - A PUT request to `rest/v1/system/bridges/bridge_normal/vlans/test` and the HTTP response is not empty.
 
 ## Update VLAN using an invalid name
 
@@ -3933,7 +4156,7 @@ The test case verifies updates for:
 ### Description
 
 - Verify if VLAN was updated unsuccessfully:
-    1. Execute the PUT request over "/rest/v1/system/bridges/bridge_normal/vlans/test" with each configuration.
+    1. Execute the PUT request over `/rest/v1/system/bridges/bridge_normal/vlans/test` with each configuration.
     2. Verify if the HTTP response is `400 BAD REQUEST`.
     3. Verify if the HTTP response is not empty.
 
@@ -4030,7 +4253,7 @@ This test passes by meeting the following criteria:
 
 - Updating VLAN for:
     - An HTTP `400 BAD REQUEST` response.
-    - A PUT request to "/rest/v1/system/bridges/bridge_normal/vlans/test" and there is a non-empty HTTP response.
+    - A PUT request to `/rest/v1/system/bridges/bridge_normal/vlans/test` and there is a non-empty HTTP response.
 
 #### Test fail criteria
 
@@ -4038,7 +4261,7 @@ This test fails when:
 
 - Updating a VLAN for:
     - An HTTP response is not equal to `400 BAD REQUEST`.
-    - A PUT request to "rest/v1/system/bridges/bridge_normal/vlans/test" and there is no error in the HTTP response.
+    - A PUT request to `rest/v1/system/bridges/bridge_normal/vlans/test` and there is no error in the HTTP response.
 
 ## Update VLAN using an invalid ID
 
@@ -4085,7 +4308,7 @@ The test case verifies updates for:
 ### Description
 
 - Verify if VLAN was updated unsuccessfully:
-    1. Execute the PUT request over "/rest/v1/system/bridges/bridge_normal/vlans/test" with each configuration.
+    1. Execute the PUT request over `/rest/v1/system/bridges/bridge_normal/vlans/test` with each configuration.
     2. Verify if the HTTP response is `400 BAD REQUEST`.
     3. Verify if the HTTP response is not empty.
 
@@ -4196,7 +4419,7 @@ This test passes by meeting the following criteria:
 
 - Updating VLAN for:
     - An HTTP `400 BAD REQUEST` response.
-    - A PUT request to "/rest/v1/system/bridges/bridge_normal/vlans/test" and there is a non-empty HTTP response.
+    - A PUT request to `/rest/v1/system/bridges/bridge_normal/vlans/test` and there is a non-empty HTTP response.
 
 #### Test fail criteria
 
@@ -4204,7 +4427,7 @@ This test fails when:
 
 - Updating a VLAN for:
     - An HTTP response is not equal to `400 BAD REQUEST`.
-    - A PUT request to "rest/v1/system/bridges/bridge_normal/vlans/test" and there is no error in the HTTP response.
+    - A PUT request to `rest/v1/system/bridges/bridge_normal/vlans/test` and there is no error in the HTTP response.
 
 ## Update VLAN using an invalid Description
 
@@ -4251,7 +4474,7 @@ The test case verifies updates for:
 ### Description
 
 - Verify if VLAN was updated unsuccessfully:
-    1. Execute the PUT request over "/rest/v1/system/bridges/bridge_normal/vlans/test" with each configuration.
+    1. Execute the PUT request over `/rest/v1/system/bridges/bridge_normal/vlans/test` with each configuration.
     2. Verify if the HTTP response is `400 BAD REQUEST`.
     3. Verify if the HTTP response is not empty.
 
@@ -4348,7 +4571,7 @@ This test passes by meeting the following criteria:
 
 - Updating VLANs for:
     - An HTTP `400 BAD REQUEST` response.
-    - A PUT request to "/rest/v1/system/bridges/bridge_normal/vlans/test" and there is a non-empty HTTP response.
+    - A PUT request to `/rest/v1/system/bridges/bridge_normal/vlans/test` and there is a non-empty HTTP response.
 
 #### Test fail criteria
 
@@ -4356,7 +4579,7 @@ This test fails when:
 
 - Updating a VLAN for:
     - An HTTP response is not equal to `400 BAD REQUEST`.
-    - A PUT request to "rest/v1/system/bridges/bridge_normal/vlans/test" and there is no error in the HTTP response.
+    - A PUT request to `rest/v1/system/bridges/bridge_normal/vlans/test` and there is no error in the HTTP response.
 
 ## Update VLAN using an invalid Admin
 
@@ -4403,7 +4626,7 @@ The test case verifies updates for:
 ### Description
 
 - Verify if VLAN was updated unsuccessfully:
-    1. Execute the PUT request over "/rest/v1/system/bridges/bridge_normal/vlans/test" using each configuration.
+    1. Execute the PUT request over `/rest/v1/system/bridges/bridge_normal/vlans/test` using each configuration.
     2. Verify if the HTTP response is `400 BAD REQUEST`.
     3. Verify if the HTTP response is not empty.
 
@@ -4514,7 +4737,7 @@ This test passes by meeting the following criteria:
 
 - Updating VLANs for:
     - An HTTP `400 BAD REQUEST` response.
-    - A PUT request to "/rest/v1/system/bridges/bridge_normal/vlans/test" and there is a non-empty HTTP response.
+    - A PUT request to `/rest/v1/system/bridges/bridge_normal/vlans/test` and there is a non-empty HTTP response.
 
 #### Test fail criteria
 
@@ -4522,7 +4745,7 @@ This test fails when:
 
 - Updating a VLAN for:
     - An HTTP response is not equal to `400 BAD REQUEST`.
-    - A PUT request to "rest/v1/system/bridges/bridge_normal/vlans/test" and there is no error in the HTTP response.
+    - A PUT request to `rest/v1/system/bridges/bridge_normal/vlans/test` and there is no error in the HTTP response.
 
 ## Update VLAN using an invalid other_config
 
@@ -4569,7 +4792,7 @@ The test case verifies updates for:
 ### Description
 
 - Verify if VLAN was updated unsuccessfully:
-    1. Execute the PUT request over "/rest/v1/system/bridges/bridge_normal/vlans/test" using each configuration.
+    1. Execute the PUT request over `/rest/v1/system/bridges/bridge_normal/vlans/test` using each configuration.
     2. Verify if the HTTP response is `400 BAD REQUEST`.
     3. Verify if the HTTP response is not empty.
 
@@ -4680,7 +4903,7 @@ This test passes by meeting the following criteria:
 
 - Updating VLAN for:
     - An HTTP `400 BAD REQUEST` response.
-    - A PUT request to "/rest/v1/system/bridges/bridge_normal/vlans/test" and there is a non-empty HTTP response.
+    - A PUT request to `/rest/v1/system/bridges/bridge_normal/vlans/test` and there is a non-empty HTTP response.
 
 #### Test fail criteria
 
@@ -4688,7 +4911,7 @@ This test fails when:
 
 - Updating a VLAN for:
     - An HTTP response is not equal to `400 BAD REQUEST`.
-    - A PUT request to "rest/v1/system/bridges/bridge_normal/vlans/test" and there is no error in the HTTP response.
+    - A PUT request to `rest/v1/system/bridges/bridge_normal/vlans/test` and there is no error in the HTTP response.
 
 ## Update VLAN using an invalid external_ids
 
@@ -4735,7 +4958,7 @@ The test case verifies updates for:
 ### Description
 
 - Verify if VLAN was updated unsuccessfully:
-    1. Execute the PUT request over "/rest/v1/system/bridges/bridge_normal/vlans/test" using each configuration.
+    1. Execute the PUT request over `/rest/v1/system/bridges/bridge_normal/vlans/test` using each configuration.
     2. Verify if the HTTP response is `400 BAD REQUEST`.
     3. Verify if the HTTP response is not empty.
 
@@ -4846,7 +5069,7 @@ This test passes by meeting the following criteria:
 
 - Updating VLAN for:
     - An HTTP `400 BAD REQUEST` response.
-    - A PUT request to "/rest/v1/system/bridges/bridge_normal/vlans/test" and there is a non-empty HTTP response.
+    - A PUT request to `/rest/v1/system/bridges/bridge_normal/vlans/test` and there is a non-empty HTTP response.
 
 #### Test fail criteria
 
@@ -4854,7 +5077,7 @@ This test fails when:
 
 - Updating a VLAN for:
     - An HTTP response is not equal to `400 BAD REQUEST`.
-    - A PUT request to "rest/v1/system/bridges/bridge_normal/vlans/test" and there is no error in the HTTP response.
+    - A PUT request to `rest/v1/system/bridges/bridge_normal/vlans/test` and there is no error in the HTTP response.
 
 ## Update VLAN with missing fields
 
@@ -4928,7 +5151,7 @@ Verify if VLAN was updated unsuccessfully. The new VLAN will have the following 
 }
 ```
 
-1. Execute the PUT request over "/rest/v1/system/bridges/bridge_normal/vlans/test" with each configuration.
+1. Execute the PUT request over `/rest/v1/system/bridges/bridge_normal/vlans/test` with each configuration.
 2. Verify if the HTTP response is `400 BAD REQUEST`.
 3. Confirm that the HTTP response is not empty.
 
@@ -4939,7 +5162,7 @@ This test passes by meeting the following criteria:
 
 - Updating VLANs for:
     - An HTTP `400 BAD REQUEST` response.
-    - A PUT request to "/rest/v1/system/bridges/bridge_normal/vlans/test" and there is a non-empty HTTP response.
+    - A PUT request to `/rest/v1/system/bridges/bridge_normal/vlans/test` and there is a non-empty HTTP response.
 
 #### Test fail criteria
 
@@ -4947,7 +5170,7 @@ This test fails when:
 
 - Updating a VLAN for:
     - An HTTP response is not equal to `400 BAD REQUEST`.
-    - A PUT request to "rest/v1/system/bridges/bridge_normal/vlans/test" and there is no error in the HTTP response.
+    - A PUT request to `rest/v1/system/bridges/bridge_normal/vlans/test` and there is no error in the HTTP response.
 
 ## Delete non-existent VLAN
 
@@ -4980,7 +5203,7 @@ The test case verifies deletes for:
 ### Description
 
 - Verify if non-existent VLAN was not deleted:
-    1. Execute the DELETE request over "/rest/v1/system/bridges/bridge_normal/vlans/not_found".
+    1. Execute the DELETE request over `/rest/v1/system/bridges/bridge_normal/vlans/not_found`.
     2. Verify if the HTTP response is `404 NOT FOUND`.
     3. Verify if the HTTP response is empty.
 
@@ -4991,7 +5214,7 @@ This test passes by meeting the following criteria:
 
 - Deleting VLAN for:
     - An HTTP `404 NOT FOUND` response.
-    - A DELETE request to "/rest/v1/system/bridges/bridge_normal/vlans/not_dounf" and there is a empty HTTP response.
+    - A DELETE request to `/rest/v1/system/bridges/bridge_normal/vlans/not_dounf` and there is a empty HTTP response.
 
 #### Test fail criteria
 
@@ -4999,7 +5222,7 @@ This test fails when:
 
 - Deleting VLAN for:
     - An HTTP response is not equal to `404 NOT FOUND`.
-    - A DELETE request to "rest/v1/system/bridges/bridge_normal/vlans/not_found" and there is a non-empty HTTP response.
+    - A DELETE request to `rest/v1/system/bridges/bridge_normal/vlans/not_found` and there is a non-empty HTTP response.
 
 ## Query VLANs filtered by name
 
@@ -5048,7 +5271,7 @@ The "number" will be from 1 to 10 respectively.
 ### Description
 
 - Verify if VLAN was queried successfully:
-    1. Execute the GET request over "/rest/v1/system/bridges/bridge_normal/vlans?depth=1;name=Vlan-<number>" for each VLAN added.
+    1. Execute the GET request over `/rest/v1/system/bridges/bridge_normal/vlans?depth=1;name=Vlan-<number>` for each VLAN added.
     2. Verify if the HTTP response is `200 OK`.
     3. Verify if the HTTP response is not empty.
     4. Verify if the HTTP response contains one VLAN.
@@ -5069,7 +5292,7 @@ This test fails when:
 
 - Querying VLAN for:
  - An HTTP response is not equal to `200 OK`.
- - A GET request to "rest/v1/system/bridges/bridge_normal/vlans?depth=1;name=Vlan-<number>" and the test VLAN is not within the HTTP response.
+ - A GET request to `rest/v1/system/bridges/bridge_normal/vlans?depth=1;name=Vlan-<number>` and the test VLAN is not within the HTTP response.
 
 ## Query VLANs filtered by ID
 
@@ -5118,7 +5341,7 @@ The "number" will be from 1 to 10 respectively.
 ### Description
 
 - Verify if the test VLAN is filtered by name:
-    1. Execute the GET request over "/rest/v1/system/bridges/bridge_normal/vlans?depth=1;id=<number>" for each VLAN added.
+    1. Execute the GET request over `/rest/v1/system/bridges/bridge_normal/vlans?depth=1;id=<number>` for each VLAN added.
     2. Verify if the HTTP response is `200 OK`.
     3. Verify if the HTTP response is not empty.
     4. Verify if the HTTP response contains one VLAN.
@@ -5139,7 +5362,7 @@ This test fails when:
 
 - Querying VLAN for:
     - An HTTP response is not equal to `200 OK`.
-    - A GET request to "rest/v1/system/bridges/bridge_normal/vlans?depth=1;id=Vlan-<number>" and the test VLAN is not within the HTTP response.
+    - A GET request to `rest/v1/system/bridges/bridge_normal/vlans?depth=1;id=Vlan-<number>` and the test VLAN is not within the HTTP response.
 
 ## Query VLANs filtered by Description
 
@@ -5203,7 +5426,7 @@ The "number" will be from 1 to 10 respectively.
 ### Description
 
 - Verify if VLAN was queried successfully:
-    1. Execute the GET request over "/rest/v1/system/bridges/bridge_normal/vlans?depth=1;description=fake_vlan" for each VLAN modified.
+    1. Execute the GET request over `/rest/v1/system/bridges/bridge_normal/vlans?depth=1;description=fake_vlan` for each VLAN modified.
     2. Verify if the HTTP response is `200 OK`.
     3. Verify if the HTTP response is not empty.
     4. Verify if the HTTP response contains five VLANs.
@@ -5224,7 +5447,7 @@ This test fails when:
 
 - Querying VLAN for:
     - An HTTP response is not equal to `200 OK`.
-    - A GET request to "rest/v1/system/bridges/bridge_normal/vlans?depth=1;description=fake_vlan" and the test VLANs are not within the HTTP response.
+    - A GET request to `rest/v1/system/bridges/bridge_normal/vlans?depth=1;description=fake_vlan` and the test VLANs are not within the HTTP response.
 
 ## Query VLANs filtered by Admin
 
@@ -5288,7 +5511,7 @@ The "number" will be from 1 to 10 respectively.
 ### Description
 
 - Verify if VLAN was queried successfully:
-    1. Execute the GET request over "/rest/v1/system/bridges/bridge_normal/vlans?depth=1;admin=down" for each VLAN modified.
+    1. Execute the GET request over `/rest/v1/system/bridges/bridge_normal/vlans?depth=1;admin=down` for each VLAN modified.
     2. Verify if the HTTP response is `200 OK`.
     3. Verify if the HTTP response is not empty.
     4. Verify if the HTTP response contains five VLANs.
@@ -5309,12 +5532,12 @@ This test fails when:
 
 - Querying VLAN for:
     - An HTTP response is not equal to `200 OK`.
-    - A GET request to "rest/v1/system/bridges/bridge_normal/vlans?depth=1;admin=down" and the test VLANs are not within the HTTP response.
+    - A GET request to `rest/v1/system/bridges/bridge_normal/vlans?depth=1;admin=down` and the test VLANs are not within the HTTP response.
 
 ## Update VLAN using If Match header with star Etag
 
 ### Objective
-The objective of the test is to validate "rest/{version}/system/bridges/{id}/vlans/{id}" through the standard REST API PUT method using If-Match header with the field value `*`.
+The objective of the test is to validate `rest/<version>/system/bridges/<id>/vlans/<id>` through the standard REST API PUT method using If-Match header with the field value `*`.
 
 ###  Requirements
 
@@ -5336,8 +5559,8 @@ The objective of the test is to validate "rest/{version}/system/bridges/{id}/vla
 
 #### Test setup
 
-** Switch 1 ** has bridge_normal configure by default.
-** Switch 1 ** a test VLAN has to be added with the following configuration:
+**Switch 1** has bridge_normal configure by default.
+**Switch 1** a test VLAN has to be added with the following configuration:
 
 ```
 {
@@ -5355,12 +5578,12 @@ The objective of the test is to validate "rest/{version}/system/bridges/{id}/vla
 ### Description
 
 Verify if VLAN was updated successfully using If-Match header using value `*` as Etag:
- 1. Execute a GET request over "/rest/v1/system/bridges/bridge_normal/vlans/test?selector=configuration".
+ 1. Execute a GET request over `/rest/v1/system/bridges/bridge_normal/vlans/test?selector=configuration`.
  2. Modify VLAN description field: `"description": "Etag match"`
- 3. Execute PUT request over "/rest/v1/system/bridges/bridge_normal/vlans/test?selector=configuration" and include the If-Match Header using field value `*` as Etag.
+ 3. Execute PUT request over `/rest/v1/system/bridges/bridge_normal/vlans/test?selector=configuration` and include the If-Match Header using field value `*` as Etag.
  4. Verify if the HTTP response is `200 OK`.
  5. Verify if the HTTP response is empty.
- 6. Confirm that VLAN description field was updated.
+ 6. Confirm that the VLAN description field was updated.
 
 ### Test result criteria
 #### Test pass criteria
@@ -5382,7 +5605,7 @@ This test fails when:
 ## Update VLAN using If Match header with a matching Etag
 
 ### Objective
-The objective of the test is to validate "rest/{version}/system/bridges/{id}/vlans/{id}" through the standard REST API PUT method using If-Match header with a matching Etag.
+The objective of the test is to validate `rest/<version>/system/bridges/<id>/vlans/<id>` through the standard REST API PUT method using If-Match header with a matching Etag.
 
 ###  Requirements
 
@@ -5404,8 +5627,8 @@ The objective of the test is to validate "rest/{version}/system/bridges/{id}/vla
 
 #### Test setup
 
-** Switch 1 ** has bridge_normal configure by default.
-** Switch 1 ** a test VLAN has to be added with the following configuration:
+**Switch 1** has bridge_normal configure by default.
+**Switch 1** a test VLAN has to be added with the following configuration:
 
 ```
 {
@@ -5422,14 +5645,14 @@ The objective of the test is to validate "rest/{version}/system/bridges/{id}/vla
 
 ### Description
 
- Verify if VLAN was updated unsuccessfully using If-Match header with a matching Etag.
- 1. Execute a GET request over "/rest/v1/system/bridges/bridge_normal/vlans/test?selector=configuration".
+Verify if VLAN was updated unsuccessfully using If-Match header with a matching Etag.
+ 1. Execute a GET request over `/rest/v1/system/bridges/bridge_normal/vlans/test?selector=configuration`.
  2. Read Etag header field provided by the server.
  3. Modify VLAN description field: `"description": "Etag match"`
- 4. Execute PUT request over "/rest/v1/system/bridges/bridge_normal/vlans/test?selector=configuration" and include the If-Match Header using the Etag read at step 2.
+ 4. Execute PUT request over `/rest/v1/system/bridges/bridge_normal/vlans/test?selector=configuration` and include the If-Match Header using the Etag read at step 2.
  5. Verify if the HTTP response is `200 OK`.
  6. Verify if the HTTP response is empty.
- 7. Confirm that VLAN description field was updated.
+ 7. Confirm that the VLAN description field was updated.
 
 ### Test result criteria
 #### Test pass criteria
@@ -5451,7 +5674,7 @@ This test fails when:
 ## Update VLAN using If Match header with a not matching Etag
 
 ### Objective
-The objective of the test is to validate "rest/{version}/system/bridges/{id}/vlans/{id}" through the standard REST API PUT method using If-Match header with a not matching Etag.
+The objective of the test is to validate `rest/<version>/system/bridges/<id>/vlans/<id>` through the standard REST API PUT method using If-Match header with a not matching Etag.
 
 ###  Requirements
 
@@ -5473,8 +5696,8 @@ The objective of the test is to validate "rest/{version}/system/bridges/{id}/vla
 
 #### Test setup
 
-** Switch 1 ** has bridge_normal configure by default.
-** Switch 1 ** a test VLAN has to be added with the following configuration:
+**Switch 1** has bridge_normal configure by default.
+**Switch 1** a test VLAN has to be added with the following configuration:
 
 ```
 {
@@ -5492,11 +5715,11 @@ The objective of the test is to validate "rest/{version}/system/bridges/{id}/vla
 ### Description
 
 Verify if VLAN was not updated using If-Match header with a not matching Etag.
- 1. Execute a GET request over "/rest/v1/system/bridges/bridge_normal/vlans/test?selector=configuration".
+ 1. Execute a GET request over `/rest/v1/system/bridges/bridge_normal/vlans/test?selector=configuration`.
  2. Read Etag header field provided by the server.
  3. Modify VLAN description field: `"description": "Etag match"`
  4. Change the Etag value read at step 2.
- 5. Execute PUT request over "/rest/v1/system/bridges/bridge_normal/vlans/test?selector=configuration" and include the If-Match Header using the changed Etag from step 4.
+ 5. Execute PUT request over `/rest/v1/system/bridges/bridge_normal/vlans/test?selector=configuration` and include the If-Match Header using the changed Etag from step 4.
  6. Verify if the HTTP response is `412 Precondition Failed`.
 
 ### Test result criteria
@@ -5514,7 +5737,7 @@ This test fails when the HTTP response is not equal to `412 Precondition Failed`
 
 ### Objective
 
-The objective of the test is to validate "rest/{version}/system/bridges/{id}/vlans" through the standard REST API POST method using If-Match header with a matching Etag.
+The objective of the test is to validate `rest/<version>/system/bridges/<id>/vlans` through the standard REST API POST method using If-Match header with a matching Etag.
 
 ###  Requirements
 
@@ -5535,8 +5758,8 @@ The objective of the test is to validate "rest/{version}/system/bridges/{id}/vla
 
 #### Test setup
 
-** Switch 1 ** has bridge_normal configure by default.
-** Switch 1 ** a test VLAN has to be added with the following configuration:
+**Switch 1** has bridge_normal configure by default.
+**Switch 1** a test VLAN has to be added with the following configuration:
 
 ```
 {
@@ -5554,12 +5777,12 @@ The objective of the test is to validate "rest/{version}/system/bridges/{id}/vla
 ### Description
 
 Verify if VLAN was added successfully using If-Match header with a matching Etag.
- 1. Execute a GET request over "/rest/v1/system/bridges/bridge_normal/vlans?selector=configuration".
+ 1. Execute a GET request over `/rest/v1/system/bridges/bridge_normal/vlans?selector=configuration`.
  2. Read Etag header field provided by the server.
- 3. Execute POST request over "/rest/v1/system/bridges/bridge_normal/vlans?selector=configuration" and include the If-Match Header using the Etag read at step 2.
+ 3. Execute POST request over `/rest/v1/system/bridges/bridge_normal/vlans?selector=configuration` and include the If-Match Header using the Etag read at step 2.
  4. Verify if the HTTP response is `201 CREATED`.
  5. Verify if the HTTP response is empty.
- 6. Confirm that VLAN description field was updated.
+ 6. Confirm that the VLAN description field was updated.
 
 The new VLAN will have the following configuration data:
 ```
@@ -5593,7 +5816,7 @@ This test fails when:
 ## Create VLAN using If Match header with a not matching Etag
 
 ### Objective
-The objective of the test is to validate "rest/{version}/system/bridges/{id}/vlans" through the standard REST API POST method using If-Match header with a not matching Etag.
+The objective of the test is to validate `rest/<version>/system/bridges/<id>/vlans` through the standard REST API POST method using If-Match header with a not matching Etag.
 
 ###  Requirements
 
@@ -5614,8 +5837,8 @@ The objective of the test is to validate "rest/{version}/system/bridges/{id}/vla
 
 #### Test setup
 
-** Switch 1 ** has bridge_normal configure by default.
-** Switch 1 ** a test VLAN has to be added with the following configuration:
+**Switch 1** has bridge_normal configure by default.
+**Switch 1** a test VLAN has to be added with the following configuration:
 
 ```
 {
@@ -5633,10 +5856,10 @@ The objective of the test is to validate "rest/{version}/system/bridges/{id}/vla
 ### Description
 
 Verify if VLAN was not created using If-Match header with a not-matching Etag.
- 1. Execute a GET request over "/rest/v1/system/bridges/bridge_normal/vlans?selector=configuration".
+ 1. Execute a GET request over `/rest/v1/system/bridges/bridge_normal/vlans?selector=configuration`.
  2. Read Etag header field provided by the server.
  3. Change the Etag value read at step 2.
- 4. Execute POST request over "/rest/v1/system/bridges/bridge_normal/vlans?selector=configuration" and include the If-Match Header using the Etag read at step 4.
+ 4. Execute POST request over `/rest/v1/system/bridges/bridge_normal/vlans?selector=configuration` and include the If-Match Header using the Etag read at step 4.
  5. Verify if the HTTP response is `412 Precondition Failed`
 
 ### Test result criteria
@@ -5654,7 +5877,7 @@ This test fails when the HTTP response is not equal to `412 Precondition Failed`
 
 ### Objective
 
-The objective of the test is to validate "rest/{version}/system/bridges/{id}/vlans" through the standard REST API GET method using If-Match header with a matching Etag.
+The objective of the test is to validate `rest/<version>/system/bridges/<id>/vlans` through the standard REST API GET method using If-Match header with a matching Etag.
 
 ###  Requirements
 
@@ -5676,8 +5899,8 @@ The objective of the test is to validate "rest/{version}/system/bridges/{id}/vla
 
 #### Test setup
 
-** Switch 1 ** has bridge_normal configure by default.
-** Switch 1 ** a test VLAN has to be added with the following configuration:
+**Switch 1** has bridge_normal configure by default.
+**Switch 1** a test VLAN has to be added with the following configuration:
 
 ```
 {
@@ -5695,9 +5918,9 @@ The objective of the test is to validate "rest/{version}/system/bridges/{id}/vla
 ### Description
 
 Verify if the VLANs are retrieved successfully using If-Match header with a matching Etag.
- 1. Execute a GET request over "/rest/v1/system/bridges/bridge_normal/vlans?selector=configuration".
+ 1. Execute a GET request over `/rest/v1/system/bridges/bridge_normal/vlans?selector=configuration`.
  2. Read Etag header field provided by the server.
- 3. Execute GET request over "/rest/v1/system/bridges/bridge_normal/vlans?selector=configuration" and include the If-Match Header using the Etag read at step 2.
+ 3. Execute GET request over `/rest/v1/system/bridges/bridge_normal/vlans?selector=configuration` and include the If-Match Header using the Etag read at step 2.
  4. Verify if the HTTP response is `200 OK`.
  5. Verify if the HTTP response is not empty.
 
@@ -5719,7 +5942,7 @@ This test fails when:
 ## Query all VLANs using If Match header with a not matching Etag
 
 ### Objective
-The objective of the test is to validate "rest/{version}/system/bridges/{id}/vlans" through the standard REST API GET method using If-Match header with a not matching Etag.
+The objective of the test is to validate `rest/<version>/system/bridges/<id>/vlans` through the standard REST API GET method using If-Match header with a not matching Etag.
 
 ###  Requirements
 
@@ -5740,8 +5963,8 @@ The objective of the test is to validate "rest/{version}/system/bridges/{id}/vla
 
 #### Test setup
 
-** Switch 1 ** has bridge_normal configure by default.
-** Switch 1 ** a test VLAN has to be added with the following configuration:
+**Switch 1** has bridge_normal configure by default.
+**Switch 1** a test VLAN has to be added with the following configuration:
 
 ```
 {
@@ -5759,10 +5982,10 @@ The objective of the test is to validate "rest/{version}/system/bridges/{id}/vla
 ### Description
 
 Verify if the VLANs aren't retrieved using If-Match header with a not matching Etag.
- 1. Execute a GET request over "/rest/v1/system/bridges/bridge_normal/vlans?selector=configuration".
+ 1. Execute a GET request over `/rest/v1/system/bridges/bridge_normal/vlans?selector=configuration`.
  2. Read Etag header field provided by the server.
  3. Change the Etag value read at step 2.
- 4. Execute GET request over "/rest/v1/system/bridges/bridge_normal/vlans?selector=configuration" and include the If-Match Header using the Etag read at step 3.
+ 4. Execute GET request over `/rest/v1/system/bridges/bridge_normal/vlans?selector=configuration` and include the If-Match Header using the Etag read at step 3.
  5. Verify if the HTTP response is `412 Precondition Failed`.
 
 ### Test result criteria
@@ -5780,7 +6003,7 @@ This test fails when the HTTP response is not equal to `412 Precondition Failed`
 
 ### Objective
 
-The objective of the test is to validate "rest/{version}/system/bridges/{id}/vlans/{id}" through the standard REST API GET method using If-Match header with a matching Etag.
+The objective of the test is to validate `rest/<version>/system/bridges/<id>/vlans/<id>` through the standard REST API GET method using If-Match header with a matching Etag.
 
 ###  Requirements
 
@@ -5802,8 +6025,8 @@ The objective of the test is to validate "rest/{version}/system/bridges/{id}/vla
 
 #### Test setup
 
-** Switch 1 ** has bridge_normal configure by default.
-** Switch 1 ** a test VLAN has to be added with the following configuration:
+**Switch 1** has bridge_normal configure by default.
+**Switch 1** a test VLAN has to be added with the following configuration:
 
 ```
 {
@@ -5821,9 +6044,9 @@ The objective of the test is to validate "rest/{version}/system/bridges/{id}/vla
 ### Description
 
 Verify if the VLAN is retrieved successfully using If-Match header with a matching Etag.
- 1. Execute a GET request over "/rest/v1/system/bridges/bridge_normal/vlans/test?selector=configuration".
+ 1. Execute a GET request over `/rest/v1/system/bridges/bridge_normal/vlans/test?selector=configuration`.
  2. Read Etag header field provided by the server.
- 3. Execute GET request over "/rest/v1/system/bridges/bridge_normal/vlans/test?selector=configuration" and include the If-Match Header using the Etag read at step 2.
+ 3. Execute GET request over `/rest/v1/system/bridges/bridge_normal/vlans/test?selector=configuration` and include the If-Match Header using the Etag read at step 2.
  4. Verify if the HTTP response is `200 OK`.
  5. Verify if the HTTP response is not empty.
 
@@ -5845,7 +6068,7 @@ This test fails when:
 ## Query VLAN using If Match header with a not matching Etag
 
 ### Objective
-The objective of the test is to validate "rest/{version}/system/bridges/{id}/vlans/{id}" through the standard REST API GET method using If-Match header with a not matching Etag.
+The objective of the test is to validate `rest/<version>/system/bridges/<id>/vlans/<id>` through the standard REST API GET method using If-Match header with a not matching Etag.
 
 ###  Requirements
 
@@ -5866,8 +6089,8 @@ The objective of the test is to validate "rest/{version}/system/bridges/{id}/vla
 
 #### Test setup
 
-** Switch 1 ** has bridge_normal configure by default.
-** Switch 1 ** a test VLAN has to be added with the following configuration:
+**Switch 1** has bridge_normal configure by default.
+**Switch 1** a test VLAN has to be added with the following configuration:
 
 ```
 {
@@ -5885,10 +6108,10 @@ The objective of the test is to validate "rest/{version}/system/bridges/{id}/vla
 ### Description
 
 Verify if the VLAN is not retrieved using If-Match header with a not matching Etag.
- 1. Execute a GET request over "/rest/v1/system/bridges/bridge_normal/vlans/test?selector=configuration".
+ 1. Execute a GET request over `/rest/v1/system/bridges/bridge_normal/vlans/test?selector=configuration`.
  2. Read Etag header field provided by the server.
  3. Change the Etag value read at step 2.
- 4. Execute GET request over "/rest/v1/system/bridges/bridge_normal/vlans/test?selector=configuration" and include the If-Match Header using the Etag read at step 3.
+ 4. Execute GET request over `/rest/v1/system/bridges/bridge_normal/vlans/test?selector=configuration` and include the If-Match Header using the Etag read at step 3.
  5. Verify if the HTTP response is `412 Precondition Failed`.
 
 ### Test result criteria
@@ -5906,7 +6129,7 @@ This test fails when the HTTP response is not equal to `412 Precondition Failed`
 
 ### Objective
 
-The objective of the test is to validate "rest/{version}/system/bridges/{id}/vlans/{id}" through the standard REST API DELETE method using If-Match header with a matching Etag.
+The objective of the test is to validate `rest/<version>/system/bridges/<id>/vlans/<id>` through the standard REST API DELETE method using If-Match header with a matching Etag.
 
 ###  Requirements
 
@@ -5928,8 +6151,8 @@ The objective of the test is to validate "rest/{version}/system/bridges/{id}/vla
 
 #### Test setup
 
-** Switch 1 ** has bridge_normal configure by default.
-** Switch 1 ** a test VLAN has to be addded with the following configuration:
+**Switch 1** has bridge_normal configure by default.
+**Switch 1** a test VLAN has to be addded with the following configuration:
 
 ```
 {
@@ -5944,7 +6167,7 @@ The objective of the test is to validate "rest/{version}/system/bridges/{id}/vla
 }
 ```
 
-Add a VLAN to ** Switch 1 ** with the following data:
+Add a VLAN to **Switch 1** with the following data:
 ```
 {
     "configuration": {
@@ -5960,9 +6183,9 @@ Add a VLAN to ** Switch 1 ** with the following data:
 
 ### Description
 Verify if the VLAN is deleted successfully using If-Match header with a matching Etag.
- 1. Execute a GET request over "/rest/v1/system/bridges/bridge_normal/vlans/VLAN2?selector=configuration".
+ 1. Execute a GET request over `/rest/v1/system/bridges/bridge_normal/vlans/VLAN2?selector=configuration`.
  2. Read Etag header field provided by the server.
- 3. Execute DELETE request over "/rest/v1/system/bridges/bridge_normal/vlans/VLAN2?selector=configuration" and include the If-Match Header using the Etag read at step 2.
+ 3. Execute DELETE request over `/rest/v1/system/bridges/bridge_normal/vlans/VLAN2?selector=configuration` and include the If-Match Header using the Etag read at step 2.
  4. Verify if the HTTP response is `204 No Content`.
  5. Verify if the HTTP response is not empty.
 
@@ -5984,7 +6207,7 @@ This test fails when:
 ## Delete VLAN using If Match header with a not matching Etag
 
 ### Objective
-The objective of the test is to validate "rest/{version}/system/bridges/{id}/vlans/{id}" through the standard REST API DELETE method using If-Match header with a not matching Etag.
+The objective of the test is to validate `rest/<version>/system/bridges/<id>/vlans/<id>` through the standard REST API DELETE method using If-Match header with a not matching Etag.
 
 ###  Requirements
 
@@ -6005,8 +6228,8 @@ The objective of the test is to validate "rest/{version}/system/bridges/{id}/vla
 
 #### Test setup
 
-** Switch 1 ** has bridge_normal configure by default.
-** Switch 1 ** a test VLAN has to be addded with the following configuration:
+**Switch 1** has bridge_normal configure by default.
+**Switch 1** a test VLAN has to be addded with the following configuration:
 
 ```
 {
@@ -6037,10 +6260,10 @@ Add a VLAN with the following data:
 
 ### Description
 Verify if the VLAN is not deleted using If-Match header with a not matching Etag.
- 1. Execute a GET request over "/rest/v1/system/bridges/bridge_normal/vlans/test?selector=configuration".
+ 1. Execute a GET request over `/rest/v1/system/bridges/bridge_normal/vlans/test?selector=configuration`.
  2. Read Etag header field provided by the server.
  3. Change the Etag value read at step 2.
- 4. Execute DELETE request over "/rest/v1/system/bridges/bridge_normal/vlans/test?selector=configuration" and include the If-Match Header using the Etag read at step 3.
+ 4. Execute DELETE request over `/rest/v1/system/bridges/bridge_normal/vlans/test?selector=configuration` and include the If-Match Header using the Etag read at step 3.
  5. Verify if the HTTP response is `412 Precondition Failed`.
 
 ### Test result criteria
@@ -6054,7 +6277,7 @@ A `412 Precondition Failed` HTTP response.
 
 This test fails when the HTTP response is not equal to `412 Precondition Failed`.
 
-##  Declarative configuration schema validations
+## Declarative configuration schema validations
 ### Objective
 The test case verifies that the schema validations for the declarative configuration including incorrect data type, out of range, missing mandatory field, and invalid reference checking prevents invalid configurations from reaching the database.
 
@@ -6179,7 +6402,7 @@ The test case is considered passing if the PUT request using the valid data is s
 #### Test fail criteria
 The test is considered failing if the PUT request using the invalid data is successful. A successful response indicates that the schema validations did not detect errors in the data.
 
-##  Custom validators
+## Custom validators
 ### Objective
 This test case verifies that the custom validation framework invokes an implemented custom validator upon a POST request and also returns any issues.
 
@@ -6347,3 +6570,37 @@ For REST, the test case is considered passing if the request for creating the fi
 
 #### Test fail criteria
 For REST, the test case is considered failing if the second request to create another BGP router is successful. A successful response indicates that the custom validation framework did not invoke the custom validator for the BGP router. Similarly, for the declarative configuration, the test case is considered failing if a successful response is received when configuring the invalid configuration.
+
+## HTTPS support
+All REST APIs use the HTTPS protocol to send requests to the REST server. The HTTPS protocol requires the SSL certificate and the private key for authentication of the REST server. It also provides encryption of the data exchanged.
+The REST server by default uses a self-signed SSL certificate for this purpose. All of the REST test scripts use the same SSL certificate for testing purpose. The above tests are all modified to send an HTTPS request to the REST server. REST test scripts currently use two different test frameworks:`ops-vsi` and `ops-ft-framework`. The `ops-ft-framework` framework creates a virtual host running a generic Ubuntu image, which uses Python 2.7.6. The following change has been added to `ops-ft-framework` to set up an HTTPS connection with the REST server.
+
+```ditaa
+import ssl
+import httplib
+headers = {"Content-type": "application/json", "Accept": "text/plain"}
+url = '/rest/v1/system/ports'
+conn = httplib.HTTPSConnection(server_ip, 443, cert_file="/root/restEnv/server.crt, key_file="/root/restEnv/server.key")
+conn.request('GET', url, None, headers)
+response = conn.getresponse()
+
+```
+
+Scripts, using the `ops-vsi` framework run Python 2.7.9, introduces the SSL context. The following change is added in the library function to set up an HTTPS connection with the REST server. As this is a self-signed certificate, hostname is not being used. Hence, the `check_hostname` flag is set to false. For certificates obtained from a trusted certificate authority (CA), the `check_hostname flag` must be set to true.
+
+```ditaa
+import ssl
+import httplib
+headers = {"Content-type": "application/json", "Accept": "text/plain"}
+sslcontext = ssl.SSLContext(ssl.PROTOCOL_SSLv23)
+sslcontext.verify_mode = ssl.CERT_REQUIRED
+sslcontext.check_hostname = False
+src_path = os.path.dirname(os.path.realpath(__file__))
+src_file = os.path.join(src_path, 'server.crt')
+sslcontext.load_verify_locations(src_file)
+url = '/rest/v1/system/ports'
+conn = httplib.HTTPSConnection(server_ip, 443, context=sslcontext)
+conn.request('GET', url, None, headers)
+response = conn.getresponse()
+
+```

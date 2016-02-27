@@ -134,6 +134,9 @@ class Test_ft_framework_basics:
             Test_ft_framework_basics.testObj.topoObjGet()
 
     def teardown_class(cls):
+        # Stop the LACP Daemon so that it dumps the coverage data
+        dut01Obj = cls.topoObj.deviceObjGet(device="dut01")
+        dut01Obj.cmd("systemctl stop ops-lacpd")
         Test_ft_framework_basics.topoObj.terminate_nodes()
 
     def test_initializeDev(self):

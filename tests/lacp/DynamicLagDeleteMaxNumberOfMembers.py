@@ -648,6 +648,9 @@ class Test_ft_framework_basics:
             cls.topoObj.deviceObjGet(device="dut02"),
             cls.topoObj.deviceObjGet(device="wrkston01"),
             cls.topoObj.deviceObjGet(device="wrkston02"))
+        # Stop the LACP Daemon so that it dumps the coverage data
+        dut01Obj = cls.topoObj.deviceObjGet(device="dut01")
+        dut01Obj.cmd("systemctl stop ops-lacpd")
         # Terminate all nodes
         Test_ft_framework_basics.topoObj.terminate_nodes()
 

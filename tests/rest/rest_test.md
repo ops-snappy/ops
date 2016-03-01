@@ -23,6 +23,7 @@ REST API Test Cases
 - [REST API get method with pagination for ports](#rest-api-get-method-with-pagination-for-ports)
 - [REST API get method and sort by field for ports](#rest-api-get-method-and-sort-by-field-for-ports)
 - [REST API get method and sort by field combination for ports](#rest-api-get-method-and-sort-by-field-combination-for-ports)
+- [REST API get method with specific column retrieval for interfaces](#rest-api-get-method-with-specific-column-retrieval-for-interfaces)
 - [REST API patch method for system](#rest-api-patch-method-for-system)
 - [REST API VLANs Resource test cases](#rest-api-vlans-resource-test-cases)
   - [Query Bridge Normal](#query-bridge-normal)
@@ -476,22 +477,22 @@ The requirements for this test case are:
 
 The test case validates the `/rest/v1/system/users` through the standard REST API GET method.
 
-1. Verify if the GET method returns a json object with a list of users by creating 100 new users that are part of ovsdb_users group.
+1. Verify if the GET method returns a json object with a list of users by creating 100 new users that are part of ovsdb-client group.
     a. Execute the GET request over `/rest/v1/system/users?depth=1`.
     b. Verify if the HTTP response is `200 OK`.
     c. Confirm that the returned user list has the expected data.
 
-2. Verify if the GET method returns an users URI list by creating 100 new users that are part of ovsdb_users group.
+2. Verify if the GET method returns an users URI list by creating 100 new users that are part of ovsdb-client group.
     a. Execute the GET request over `/rest/v1/system/users`.
     b. Verify if the HTTP response is `200 OK`.
     c. Confirm that the returned user list has the expected data.
 
-3. Verify if the GET method returns a json object with a list of users by creating 11 new users and only 10 are part of ovsdb_users group.
+3. Verify if the GET method returns a json object with a list of users by creating 11 new users and only 10 are part of ovsdb-client group.
     a. Execute the GET request over `/rest/v1/system/users?depth=1`.
     b. Verify if the HTTP response is `200 OK`.
     c. Confirm that the returned user list has the expected data.
 
-4. Verify if the GET method returns a json object with a list of users by creating 10 new users that are part of ovsdb_users group and have extra arguments in the creation command.
+4. Verify if the GET method returns a json object with a list of users by creating 10 new users that are part of ovsdb-client group and have extra arguments in the creation command.
     a. Execute the GET request over `/rest/v1/system/users?depth=1`.
     b. Verify if the HTTP response is `200 OK`.
     c. Confirm that the returned user list has the expected data.
@@ -845,12 +846,12 @@ The requirements for this test case are:
 ### Description
 The test case validates the `/rest/v1/system/users/<id>` through the standard REST API DELETE method.
 
-1. Verify that the request passes when trying to delete a new user who is part of ovsdb_users group and is not logged in.
+1. Verify that the request passes when trying to delete a new user who is part of ovsdb-client group and is not logged in.
     a. Execute the DELETE request over `/rest/v1/system/users/<id>`.
     b. Verify if the HTTP response is `204 NO CONTENT`.
     c. Confirm that the returned user list has the expected data.
 
-2. Verify that the request fails when trying to delete a new user who is part of ovsdb_users group and is logged in.
+2. Verify that the request fails when trying to delete a new user who is part of ovsdb-client group and is logged in.
     a. Execute the DELETE request over `/rest/v1/system/users/<id>`.
     b. Verify if the HTTP response is `400 BAD REQUEST`.
     c. Confirm that the returned user list has the expected data.
@@ -864,7 +865,7 @@ The test case validates the `/rest/v1/system/users/<id>` through the standard RE
     a. Execute the DELETE request over `/rest/v1/system/users/<id>`.
     b. Verify if the HTTP response is `404 NOT FOUND`.
 
-5. Verify that the request fails after trying to delete a new user who is not part of the ovsdb_users group.
+5. Verify that the request fails after trying to delete a new user who is not part of the ovsdb-client group.
     a. Execute the DELETE request over `/rest/v1/system/users/<id>`.
     b. Verify if the HTTP response is `404 NOT FOUND`.
     c. Confirm that the returned user list has the expected data.
@@ -886,7 +887,7 @@ This test passes by meeting the following criteria:
 
     A `404 NOT FOUND` HTTP response.
 
-- The following error message is displayed when trying to delete a user who is not part of ovsdb_users group:
+- The following error message is displayed when trying to delete a user who is not part of ovsdb-client group:
 
     A `404 NOT FOUND` HTTP response.
 
@@ -904,7 +905,7 @@ This test fails when:
 
 - Deleting a nonexistent user anything other than a `404 NOT FOUND` HTTP response is displayed.
 
-- Deleting a user who is not part of the ovsdb_users group, the following error message or anything other than a `404 NOT FOUND` HTTP response is displayed:
+- Deleting a user who is not part of the ovsdb-client group, the following error message or anything other than a `404 NOT FOUND` HTTP response is displayed:
 
     A `204 NO CONTENT` HTTP response.
 
@@ -949,7 +950,7 @@ The requirements for this test case are:
 ### Description
 The test case validates the `/rest/v1/system/users/<id>` through the standard REST API PUT method.
 
-1. Verify that the request passes when trying to update the password of a user, who is also part of ovsdb_users group but is not logged in.
+1. Verify that the request passes when trying to update the password of a user, who is also part of ovsdb-client group but is not logged in.
     a. Execute the PUT request over `/rest/v1/system/users/<id>` with the following data:
 
         ```
@@ -964,7 +965,7 @@ The test case validates the `/rest/v1/system/users/<id>` through the standard RE
     b. Verify if the HTTP response is `200 OK`.
     c. Confirm that the user can log in with the new password.
 
-2. Verify that the request fails when trying to update a user with an empty password, and the user is part of the ovsdb_users group.
+2. Verify that the request fails when trying to update a user with an empty password, and the user is part of the ovsdb-client group.
     a. Execute the PUT request over `/rest/v1/system/users/<id>` with the following data:
 
         ```
@@ -993,7 +994,7 @@ The test case validates the `/rest/v1/system/users/<id>` through the standard RE
 
     b. Verify if the HTTP response is `404 NOT FOUND`.
 
-4. Verify that the request fails after trying to update the password of a user who is not part of the ovsdb_users group.
+4. Verify that the request fails after trying to update the password of a user who is not part of the ovsdb-client group.
     a. Execute the PUT request over `/rest/v1/system/users/<id>` with the following data:
 
         ```
@@ -1007,7 +1008,7 @@ The test case validates the `/rest/v1/system/users/<id>` through the standard RE
 
     b. Verify if the HTTP response is `404 NOT FOUND`.
 
-5. Verify that the request fails after trying to update the password of a user who is part of the ovsdb_users group and then try to log in with the old password.
+5. Verify that the request fails after trying to update the password of a user who is part of the ovsdb-client group and then try to log in with the old password.
     a. Execute the PUT request over `/rest/v1/system/users/<id>` with the following data:
 
         ```
@@ -2420,6 +2421,128 @@ The test fails when:
 - The HTTP response is not `200 OK`.
 - The response doesn't have 10 ports.
 - The result is not sorted ascending/descending by the combination of fields.
+
+## REST API get method with specific column retrieval for interfaces
+
+### Objective
+The test case verifies queries for:
+
+- Single column retrieval
+- Multiple column retrieval
+- Column retrieval without depth argument
+- Column retrieval with empty columns argument
+- Column retrieval with nonexistent column key
+- Column retrieval with filter
+- Column retrieval with pagination
+- Column retrieval with depth greater than one
+- Column retrieval in requests other than GET
+- Column retrieval with all applicable arguments
+- Column retrieval by adding columns argument by separate
+
+### Requirements
+- OpenSwitch
+- Ubuntu Workstation
+
+### Setup
+
+#### Topology diagram
+```ditaa
++----------------+         +----------------+
+|                |         |                |
+|                |         |                |
+|    Local Host  +---------+    Switch 1    |
+|                |         |                |
+|                |         |                |
++----------------+         +----------------+
+```
+
+### Description
+The test case validates if the interface list retrieved it shows only the data with the specified columns through the standard REST API GET method.
+
+1. Verify if specific column retrieval is applied in the GET request by using the columns argument for a single column.
+    a. Execute the GET request over `/rest/v1/system/interfaces?selector=configuration;depth=1;sort=name;columns=name`.
+    b. Verify if the HTTP response is `200 OK`.
+    c. Validate if the list of interfaces has the exact amount of columns specified in the request.
+    d. Confirm that interface resource returned the expected data.
+
+2. Verify if specific column retrieval is applied in the GET request by using the columns argument for multiple columns.
+    a. Execute the GET request over `/rest/v1/system/interfaces?selector=configuration;depth=1;sort=name;columns=name,type`.
+    b. Verify if the HTTP response is `200 OK`.
+    c. Validate if the list of interfaces has the exact amount of columns specified in the request.
+    d. Confirm that interface resource returned the expected data.
+
+3. Verify if specific column retrieval is invalid in the GET request by using the columns argument and no depth argument.
+    a. Execute the GET request over `/rest/v1/system/interfaces?selector=configuration;sort=name;columns=name`.
+    b. Verify if the HTTP response is `400 BAD REQUEST`.
+
+4. Verify if specific column retrieval is invalid in the GET request by using the columns argument and no value.
+    a. Execute the GET request over `/rest/v1/system/interfaces?selector=configuration;depth=1;sort=name;columns=`.
+    b. Verify if the HTTP response is `400 BAD REQUEST`.
+
+5. Verify if specific column retrieval is invalid in the GET request by using the columns argument and nonexistent key.
+    a. Execute the GET request over `/rest/v1/system/interfaces?selector=configuration;depth=1;sort=name;columns=foo`.
+    b. Verify if the HTTP response is `400 BAD REQUEST`.
+
+6. Verify if specific column retrieval is applied in the GET request by using the columns and filter arguments.
+    a. Execute the GET request over `/rest/v1/system/interfaces?selector=configuration;depth=1;sort=name;name=10;columns=name,type`.
+    b. Verify if the HTTP response is `200 OK`.
+    c. Validate if the list of interfaces has the exact amount of columns specified in the request.
+    d. Confirm that interface resource returned the expected data.
+
+7. Verify if specific column retrieval is applied in the GET request by using the columns and pagination arguments.
+    a. Execute the GET request over `/rest/v1/system/interfaces?selector=configuration;depth=1;sort=name;limit=10;offset=10;columns=name,type`.
+    b. Verify if the HTTP response is `200 OK`.
+    c. Validate if the list of interfaces has the exact amount of columns specified in the request.
+    d. Confirm that interface resource returned the expected data.
+
+8. Verify if specific column retrieval is applied in the GET request by using the columns argument and depth argument equals 2.
+    a. Execute the GET request over `/rest/v1/system/interfaces?selector=configuration;depth=2;sort=name;columns=name,type`.
+    b. Verify if the HTTP response is `200 OK`.
+    c. Validate if the list of interfaces has the exact amount of columns specified in the request.
+    d. Confirm that interface resource returned the expected data.
+
+9. Verify if specific column retrieval is invalid in requests other than GET.
+    a. Execute the POST, PUT and DELETE request over `/rest/v1/system/interfaces?selector=configuration;depth=1;sort=name;columns=name`.
+    b. Verify if the HTTP response is `400 BAD REQUEST`.
+
+10. Verify if specific column retrieval is applied in the GET request by using the columns argument in combination with filter, sort and pagination.
+    a. Execute the GET request over `/rest/v1/system/interfaces?selector=configuration;depth=1;sort=name;name=10;limit=1;columns=name,type`.
+    b. Verify if the HTTP response is `200 OK`.
+    c. Validate if the list of interfaces has the exact amount of columns specified in the request.
+    d. Confirm that interface resource returned the expected data.
+
+11. Verify if specific column retrieval is applied in the GET request by using the columns argument more than once as separate arguments.
+    a. Execute the GET request over `/rest/v1/system/interfaces?selector=configuration;depth=1;sort=name;columns=name;columns=type`.
+    b. Verify if the HTTP response is `200 OK`.
+    c. Validate if the list of interfaces has the exact amount of columns specified in the request.
+    d. Confirm that interface resource returned the expected data.
+
+### Test result criteria
+#### Test pass criteria
+
+This test passes by meeting the following criteria:
+
+- Using the columns argument with the specified correct value and depth greater than zero in the request:
+    - A `200 OK` HTTP response.
+
+- Using the columns argument with invalid values or a nonexistent keys results in the request:
+    - A `400 BAD REQUEST` HTTP response.
+
+- Using the columns argument in requests other than GET:
+    - A `400 BAD REQUEST` HTTP response.
+
+#### Test fail criteria
+
+This test fails when:
+
+- Using the columns argument with the specified correct value and depth greater than zero in the request:
+    - A `400 BAD REQUEST` HTTP response or anything other than `200 OK` HTTP RESPONSE.
+
+- Using the columns argument with invalid values or a nonexistent keys results in the request:
+    - A `200 OK` HTTP response or anything other than `400 BAD REQUEST` HTTP RESPONSE.
+
+- Using the columns argument in requests other than GET:
+    - A `200 OK` HTTP response or anything other than `400 BAD REQUEST` HTTP RESPONSE.
 
 ## REST API patch method for system
 

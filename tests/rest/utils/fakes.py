@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright (C) 2015 Hewlett Packard Enterprise Development LP
+# Copyright (C) 2015-2016 Hewlett Packard Enterprise Development LP
 # All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -35,23 +35,21 @@ FAKE_PORT_DATA = """
         "vlan_mode": "trunk",
         "ip6_address": ["2001:0db8:85a3:0000:0000:8a2e:0370:%(index)04d"],
         "external_ids": {"extid1key": "extid1value"},
-        "bond_options": {},
         "mac": ["01:23:45:67:89:%(index)02x"],
         "other_config": {"cfg-1key": "cfg1val"},
         "bond_active_slave": "null",
-        "ip6_address_secondary": ["2001:0db8:85a3:0000:0000:8a2e:0371:%(index)04d"],
-        "vlan_options": {},
+        "ip6_address_secondary": \
+            ["2001:0db8:85a3:0000:0000:8a2e:0371:%(index)04d"],
         "ip4_address": "192.168.0.%(index)s",
         "admin": "up",
-        "qos_config": {},
-        "ospf_auth_md5_keys": {},
+        "qos_config": {"qos_trust": "none"},
         "ospf_auth_text_key": "null",
         "ospf_auth_type": "null",
         "ospf_if_out_cost": 10,
-        "ospf_if_type": "ospf_iftype_broadcast",
-        "ospf_intervals": {},
         "ospf_mtu_ignore": false,
-        "ospf_priority": 0
+        "ospf_priority": 0,
+        "ospf_if_type": "ospf_iftype_broadcast",
+        "ospf_intervals": {"transmit_delay": 1}
     },
     "referenced_by": [{"uri": "/rest/v1/system/bridges/bridge_normal"}]
 }
@@ -133,6 +131,7 @@ def create_fake_vlan(path, switch_ip, fake_vlan_name, vlan_id):
     info("---------- Creating fake vlan (%s) DONE ----------\n" %
          fake_vlan_name)
 
+    return json.loads(data)
 
 def create_fake_bridge(path, switch_ip, fake_bridge_name):
     data = FAKE_BRIDGE_DATA % fake_bridge_name

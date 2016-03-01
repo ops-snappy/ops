@@ -23,6 +23,7 @@ import ssl
 import os
 import time
 import pytest
+import subprocess
 
 from opsvsi.opsvsitest import *
 from copy import deepcopy
@@ -40,21 +41,17 @@ PORT_DATA = {
         "vlan_mode": "trunk",
         "ip6_address": "2001:0db8:85a3:0000:0000:8a2e:0370:7334",
         "external_ids": {"extid1key": "extid1value"},
-        "bond_options": {},
         "mac": "01:23:45:67:89:ab",
         "other_config": {"cfg-1key": "cfg1val"},
         "bond_active_slave": "null",
         "ip6_address_secondary": ["01:23:45:67:89:ab"],
-        "vlan_options": {},
         "ip4_address": "192.168.0.1",
         "admin": "up",
-        "qos_config": {},
-        "ospf_auth_md5_keys": {},
         "ospf_auth_text_key": "null",
         "ospf_auth_type": "null",
         "ospf_if_out_cost": 10,
         "ospf_if_type": "ospf_iftype_broadcast",
-        "ospf_intervals": {},
+        "ospf_intervals": {"transmit_delay": 1},
         "ospf_mtu_ignore": False,
         "ospf_priority": 0
     },
@@ -62,9 +59,17 @@ PORT_DATA = {
 }
 
 
+def get_container_id(switch):
+    container_name = switch.testid + "_" + switch.name
+    container_id = subprocess.check_output(["docker", "ps", "-a",
+                                           "-q", "-f", "name=" +
+                                           container_name]).strip()
+    return container_id
+
+
 def get_switch_ip(switch):
-    switch_ip = switch.cmd("python -c \"import socket;\
-                            print socket.gethostbyname(socket.gethostname())\"")
+    switch_ip = switch.cmd("python -c \"import socket; \
+                           print socket.gethostbyname(socket.gethostname())\"")
     switch_ip = switch_ip.rstrip("\r\n")
     return switch_ip
 
@@ -332,24 +337,33 @@ def validate_keys_complete_object(json_data):
 
 
 def rest_sanity_check(switch_ip):
-    info("\nSwitch Sanity Check: Verify if System table row and bridge_normal exist\n")
+    info("\nSwitch Sanity Check: Verify if System table row and bridge_normal \
+        exist\n")
     # Check if bridge_normal is ready, loop until ready or timeout finish
     system_path = "/rest/v1/system"
     bridge_path = "/rest/v1/system/bridges/bridge_normal"
     count = 1
-    max_retries = 60 # 1 minute
+    max_retries = 60  # 1 minute
     while count <= max_retries:
         info("\nSwitch Sanity Check: Try count %d \n" % count)
-        status_system, response_system = execute_request(system_path, "GET",
-                                                         None, switch_ip)
-        status_bridge, response_bridge = execute_request(bridge_path, "GET",
-                                                         None, switch_ip)
-        if status_system is httplib.OK and response_system is not None and \
-            status_bridge is httplib.OK and response_bridge is not None:
-            break;
+        try:
+            status_system, response_system = \
+                execute_request(system_path, "GET", None, switch_ip)
+            status_bridge, response_bridge = \
+                execute_request(bridge_path, "GET", None, switch_ip)
+
+            if status_system is httplib.OK and \
+                    response_system is not None and \
+                    status_bridge is httplib.OK and \
+                    response_bridge is not None:
+                break
+        except:
+            pass
+
         count += 1
         info("\nSwitch Sanity Check: Retrying\n")
         time.sleep(1)
 
-    assert count <= max_retries, "Switch Sanity check failure: After waiting %d seconds, "\
-        "the switch is still not ready to run the tests" % max_retries
+    assert count <= max_retries, "Switch Sanity check failure: After waiting \
+        %d seconds, the switch is still not ready to run the tests" \
+        % max_retries

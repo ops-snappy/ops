@@ -23,9 +23,11 @@ from opsvsi.opsvsitest import *
 import json
 import httplib
 import urllib
+import subprocess
 
 from utils.fakes import *
 from utils.utils import *
+from utils.swagger_test_utility import *
 
 NUM_OF_SWITCHES = 1
 NUM_HOSTS_PER_SWITCH = 0
@@ -118,79 +120,6 @@ class TestGetDefaultBridgeNormal:
 
 ###############################################################################
 #                                                                             #
-#   No VLANs Associated to bridge_normal by default                           #
-#                                                                             #
-###############################################################################
-class QueryNoVlansAssociated(OpsVsiTest):
-    def setupNet(self):
-        self.net = Mininet(topo=myTopo(hsts=NUM_HOSTS_PER_SWITCH,
-                                       sws=NUM_OF_SWITCHES,
-                                       hopts=self.getHostOpts(),
-                                       sopts=self.getSwitchOpts()),
-                           switch=VsiOpenSwitch,
-                           host=None,
-                           link=None,
-                           controller=None,
-                           build=True)
-
-        self.path = "/rest/v1/system/bridges/"
-        self.switch_ip = get_switch_ip(self.net.switches[0])
-
-    def test(self):
-        path = "%s/%s/vlans" % (self.path, DEFAULT_BRIDGE)
-
-        info("\n########## Executing GET to /system/bridges/{id}/vlans "
-             "(No VLANs added) ##########\n")
-        info("Testing path: %s\n" % path)
-
-        response_status, response_data = execute_request(path,
-                                                         "GET",
-                                                         None,
-                                                         self.switch_ip)
-
-        assert response_status == httplib.OK, \
-            "Response status received: %s\n" % response_status
-        info("Response status received: %s\n" % response_status)
-
-        assert json.loads(response_data) == []
-        info("Response data received: %s\n" % response_data)
-
-        info("########## Executing GET to /system/bridges/{id}/vlans "
-             "(No VLANs added) DONE ##########\n")
-
-
-@pytest.mark.skipif(True, reason="Disabling this testcase "
-                                 "due to this dependencies on"
-                                 " L2 vlan behaviour changes")
-class TestGetNoVlansAssociated:
-    def setup(self):
-        pass
-
-    def teardown(self):
-        pass
-
-    def setup_class(cls):
-        TestGetNoVlansAssociated.test_var = QueryNoVlansAssociated()
-        rest_sanity_check(cls.test_var.switch_ip)
-
-    def teardown_class(cls):
-        TestGetNoVlansAssociated.test_var.net.stop()
-
-    def setup_method(self, method):
-        pass
-
-    def teardown_method(self, method):
-        pass
-
-    def __del__(self):
-        del self.test_var
-
-    def test_run(self):
-        self.test_var.test()
-
-
-###############################################################################
-#                                                                             #
 #   Retrieve VLANs Associated from bridge_normal                              #
 #                                                                             #
 ###############################################################################
@@ -213,7 +142,7 @@ class QueryVlansAssociated(OpsVsiTest):
         self.vlan_path = "%s/%s/vlans" % (self.path, DEFAULT_BRIDGE)
 
     def test(self):
-        expected_data = ["%s/%s" % (self.vlan_path, self.vlan_name)]
+        expected_data = "%s/%s" % (self.vlan_path, self.vlan_name)
         path = self.vlan_path
 
         info("\n########## Executing GET to /system/bridges/{id}/vlans "
@@ -229,7 +158,7 @@ class QueryVlansAssociated(OpsVsiTest):
             "Response status received: %s\n" % response_status
         info("Response status received: %s\n" % response_status)
 
-        assert json.loads(response_data) == expected_data, \
+        assert expected_data in json.loads(response_data), \
             "Response data received: %s\n" % response_data
         info("Response data received: %s" % response_data)
 
@@ -237,9 +166,6 @@ class QueryVlansAssociated(OpsVsiTest):
              "(VLAN added) DONE ##########\n")
 
 
-@pytest.mark.skipif(True, reason="Disabling this testcase "
-                                 "due to this dependencies on"
-                                 " L2 vlan behaviour changes")
 class TestGetVlansAssociated:
     def setup(self):
         pass
@@ -302,8 +228,8 @@ class QueryVlanByName(OpsVsiTest):
         expected_configuration_data["id"] = 1
         expected_configuration_data["description"] = "test_vlan"
         expected_configuration_data["admin"] = "up"
-        expected_configuration_data["other_config"] = {}
-        expected_configuration_data["external_ids"] = {}
+        #expected_configuration_data["other_config"] = {}
+        #expected_configuration_data["external_ids"] = {}
 
         info("\n########## Executing GET to /system/bridges/{id}/vlans/ "
              "{id} ##########\n")
@@ -337,10 +263,12 @@ class TestGetVlanByName:
     def setup_class(cls):
         TestGetVlanByName.test_var = QueryVlanByName()
         rest_sanity_check(cls.test_var.switch_ip)
-        create_fake_vlan(TestGetVlanByName.test_var.vlan_path,
-                         TestGetVlanByName.test_var.switch_ip,
-                         TestGetVlanByName.test_var.vlan_name,
-                         TestGetVlanByName.test_var.vlan_id)
+        cls.fake_data = create_fake_vlan(TestGetVlanByName.test_var.vlan_path,
+                                         TestGetVlanByName.test_var.switch_ip,
+                                         TestGetVlanByName.test_var.vlan_name,
+                                         TestGetVlanByName.test_var.vlan_id)
+
+        cls.container_id = get_container_id(cls.test_var.net.switches[0])
 
     def teardown_class(cls):
         TestGetVlanByName.test_var.net.stop()
@@ -355,6 +283,10 @@ class TestGetVlanByName:
         del self.test_var
 
     def test_run(self):
+        info("container_id_test %s\n" % self.container_id)
+        swagger_model_verification(self.container_id,
+                                   "/system/bridges/{pid}/vlans/{id}",
+                                   "GET_ID", self.fake_data)
         self.test_var.test()
 
 

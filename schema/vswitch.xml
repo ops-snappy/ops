@@ -1566,7 +1566,7 @@
       </column>
       <column name="bgp_neighbors" keyname="ip_or_group_name">
         BGP neighbors or neighbor groups, keyed by IP for the former or any
-	string name for the latter.
+    string name for the latter.
       </column>
       <column name="fast_external_failover">
         Enables fast external failover for BGP directly connected peering sessions.
@@ -3886,6 +3886,72 @@
       would be set for any value of the option.
     </column>
 
+  </table>
+
+  <table name="Test">
+    <p>
+      Test with dummy rows. Used by the benchmark utility.
+    </p>
+    <column name="boolField">
+      Dummy column of bool type.
+    </column>
+    <column name="stringField">
+      Dummy column of string type.
+    </column>
+    <column name="enumField">
+      Dummy column of enum type.
+    </column>
+    <column name="numericField">
+      Dummy column of numeric type.
+    </column>
+  </table>
+
+  <table name="TestCounters">
+    <p>
+      Test with dummy rows. Used by the benchmark utility.
+    </p>
+    <column name="countersField">
+      Dummy column of map type.
+    </column>
+    <column name="numericField">
+      Dummy column of numeric type.
+    </column>
+    <column name="stringField">
+      Dummy column of string type.
+    </column>
+  </table>
+
+  <table name="TestCountersRequests">
+    <p>
+      Test with dummy rows. Used by the benchmark utility.
+    </p>
+    <column name="requestTimestamp">
+      Dummy column of numeric type.
+    </column>
+    <column name="responseTimestamp">
+      Dummy column of numeric type.
+    </column>
+    <column name="stringField">
+      Dummy column of string type.
+    </column>
+  </table>
+
+  <table name="TestIndex">
+    <p>
+      Test with dummy rows. Used by the benchmark utility.
+    </p>
+    <column name="stringField">
+      Dummy column of string type.
+    </column>
+    <column name="enumField">
+      Dummy column of enum type.
+    </column>
+    <column name="numericField">
+      Dummy column of numeric type.
+    </column>
+    <column name="boolField">
+      Dummy column of bool type.
+    </column>
   </table>
 
 </database>

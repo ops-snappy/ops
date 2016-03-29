@@ -98,6 +98,14 @@
         settings with no interface or routing dependences.
       </column>
 
+      <column name="ipsec_manual_sas">
+        This is a list of configured IPsec manual security associations (SA)
+      </column>
+
+      <column name="ipsec_manual_sps">
+        This is a list of configured IPsec manual security policies (SP)
+      </column>
+
       <column name="hostname">
       </column>
 
@@ -127,6 +135,10 @@
 
       <column name="sflow">
         sFlow(R) configuration.
+      </column>
+
+      <column name="snmp_communities">
+        Community strings to be used by the system when communicating over SNMPv1/SNMPv2c.
       </column>
 
       <column name="other_config" key="stats-update-interval"
@@ -344,6 +356,15 @@
           Default value is 2.
         </p>
       </column>
+   </group>
+
+   <group title="SNMP configuration">
+     <column name="other_config" key="snmp_agent_port">
+        The port on which the SNMP agent listens for SNMP requests. The default port is 161.
+     </column>
+     <column name="other_config" key="system_location">This key represents the system location.</column>
+     <column name="other_config" key="system_contact">This key represents the system contact.</column>
+     <column name="other_config" key="system_description">This key represents the system description.</column>
    </group>
 
    <group title="Syslog Remotes Configurations">
@@ -952,6 +973,16 @@
         </p>
       </column>
 
+      <column name="dhcp_config" key="v4relay_option82_enabled"
+              type='{"type": "boolean"}'>
+        <p>
+        Set this value to <code>true</code> to enable the DHCP-Relay Option 82
+        and set it to <code>false</code> otherwise. This configuration is
+        disabled by default. If the key is missing, the configuration is assumed
+        to be disabled.
+        </p>
+      </column>
+
       <column name="dhcp_config" key="v4relay_option82_policy"
               type='{"type": "string", "enum": ["set", ["drop", "keep", "replace"]]}'>
         <p>
@@ -1002,22 +1033,13 @@
         </p>
       </column>
 
-      <column name="dhcp_config" key="v4relay_hop_count_increment_enabled"
+      <column name="dhcp_config" key="v4relay_hop_count_increment_disabled"
               type='{"type": "boolean"}'>
         <p>
-        Set this value to <code>true</code> to enable the hop count increment in
+        Set this value to <code>true</code> to disable the hop count increment in
         the relayed DHCP requests and set it to <code>false</code> otherwise. This
-        configuration is disabled by default. If the key is missing, the configuration
-        is assumed to be disabled.
-        </p>
-      </column>
-
-      <column name="dhcp_config" key="bootp_gateway"
-              type='{"type": "string", "maxLength":15}'>
-        <p>
-        Provides a way to configure a gateway address for the DHCP relay agent
-        to use for DHCP requests, rather than the DHCP relay agent automatically assigning
-        the lowest-numbered IP address.
+        configuration is enabled by default. If the key is missing, the configuration
+        is assumed to be enabled.
         </p>
       </column>
     </group>
@@ -1261,7 +1283,15 @@
         Set this value to specify the configuration revision number.
         Default value is 0.
       </column>
-   </group>
+    </group>
+    <group title="MSTP Status">
+      <p>
+        MSTP global status for all MSTIs.
+      </p>
+      <column name="status" key="mstp_config_digest">
+        The configuration digest for the MSTP bridge that is derived based on the VLAN membership of MST instances.
+      </column>
+    </group>
 
     <group title="Other Features">
       <column name="mirrors">
@@ -2905,6 +2935,11 @@
       <column name="hw_config" key="internal-vlan">
         The VLAN associated with l3 interfaces.
       </column>
+      <column name="hw_config" key="block_all_mstp"
+              type='{"type": "boolean"}'>
+        Indicates that the port should be blocked in all MSTP instances.
+        Defaults to <code>false</code>.
+      </column>
     </group>
 
     <group title="QoS configuration">
@@ -4005,8 +4040,8 @@
            type='{"type": "integer"}'>
            Reports the Security Parameter Index used for SA outbound traffics.
         </column>
-
       </group>
+
     </group>
 
     <group title="Module Information">
@@ -6132,6 +6167,165 @@
     </column>
   </table>
 
+  <table name="IPsec_Manual_SA">
+    <p>
+      Following is the description of the IPsec manual SA configuration settings of
+      <ref table="IPsec_Manual_SA"/>.
+    </p>
+    <column name="SPI">
+      Specifies the IPsec security parameter index associated to a SA.
+    </column>
+    <column name="request_id">
+      Specifies the request ID associated a manual SA to its corresponding SP.
+    </column>
+    <column name="src_ip">
+        Specifies the source IPv4/IPv6 address of an SA.
+    </column>
+    <column name="dest_ip">
+        Specifies the destination IPv4/IPv6 address of an SA.
+    </column>
+    <column name="protocol">
+      Specifies the traffic IPsec protocol: Authentication Header (AH) vs.
+      Encapsulating Security Payload (ESP).
+      Defaults to <code>ESP</code>.
+    </column>
+    <column name="mode">
+      Specifies the traffic IPsec operation mode: tunnel vs. transport,
+      Defaults to <code>transport</code>.
+    </column>
+    <column name="authentication">
+      Specifies the configured hashes for the authenticity and integrity protection.
+      Defaults to <code>SHA1HMAC</code>.
+    </column>
+    <column name="auth_key">
+        Specifies the key for authentication and hasing.
+    </column>
+    <column name="encryption">
+      Specifies the supported encryptions for the message privacy.
+      Defaults to <code>AES128</code>.
+    </column>
+    <column name="encr_key">
+        Specifies the encryption key if the protocol is ESP.
+    </column>
+    <column name="selector_src_prefix">
+      Specifies the selector source address with an /XXX net mask.
+    </column>
+    <column name="selector_dest_prefix">
+      Specifies the selector destination address with an /XXX net mask.
+    </column>
+
+    <group title="Common Columns">
+      The overall purpose of these columns is described under <code>Common
+      Columns</code> at the beginning of this document.
+
+      <column name="external_ids"/>
+      <column name="other_config"/>
+    </group>
+
+    <group title="Manual SA Status">
+      <column name="status" key="sa_conn_added"
+         type='{"type": "integer"}'>
+         Reports the epoch time when this SA was added.
+      </column>
+      <column name="status" key="sa_conn_used"
+         type='{"type": "integer"}'>
+         Reports the epoch time when this SA was last used.
+      </column>
+    </group>
+
+    <group title="Manual SA Statistics">
+      <column name="statistics" key="sa_bytes"
+         type='{"type": "integer"}'>
+         Reports the SA bytes processed.
+      </column>
+      <column name="statistics" key="sa_packets"
+         type='{"type": "integer"}'>
+         Reports the SA packets processed.
+      </column>
+    </group>
+
+  </table>
+
+  <table name="IPsec_Manual_SP">
+    <p>
+      Following is the description of the IPsec manual SP configuration settings of
+      <ref table="IPsec_Manual_SP"/>.
+    </p>
+    <column name="priority">
+      Specifies manual SP priority.
+      Defaults to <code>0</code>.
+    </column>
+    <column name="direction">
+      Specifies the manual SP direction.
+    </column>
+    <column name="action">
+      Specifies the manual SP action.
+      Defaults to <code>ipsec</code>.
+    </column>
+    <column name="ip_family">
+      Specifies the IP address family: IPv4 or IPv6.
+      Defaults to <code>ipv4</code>.
+    </column>
+    <column name="src_prefix">
+      Specifies the source IP address with a /XXX netmask.
+    </column>
+    <column name="dest_prefix">
+      Specifies the destination IP address with a /XXX netmask.
+    </column>
+    <column name="tmpl_request_id">
+      Specifies the template request ID for this manual SP operation.
+    </column>
+    <column name="tmpl_protocol">
+      Specifies the template protocol (AH or ESP) for this manual SP.
+      Defaults to <code>ESP</code>.
+    </column>
+    <column name="tmpl_mode">
+      Specifies the template mode (tunnel or transport) for this manual SP
+      Defaults to <code>transport</code>.
+    </column>
+    <column name="tmpl_ip_family">
+      Specifies the template IP address family: IPv4 or IPv6.
+      Defaults to <code>ipv4</code>.
+    </column>
+    <column name="tmpl_src_ip">
+      Specifies the template source IP address or host name.
+    </column>
+    <column name="tmpl_dest_ip">
+      Specifies the template destination IP address or host name.
+    </column>
+
+    <group title="Common Columns">
+      The overall purpose of these columns is described under <code>Common
+      Columns</code> at the beginning of this document.
+
+      <column name="external_ids"/>
+      <column name="other_config"/>
+    </group>
+
+    <group title="Manual SP Status">
+      <column name="status" key="sp_conn_added"
+         type='{"type": "integer"}'>
+         Reports the epoch time when this SP was added.
+      </column>
+      <column name="status" key="sp_conn_used"
+         type='{"type": "integer"}'>
+         Reports the epoch time when this SP was last used.
+      </column>
+    </group>
+
+    <group title="Manual SP Statistics">
+      <column name="statistics" key="sp_bytes"
+         type='{"type": "integer"}'>
+         Reports the SP bytes processed.
+      </column>
+      <column name="statistics" key="sp_packets"
+         type='{"type": "integer"}'>
+         Reports the SP packets processed.
+      </column>
+    </group>
+
+  </table>
+
   <table name="Logical_Switch">
       <p>
         Configuration for identifying overlay networks associated with
@@ -6244,6 +6438,12 @@
         this port.
         A maximum of 8 IPv6 server configurations are allowed. This count includes IPv6 unicast
         server configurations from the column "ipv6_ucast_server".
+      </column>
+      <column name="other_config" key="bootp_gateway"
+              type='{"type": "string", "maxLength":15}'>
+        Provides a way to configure a gateway address for the DHCP relay agent
+        to use for DHCP requests, rather than the DHCP relay agent automatically assigning
+        the lowest-numbered IP address.
       </column>
     </group>
   </table>
@@ -6412,6 +6612,17 @@
          Filter syslog messages with severity.  Only messages with severity higher than or equal to the specified value will be sent to the remote server.
          Default is <code>debug</code>.
       </column>
+    </group>
+  </table>
+  <table name="SNMP_Trap">
+    <group title="configuration">
+      <column name="receiver_address">The IP address of the trap receiver.</column>
+      <column name="receiver_udp_port">The UDP port of the trap receiver.</column>
+      <column name="community_name">
+        SNMPv1/SNMPv2c community strings. The default community string is "public".
+      </column>
+      <column name="type">Trap type. The default type is "trap".</column>
+      <column name="version">Trap/inform version. The default version is "v2c".</column>
     </group>
   </table>
 </database>

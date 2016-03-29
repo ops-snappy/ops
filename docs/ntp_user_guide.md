@@ -33,7 +33,8 @@ The NTP Client functionality is supported on the switch.
 The switch synchronizes its time with a NTP server using the NTP protocol over a (WAN or LAN) UDP network.
 
 ## Prerequisites
-An NTP server (either local or remote) is needed with which the switch can synchronize its time.
+- An NTP server (either local or remote) is needed with which the switch can synchronize its time.
+- OpenSwitch needs to have management interface UP and enabled.
 
 ## Limitations
 - Only the NTP Client functionality alone is supported.
@@ -142,6 +143,7 @@ switch# show ntp associations
    3    198.55.111.50    198.55.111.50    4      -           .INIT.  16  -     -  1024      0    0.000   0.000   0.000
 ----------------------------------------------------------------------------------------------------------------------
 ```
+Note that under the "NAME" column, only the first 15 characters of the server name are displayed.
 
 ### Viewing NTP authentication keys
 The `show ntp authentication-keys` command displays the configured authentication keys.

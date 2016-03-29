@@ -106,6 +106,30 @@
             "max": "unlimited"
           }
         },
+        "ipsec_manual_sas": {
+          "category": "configuration",
+          "relationship": "1:m",
+          "type": {
+            "key": {
+              "type": "uuid",
+              "refTable": "IPsec_Manual_SA"
+            },
+            "min": 0,
+            "max": "unlimited"
+          }
+        },
+        "ipsec_manual_sps": {
+          "category": "configuration",
+          "relationship": "1:m",
+          "type": {
+            "key": {
+              "type": "uuid",
+              "refTable": "IPsec_Manual_SP"
+            },
+            "min": 0,
+            "max": "unlimited"
+          }
+        },
         "hostname": {
           "category": "configuration",
           "type": "string"
@@ -467,6 +491,18 @@
             "value": "string",
             "min": 0,
             "max": "unlimited"
+          }
+        },
+        "snmp_communities": {
+          "category": "configuration",
+          "type": {
+            "key": {
+              "type": "string",
+              "minLength": 1 ,
+              "maxLength": 32
+            },
+            "min": 0,
+            "max": 10
           }
         }
       },
@@ -916,7 +952,7 @@
              "type": {
                  "key": {
                      "type": "integer",
-                     "minInteger": 1,
+                     "minInteger": 0,
                      "maxInteger": 200000000
                  },
                  "min": 0,
@@ -1018,8 +1054,8 @@
                 "type": {
                     "key": {
                         "type": "integer",
-                        "minInteger": 1,
-                        "maxInteger": 20000000000
+                        "minInteger": 0,
+                        "maxInteger": 200000000
                     },
                     "min": 0,
                     "max": 1
@@ -1091,8 +1127,8 @@
                 "type": {
                     "key": {
                         "type": "integer",
-                        "minInteger": 1,
-                        "maxInteger": 20000000000
+                        "minInteger": 0,
+                        "maxInteger": 200000000
                     },
                     "min": 0,
                     "max": 1
@@ -1639,7 +1675,7 @@
                 "type": {
                     "key": {
                         "type": "integer",
-                        "minInteger": 1,
+                        "minInteger": 0,
                         "maxInteger": 200000000
                     },
                     "min": 0,
@@ -5249,8 +5285,8 @@
           "type": {
             "key": {
               "type": "string",
-              "minLength": 18,
-              "maxLength": 18
+              "minLength": 17,
+              "maxLength": 17
             }
           }
         },
@@ -7192,6 +7228,15 @@
             "min": 0,
             "max": 8
           }
+        },
+        "other_config": {
+          "category": "configuration",
+          "type": {
+            "key": "string",
+            "value": "string",
+            "min": 0,
+            "max": "unlimited"
+          }
         }
       },
       "indexes": [
@@ -7641,8 +7686,476 @@
       },
       "indexes": [
         [
-          "remote_host",
-          "transport"
+          "remote_host"
+        ]
+      ]
+    },
+    "SNMP_Trap" : {
+      "columns" : {
+        "receiver_address" : {
+          "category" : "configuration",
+          "type" : {
+            "key" : {
+            "type" : "string",
+            "maxLength" : 45
+            }
+          }
+        },
+
+        "receiver_udp_port" : {
+          "category"  : "configuration" ,
+          "type" : {
+            "key" : {
+              "type" : "integer",
+              "minInteger" : 1,
+              "maxInteger" : 65535
+            }
+          }
+        },
+        "type" : {
+          "category" : "configuration",
+          "type" : {
+            "key" : {
+               "type"  : "string",
+               "enum": [
+                "set",
+                [
+                  "trap",
+                  "inform"
+                ]
+              ]
+            },
+            "min" : 0,
+            "max" : 1
+          }
+        },
+
+        "version" : {
+          "category" : "configuration",
+          "type" : {
+            "key" : {
+               "type"  : "string",
+               "enum": [
+                "set",
+                [
+                  "v1",
+                  "v2c",
+                  "v3"
+                ]
+              ]
+            },
+            "min" : 0,
+            "max" : 1
+          }
+        },
+
+        "community_name": {
+          "category": "configuration",
+          "type": {
+            "key": {
+              "type": "string",
+
+              "minLength": 1 ,
+              "maxLength": 32
+            },
+            "min" : 0,
+            "max" : 1
+          }
+        }
+      },
+      "indexes": [
+        [
+          "receiver_address",
+          "receiver_udp_port"
+        ]
+      ],
+
+      "maxRows" : 10,
+      "isRoot" : true
+    },
+    "IPsec_Manual_SA": {
+      "columns": {
+        "SPI": {
+          "category": "configuration",
+          "type": {
+            "key": {
+              "type": "integer",
+              "minInteger": 0,
+              "maxInteger": 4294967295
+            }
+          },
+          "mutable":false
+        },
+        "request_id": {
+          "category": "configuration",
+          "type": {
+            "key": {
+              "type": "integer",
+              "minInteger": 0,
+              "maxInteger": 4294967295
+            }
+          }
+        },
+        "src_ip": {
+          "category": "configuration",
+          "type": {
+            "key": {
+              "type": "string",
+              "maxLength": 45
+            }
+          }
+        },
+        "dest_ip": {
+          "category": "configuration",
+          "type": {
+            "key": {
+              "type": "string",
+              "maxLength": 45
+            }
+          }
+        },
+        "protocol": {
+          "category": "configuration",
+          "type": {
+            "key": {
+              "type": "string",
+              "enum": [
+                "set", [
+                  "AH",
+                  "ESP"
+                ]
+              ]
+            },
+            "min": 0,
+            "max": 1
+          }
+        },
+        "mode": {
+          "category": "configuration",
+          "type": {
+            "key": {
+              "type": "string",
+              "enum": [
+                "set", [
+                  "tunnel",
+                  "transport"
+                ]
+              ]
+            },
+            "min": 0,
+            "max": 1
+          }
+        },
+        "authentication": {
+          "category": "configuration",
+          "type": {
+            "key": {
+              "type": "string",
+              "enum": [
+                "set", [
+                  "SHA1HMAC",
+                  "SHA256HMAC",
+                  "SHA512HMAC"
+                ]
+              ]
+            },
+            "min": 0,
+            "max": 1
+          }
+        },
+        "auth_key": {
+          "category": "configuration",
+          "type": {
+            "key": {
+              "type": "string",
+              "maxLength": 64
+            }
+          }
+        },
+        "encryption": {
+          "category": "configuration",
+          "type": {
+            "key": {
+              "type": "string",
+              "enum": [
+                "set", [
+                  "AES128",
+                  "AES256"
+                ]
+              ]
+            },
+            "min": 0,
+            "max": 1
+          }
+        },
+        "encr_key": {
+          "category": "configuration",
+          "type": {
+            "key": {
+              "type": "string",
+              "maxLength": 64
+            },
+            "min": 0,
+            "max": 1
+          }
+        },
+        "selector_src_prefix": {
+          "category": "configuration",
+          "type": {
+            "key": {
+              "type": "string",
+              "maxLength": 49
+            }
+          }
+        },
+        "selector_dest_prefix": {
+          "category": "configuration",
+          "type": {
+            "key": {
+              "type": "string",
+              "maxLength": 49
+            }
+          }
+        },
+        "other_config": {
+          "category": "configuration",
+          "type": {
+            "key": "string",
+            "value": "string",
+            "min": 0,
+            "max": "unlimited"
+          }
+        },
+        "external_ids": {
+          "category": "configuration",
+          "type": {
+            "key": "string",
+            "value": "string",
+            "min": 0,
+            "max": "unlimited"
+          }
+        },
+        "status": {
+          "category": "status",
+          "type": {
+            "key": "string",
+            "value": "string",
+            "min": 0,
+            "max": "unlimited"
+          },
+          "ephemeral": true
+        },
+        "statistics": {
+          "category": "statistics",
+          "type": {
+            "key": "string",
+            "value": "string",
+            "min": 0,
+            "max": "unlimited"
+          },
+          "ephemeral": true
+        }
+      },
+      "indexes": [
+        [
+          "SPI"
+        ]
+      ]
+    },
+    "IPsec_Manual_SP": {
+      "columns": {
+        "priority": {
+          "category": "configuration",
+          "type": {
+            "key": {
+              "type": "integer",
+              "minInteger": -2147483646,
+              "maxInteger": 2147483647
+            },
+            "min": 0,
+            "max": 1
+          }
+        },
+        "direction": {
+          "category": "configuration",
+          "type": {
+            "key": {
+              "type": "string",
+              "enum": [
+                "set", [
+                  "fwd",
+                  "in",
+                  "out"
+                ]
+              ]
+            }
+          }
+        },
+        "action": {
+          "category": "configuration",
+          "type": {
+            "key": {
+              "type": "string",
+              "enum": [
+                "set", [
+                  "none",
+                  "discard",
+                  "ipsec"
+                ]
+              ]
+            },
+            "min": 0,
+            "max": 1
+          }
+        },
+        "ip_family": {
+          "category": "configuration",
+          "type": {
+            "key": {
+              "type": "string",
+              "enum": [
+                "set", [
+                  "ipv4",
+                  "ipv6"
+                ]
+              ]
+            },
+            "min": 0,
+            "max": 1
+          }
+        },
+        "src_prefix": {
+          "category": "configuration",
+          "type": {
+            "key": {
+              "type": "string",
+              "maxLength": 49
+            }
+          }
+        },
+        "dest_prefix": {
+          "category": "configuration",
+          "type": {
+            "key": {
+              "type": "string",
+              "maxLength": 49
+            }
+          }
+        },
+        "tmpl_request_id": {
+          "category": "configuration",
+          "type": "integer"
+        },
+        "tmpl_protocol": {
+          "category": "configuration",
+          "type": {
+            "key": {
+              "type": "string",
+              "enum": [
+                "set", [
+                  "AH",
+                  "ESP"
+                ]
+              ]
+            },
+            "min": 0,
+            "max": 1
+          }
+        },
+        "tmpl_mode": {
+          "category": "configuration",
+          "type": {
+            "key": {
+              "type": "string",
+              "enum": [
+                "set", [
+                  "tunnel",
+                  "transport"
+                ]
+              ]
+            },
+            "min": 0,
+            "max": 1
+          }
+        },
+        "tmpl_ip_family": {
+          "category": "configuration",
+          "type": {
+            "key": {
+              "type": "string",
+              "enum": [
+                "set", [
+                  "ipv4",
+                  "ipv6"
+                ]
+              ]
+            },
+            "min": 0,
+            "max": 1
+          }
+        },
+        "tmpl_src_ip": {
+          "category": "configuration",
+          "type": {
+            "key": {
+              "type": "string",
+              "maxLength": 45
+            }
+          }
+        },
+        "tmpl_dest_ip": {
+          "category": "configuration",
+          "type": {
+            "key": {
+              "type": "string",
+              "maxLength": 45
+            }
+          }
+        },
+        "other_config": {
+          "category": "configuration",
+          "type": {
+            "key": "string",
+            "value": "string",
+            "min": 0,
+            "max": "unlimited"
+          }
+        },
+        "external_ids": {
+          "category": "configuration",
+          "type": {
+            "key": "string",
+            "value": "string",
+            "min": 0,
+            "max": "unlimited"
+          }
+        },
+        "status": {
+          "category": "status",
+          "type": {
+            "key": "string",
+            "value": "string",
+            "min": 0,
+            "max": "unlimited"
+          },
+          "ephemeral": true
+        },
+        "statistics": {
+          "category": "statistics",
+          "type": {
+            "key": "string",
+            "value": "string",
+            "min": 0,
+            "max": "unlimited"
+          },
+          "ephemeral": true
+        }
+      },
+      "indexes": [
+        [
+          "src_prefix",
+          "dest_prefix",
+          "direction"
         ]
       ]
     }

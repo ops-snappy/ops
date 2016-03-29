@@ -88,15 +88,15 @@ In LACP negotiations, link status decisions are made by the system with the nume
 ### Setting up LAG parameters
 
 1. Setting the LACP **mode**.
-LACP mode allows values **active**, **passive** and **off**.  The default value is **off**.
-The following example displays how to set the LACP  mode commands to active, passive or off.
+LACP mode allows values such as **active**, **passive** and **off**.  The default value is **off**.
+The following example displays how to set the LACP mode commands to active, passive, or off.
 ```
 ops-xxxx(config-lag-if)# lacp mode active
 ops-xxxx(config-lag-if)# lacp mode passive
 ops-xxxx(config-lag-if)# no lacp mode {active / passive}
 ```
 2. Setting the **hash type**.
-Hash type takes value **l2-src-dst**, **l2vid-src-dst**, **l3-src-dst** or **l4-src-dst** to control the selection of a interface from a group of aggregate interfaces with which to transmit a frame.
+The Hash type takes the value of **l2-src-dst**, **l3-src-dst** or **l4-src-dst** to control the selection of a interface in a group of aggregate interfaces. This Hash type value helps transmit a frame.
 The default hash type is **l3-src-dst**.
 ```
 ops-xxxx(config-lag-if)# hash l2-src-dst
@@ -177,29 +177,27 @@ A - Active        P - Passive      F - Aggregable I - Individual
 S - Short-timeout L - Long-timeout N - InSync     O - OutofSync
 C - Collecting    D - Distributing
 X - State m/c expired              E - Default neighbor state
-.
+
 Actor details of all interfaces:
--------------------------------------------
-Intf-name    Key    Priority   State
--------------------------------------------
-Aggregate-name : lag100
-1                   500
-Aggregate-name : lag200
-3
-4
-2
-.
+------------------------------------------------------------------------------
+Intf Aggregate Port    Port     Key  State   System-id         System   Aggr
+     name      id      Priority                                Priority Key
+------------------------------------------------------------------------------
+3    lag200    69      1        200  ALFNCD  70:72:cf:37:a3:5c 20       200
+2    lag200    14      1        200  ALFNCD  70:72:cf:37:a3:5c 20       200
+4    lag200    26      1        200  ALFNCD  70:72:cf:37:a3:5c 20       200
+1    lag500    17      1        500  ALFNCD  70:72:cf:37:a3:5c 20       500
+
+
 Partner details of all interfaces:
--------------------------------------------------
-Intf-name    Partner  Key    Priority   State
-             port-id
--------------------------------------------------
-Aggregate-name : lag100
-1                            500
-Aggregate-name : lag200
-3
-4
-2
+------------------------------------------------------------------------------
+Intf Aggregate Partner Port     Key  State   System-id         System   Aggr
+     name      Port-id Priority                                Priority Key
+------------------------------------------------------------------------------
+3    lag200    69      1        200  PLFNC   70:72:cf:8c:60:a7 65534    200
+2    lag200    14      1        200  PLFNC   70:72:cf:8c:60:a7 65534    200
+4    lag200    26      1        200  PLFNCD  70:72:cf:8c:60:a7 65534    200
+1    lag500    18      1        500  PLFNCD  70:72:cf:8c:60:a7 65534    500
 ```
 
 ## CLI

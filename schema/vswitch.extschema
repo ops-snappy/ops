@@ -319,6 +319,18 @@
             "max": 1
           }
         },
+        "acls": {
+          "category": "configuration",
+          "relationship": "1:m",
+          "type": {
+            "key": {
+              "type": "uuid",
+              "refTable": "ACL"
+            },
+            "min": 0,
+            "max": "unlimited"
+          }
+        },
         "other_config": {
           "category": "configuration",
           "type": {
@@ -396,6 +408,15 @@
           }
         },
         "logrotate_config": {
+          "category": "configuration",
+          "type": {
+            "key": "string",
+            "value": "string",
+            "min": 0,
+            "max": "unlimited"
+          }
+        },
+        "broadview_config": {
           "category": "configuration",
           "type": {
             "key": "string",
@@ -504,6 +525,16 @@
             "min": 0,
             "max": 10
           }
+        },
+        "copp_statistics": {
+          "category": "statistics",
+          "type": {
+            "key": "string",
+            "value": "string",
+            "min": 0,
+            "max": "unlimited"
+          },
+          "ephemeral": true
         }
       },
       "isRoot": true,
@@ -990,18 +1021,20 @@
                  "max": 1
              }
          },
-         "top_change_cnt" : {
+         "topology_change_count" : {
              "category": "statistics",
              "type": {
                  "key": {
-                     "type": "integer"
+                     "type": "integer",
+                     "minInteger": 0,
+                     "maxInteger": 2147483647
                  },
                  "min": 0,
                  "max": 1
              }
          },
-         "topology_change_disable" : {
-              "category": "configuration",
+         "topology_unstable" : {
+              "category": "status",
               "type": {
                   "key": {
                       "type": "boolean"
@@ -1069,11 +1102,11 @@
                       "enum": [
                       "set",
                         [
-                          "root_port",
-                          "designated_port",
-                          "alternate_port",
-                          "backup_port",
-                          "disabled_port"
+                          "Root",
+                          "Designated",
+                          "Alternate",
+                          "Backup",
+                          "Disabled"
                         ]
                       ]
                     },
@@ -1432,11 +1465,23 @@
                  "max": 1
              }
          },
-         "top_change_cnt" : {
+         "topology_unstable" : {
+              "category": "status",
+              "type": {
+                  "key": {
+                      "type": "boolean"
+                  },
+                  "min": 0,
+                  "max": 1
+              }
+         },
+         "topology_change_count" : {
              "category": "statistics",
              "type": {
                  "key": {
-                     "type": "integer"
+                     "type": "integer",
+                     "minInteger": 0,
+                     "maxInteger": 2147483647
                  },
                  "min": 0,
                  "max": 1
@@ -1503,11 +1548,11 @@
                       "enum": [
                       "set",
                         [
-                          "root_port",
-                          "designated_port",
-                          "alternate_port",
-                          "backup_port",
-                          "disabled_port"
+                          "Root",
+                          "Designated",
+                          "Alternate",
+                          "Backup",
+                          "Disabled"
                         ]
                       ]
                     },
@@ -1737,6 +1782,18 @@
                    "min": 0,
                    "max": 1
                }
+            },
+            "fwd_transition_count" : {
+                "category": "statistics",
+                "type": {
+                    "key": {
+                        "type": "integer",
+                        "minInteger": 0,
+                        "maxInteger": 2147483647
+                    },
+                    "min": 0,
+                    "max": 1
+                }
             },
             "protocol_migration_enable" : {
                "category": "configuration",
@@ -3337,6 +3394,16 @@
             "max": "unlimited"
           }
         },
+        "macs_invalid": {
+          "category": "status",
+            "type": {
+            "key": {
+              "type": "boolean"
+            },
+            "min": 0,
+            "max": 1
+          }
+        },
         "oper_state": {
           "category": "status",
           "type": {
@@ -3382,6 +3449,71 @@
             "min": 0,
             "max": "unlimited"
           }
+        },
+        "aclv4_in_applied": {
+          "category": "status",
+          "relationship": "reference",
+          "type": {
+            "key": {
+              "type": "uuid",
+                "refTable": "ACL",
+                "refType" : "weak"
+            },
+            "min": 0,
+            "max": 1
+          }
+        },
+        "aclv4_in_cfg": {
+          "category": "configuration",
+          "relationship": "reference",
+          "type": {
+            "key": {
+              "type": "uuid",
+              "refTable": "ACL",
+              "refType" : "weak"
+            },
+            "min": 0,
+            "max": 1
+          }
+        },
+        "aclv4_in_cfg_version": {
+          "category": "configuration",
+          "type": {
+            "key": {
+              "type": "integer",
+              "minInteger": 0,
+              "maxInteger": 4294967295
+            },
+            "min": 0,
+            "max": 1
+          }
+        },
+        "aclv4_in_status": {
+          "category": "status",
+          "type": {
+            "key": "string",
+            "value": "string",
+            "min": 0,
+            "max": "unlimited"
+          }
+        },
+        "aclv4_in_statistics": {
+          "category": "status",
+          "type": {
+            "key": {
+              "type": "integer",
+              "minInteger": 0,
+              "maxInteger": 4294967295
+            },
+            "value": {
+              "type": "integer",
+              "minInteger": 0,
+              "maxInteger": 4294967295
+            },
+            "min": 0,
+            "max": 512
+          },
+          "ephemeral": true
         },
         "other_config": {
           "category": "configuration",
@@ -3824,6 +3956,94 @@
             "max": "unlimited"
           },
           "ephemeral": true
+        },
+        "aclv4_in_applied": {
+          "category": "status",
+          "relationship": "reference",
+          "type": {
+            "key": {
+              "type": "uuid",
+                "refTable": "ACL",
+                "refType" : "weak"
+            },
+            "min": 0,
+            "max": 1
+          }
+        },
+        "aclv4_in_cfg": {
+          "category": "configuration",
+          "relationship": "reference",
+          "type": {
+            "key": {
+              "type": "uuid",
+              "refTable": "ACL",
+              "refType" : "weak"
+            },
+            "min": 0,
+            "max": 1
+          }
+        },
+        "aclv4_in_cfg_version": {
+          "category": "configuration",
+          "type": {
+            "key": {
+              "type": "integer",
+              "minInteger": 0,
+              "maxInteger": 4294967295
+            },
+            "min": 0,
+            "max": 1
+          }
+        },
+        "aclv4_in_status": {
+          "category": "status",
+          "type": {
+            "key": "string",
+            "value": "string",
+            "min": 0,
+            "max": "unlimited"
+          }
+        },
+        "aclv4_in_statistics": {
+          "category": "status",
+          "type": {
+            "key": {
+              "type": "integer",
+              "minInteger": 0,
+              "maxInteger": 4294967295
+            },
+            "value": {
+              "type": "integer",
+              "minInteger": 0,
+              "maxInteger": 4294967295
+            },
+            "min": 0,
+            "max": 512
+          },
+          "ephemeral": true
+        },
+        "macs_invalid_on_vlans": {
+          "category": "status",
+          "relationship": "reference",
+          "type": {
+            "key": {
+              "type": "uuid",
+              "refTable": "VLAN",
+              "refType" : "weak"
+            },
+            "min": 0,
+            "max": 4094
+          }
+        },
+        "macs_invalid": {
+          "category": "status",
+          "type": {
+            "key": {
+            "type": "boolean"
+            },
+            "min": 0,
+            "max": 1
+          }
         },
         "other_config": {
           "category": "configuration",
@@ -5319,7 +5539,7 @@
                 "set",
                 [
                   "hw-vtep",
-                  "learning",
+                  "dynamic",
                   "static"
                 ]
               ],
@@ -5856,7 +6076,7 @@
           "type": {
             "key": {
               "type": "string",
-              "enum": ["set", ["strict", "wrr"] ]
+              "enum": ["set", ["strict", "dwrr"] ]
             },
             "min": 0,
             "max": 1
@@ -5913,11 +6133,8 @@
           "type": {
             "key": {
               "type": "uuid",
-              "refTable": "VRF",
-              "refType" : "weak"
-            },
-            "min":0,
-            "max":1
+              "refTable": "VRF"
+             }
           },
           "mutable": false
         },
@@ -8158,6 +8375,398 @@
           "direction"
         ]
       ]
+    },
+    "SNMPv3_User" : {
+      "columns" : {
+        "user_name" : {
+          "category": "configuration",
+          "type" : {
+           "key" : {
+             "type" : "string",
+             "minLength" : 1,
+             "maxLength": 32
+           }
+          }
+        },
+
+        "auth_protocol" : {
+          "category" : "configuration" ,
+          "type" : {
+            "key" : {
+              "type" : "string",
+              "enum" : [
+                "set",
+                [
+                  "md5",
+                  "sha",
+                  "none"
+                ]
+              ]
+            },
+            "min" : 0,
+            "max" : 1
+          }
+        },
+
+        "priv_protocol" : {
+          "category" : "configuration" ,
+          "type" : {
+            "key" : {
+              "type" : "string",
+              "enum" : [
+                "set",
+                [
+                  "aes",
+                  "des",
+                  "none"
+                ]
+              ]
+            },
+            "min" : 0,
+            "max" : 1
+          }
+        },
+
+        "auth_pass_phrase" : {
+          "category" : "configuration" ,
+          "type" : {
+            "key" : {
+              "type" : "string",
+              "minLength" : 8,
+              "maxLength" : 32
+            },
+            "min" : 0,
+            "max" : 1
+          }
+        },
+
+        "priv_pass_phrase" : {
+          "category" : "configuration" ,
+          "type" : {
+            "key" : {
+              "type" : "string",
+              "minLength" : 8,
+              "maxLength" : 32
+            },
+            "min" : 0,
+            "max" : 1
+          }
+        }
+      },
+      "maxRows" : 10,
+      "indexes" : [
+        [
+          "user_name"
+        ]
+      ],
+      "isRoot" : true
+    },
+    "ACL": {
+      "columns": {
+        "name": {
+          "category": "configuration",
+          "type": {
+            "key": {
+              "type": "string",
+              "maxLength": 64
+            }
+          },
+          "mutable": false
+        },
+        "list_type": {
+          "category": "configuration",
+          "type": {
+            "key": {
+              "type": "string",
+              "enum": [
+                "set",
+                [
+                  "ipv4"
+                ]
+              ]
+            }
+          },
+          "mutable": false
+        },
+        "cur_aces": {
+          "category": "status",
+          "relationship": "1:m",
+          "type": {
+            "key": {
+              "type": "integer",
+              "minInteger": 0,
+              "maxInteger": 4294967295
+            },
+            "value": {
+              "type": "uuid",
+              "refTable": "ACL_Entry"
+            },
+            "min": 0,
+            "max": 512
+          }
+        },
+        "cfg_aces": {
+          "category": "configuration",
+          "relationship": "1:m",
+          "type": {
+            "key": {
+              "type": "integer",
+              "minInteger": 0,
+              "maxInteger": 4294967295
+            },
+            "value": {
+              "type": "uuid",
+              "refTable": "ACL_Entry"
+            },
+            "min": 0,
+            "max": 512
+          }
+        },
+        "in_progress_aces": {
+          "category": "status",
+          "relationship": "1:m",
+          "type": {
+            "key": {
+              "type": "integer",
+              "minInteger": 0,
+              "maxInteger": 4294967295
+            },
+            "value": {
+              "type": "uuid",
+              "refTable": "ACL_Entry"
+            },
+            "min": 0,
+            "max": 512
+          }
+        },
+        "cfg_version": {
+          "category": "configuration",
+          "type": {
+            "key": {
+              "type": "integer",
+              "minInteger": 0,
+              "maxInteger": 4294967295
+            }
+          }
+        },
+        "status": {
+          "category": "status",
+          "type": {
+            "key": "string",
+            "value": "string",
+            "min": 0,
+            "max": "unlimited"
+          }
+        },
+        "other_config": {
+          "category": "configuration",
+          "type": {
+            "key": "string",
+            "value": "string",
+            "min": 0,
+            "max": "unlimited"
+          }
+        },
+        "external_ids": {
+          "category": "configuration",
+          "type": {
+            "key": "string",
+            "value": "string",
+            "min": 0,
+            "max": "unlimited"
+          }
+        }
+      },
+      "indexes": [
+        [
+          "name",
+          "list_type"
+        ]
+      ]
+    },
+    "ACL_Entry": {
+      "columns": {
+        "comment": {
+          "category": "configuration",
+          "type": {
+            "key": {
+              "type": "string",
+              "maxLength": 256
+            },
+            "min": 0,
+            "max": 1
+          }
+        },
+        "action": {
+          "category": "configuration",
+          "type": {
+            "key": {
+              "type": "string",
+              "enum": [
+                "set",
+                [
+                  "permit",
+                  "deny"
+                ]
+              ]
+            },
+            "min": 0,
+            "max": 1
+          },
+          "mutable": false
+        },
+        "src_ip": {
+          "category": "configuration",
+          "type": {
+            "key": {
+              "type": "string",
+              "maxLength": 100
+            },
+            "min": 0,
+            "max": 1
+          },
+          "mutable": false
+        },
+        "dst_ip": {
+          "category": "configuration",
+          "type": {
+            "key": {
+              "type": "string",
+              "maxLength": 100
+            },
+            "min": 0,
+            "max": 1
+          },
+          "mutable": false
+        },
+        "protocol": {
+          "category": "configuration",
+          "type": {
+            "key": {
+              "type": "integer",
+              "minInteger": 0,
+              "maxInteger": 255
+            },
+            "min": 0,
+            "max": 1
+          },
+          "mutable": false
+        },
+        "src_l4_port_min": {
+          "category": "configuration",
+          "type": {
+            "key": {
+              "type": "integer",
+              "minInteger": 0,
+              "maxInteger": 65535
+            },
+            "min": 0,
+            "max": 1
+          },
+          "mutable": false
+        },
+        "src_l4_port_max": {
+          "category": "configuration",
+          "type": {
+            "key": {
+              "type": "integer",
+              "minInteger": 0,
+              "maxInteger": 65535
+            },
+            "min": 0,
+            "max": 1
+          },
+          "mutable": false
+        },
+        "src_l4_port_range_reverse": {
+          "category": "configuration",
+          "type": {
+            "key": {
+              "type": "boolean"
+            },
+            "min": 0,
+            "max": 1
+          },
+          "mutable": false
+        },
+        "dst_l4_port_min": {
+          "category": "configuration",
+          "type": {
+            "key": {
+              "type": "integer",
+              "minInteger": 0,
+              "maxInteger": 65535
+            },
+            "min": 0,
+            "max": 1
+          },
+          "mutable": false
+        },
+        "dst_l4_port_max": {
+          "category": "configuration",
+          "type": {
+            "key": {
+              "type": "integer",
+              "minInteger": 0,
+              "maxInteger": 65535
+            },
+            "min": 0,
+            "max": 1
+          },
+          "mutable": false
+        },
+        "dst_l4_port_range_reverse": {
+          "category": "configuration",
+          "type": {
+            "key": {
+              "type": "boolean"
+            },
+            "min": 0,
+            "max": 1
+          },
+          "mutable": false
+        },
+        "log": {
+          "category": "configuration",
+          "type": {
+            "key": {
+              "type": "boolean"
+            },
+            "min": 0,
+            "max": 1
+          },
+          "mutable": false
+        },
+        "count": {
+          "category": "configuration",
+          "type": {
+            "key": {
+              "type": "boolean"
+            },
+            "min": 0,
+            "max": 1
+          },
+          "mutable": false
+        },
+        "other_config": {
+          "category": "configuration",
+          "type": {
+            "key": "string",
+            "value": "string",
+            "min": 0,
+            "max": "unlimited"
+          }
+        },
+        "external_ids": {
+          "category": "configuration",
+          "type": {
+            "key": "string",
+            "value": "string",
+            "min": 0,
+            "max": "unlimited"
+          }
+        }
+      }
     }
   }
 }

@@ -81,7 +81,7 @@ def verifyVlanPorts(dut, vlanID, port):
     showVlanOutput = returnCLS.valueGet()
     for myDictionary in showVlanOutput:
         if myDictionary['VLAN'] == vlanID and \
-                port in myDictionary['Ports']:
+                port in myDictionary['Interfaces']:
             assigned = True
             return assigned
     return assigned

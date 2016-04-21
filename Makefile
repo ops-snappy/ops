@@ -1,19 +1,20 @@
-PYTHON ?= python
 DESTDIR ?=
 PREFIX ?= /usr
 
 EXTSCHEMAS := $(wildcard schema/*.extschema)
 SANE_OVSSCHEMAS := $(patsubst %.extschema,%.ovsschema,$(EXTSCHEMAS))
 
-default: compile
+.PHONY: all compile install clean
+
+all: compile
 
 %.ovsschema: %.extschema
-	$(PYTHON) schema/sanitize.py $< $@
+	schema/sanitize.py $< $@
 
 compile: $(SANE_OVSSCHEMAS)
 	touch schema/vswitch.xml
 
-install: compile
+install:
 	install -d $(DESTDIR)/$(PREFIX)/share/openvswitch
 	set -e; cd schema; for f in *.extschema *.ovsschema *.xml; do \
 	    install -m 0644 $$f $(DESTDIR)/$(PREFIX)/share/openvswitch/$$f; \
